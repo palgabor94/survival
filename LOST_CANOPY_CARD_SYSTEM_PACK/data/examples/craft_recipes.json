@@ -1,0 +1,7 @@
+[
+  {"id":"stone_axe","ingredients":{"wood":2,"stone":1,"fiber":2},"unlocks":["wood_tier_2"],"minigameBonus":"chop_window_plus"},
+  {"id":"torch","ingredients":{"wood":1,"fiber":2},"unlocks":["dark_event_choices"]},
+  {"id":"fishing_rod","ingredients":{"wood":2,"fiber":3},"unlocks":["fishing","fish_tier_1"]},
+  {"id":"water_filter","ingredients":{"wood":3,"stone":2,"fiber":4},"unlocks":["safe_river_water"]},
+  {"id":"rope_trap","ingredients":{"wood":3,"fiber":5},"unlocks":["passive_small_game"]}
+]

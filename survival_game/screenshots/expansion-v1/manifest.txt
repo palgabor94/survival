@@ -1,0 +1,10 @@
+01-bamboo-event.png
+02-bamboo-expedition.png
+03-mangrove-event.png
+04-mangrove-expedition.png
+05-crocodile_shallows-choices.png
+06-crocodile_shallows-result.png
+07-hornet_nest-choices.png
+08-hornet_nest-result.png
+09-monkey_raiders-choices.png
+10-monkey_raiders-result.png

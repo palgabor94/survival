@@ -1,0 +1,15 @@
+id,name,type,tier,primary_effect,loot_unlock
+wood,Wood,resource,0,Crafting material,
+hardwood,Hardwood,resource,2,Advanced crafting,Improved Axe+
+stone,Stone,resource,0,Crafting material,
+fiber,Fiber,resource,0,Crafting material,
+herb,Herb,resource,1,Healing/crafting,Knife+
+medicinal_herb,Medicinal Herb,resource,2,Strong healing,Machete+
+small_fish,Small Fish,food,0,Food,Basic Rod
+medium_fish,Medium Fish,food,1,More food,Reinforced Rod
+large_fish,Large Fish,food,2,High food,Advanced Rod
+metal_scrap,Metal Scrap,resource,1,Advanced crafting,Plane Wreck
+wire,Wire,quest,1,Beacon part,Plane Wreck
+battery,Battery,quest,1,Beacon part,Plane Wreck
+radio_module,Radio Module,quest,2,Beacon part,Plane Wreck
+beacon_core,Beacon Core,quest,3,Final beacon component,Ancient Ruins

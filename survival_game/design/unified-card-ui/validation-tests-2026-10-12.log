@@ -1,0 +1,376 @@
+RUN game_engine all shipped events are valid and have an affordable fallback
+PASS game_engine all shipped events are valid and have an affordable fallback
+RUN game_engine decision is atomic, spends time once, and rejects repeated input
+PASS game_engine decision is atomic, spends time once, and rejects repeated input
+RUN game_engine six time leads to one night event, sleep then resets daylight
+PASS game_engine six time leads to one night event, sleep then resets daylight
+RUN game_engine insufficient daylight prevents exploration but still allows rest
+PASS game_engine insufficient daylight prevents exploration but still allows rest
+RUN game_engine requirements disable spending unavailable resources without blocking free choice
+PASS game_engine requirements disable spending unavailable resources without blocking free choice
+RUN game_engine risk succeeds or fails and low sanity reduces displayed chance
+PASS game_engine risk succeeds or fails and low sanity reduces displayed chance
+RUN game_engine empty supplies cause damage per time and health zero ends the run
+PASS game_engine empty supplies cause damage per time and health zero ends the run
+RUN game_engine stats clamp to 100 and reports show actual changes
+PASS game_engine stats clamp to 100 and reports show actual changes
+RUN game_engine catalog filters progression and stat requirements
+PASS game_engine catalog filters progression and stat requirements
+RUN game_engine events do not repeat immediately when alternatives exist
+PASS game_engine events do not repeat immediately when alternatives exist
+RUN game_engine seeded multi-day play never escapes bounds or deadlocks
+PASS game_engine seeded multi-day play never escapes bounds or deadlocks
+RUN camp_logic (setUpAll)
+PASS camp_logic (setUpAll)
+RUN camp_logic recipe data ships tools, camp items and three ordered camp tiers
+PASS camp_logic recipe data ships tools, camp items and three ordered camp tiers
+RUN camp_logic recipe data every tool an event asks for can be crafted
+PASS camp_logic recipe data every tool an event asks for can be crafted
+RUN camp_logic recipe data rejects duplicate ids and gaps between tiers
+PASS camp_logic recipe data rejects duplicate ids and gaps between tiers
+RUN camp_logic crafting a tool costs resources and time, then unlocks its choices
+PASS camp_logic crafting a tool costs resources and time, then unlocks its choices
+RUN camp_logic crafting explains every reason a recipe cannot be built yet
+PASS camp_logic crafting explains every reason a recipe cannot be built yet
+RUN camp_logic crafting Basic Refuge raises the camp tier and opens tier-1 recipes
+PASS camp_logic crafting Basic Refuge raises the camp tier and opens tier-1 recipes
+RUN camp_logic crafting crafting with empty supplies can end the run
+PASS camp_logic crafting crafting with empty supplies can end the run
+RUN camp_logic camp bonuses Leaf Bed and Basic Refuge improve every sleep
+PASS camp_logic camp bonuses Leaf Bed and Basic Refuge improve every sleep
+RUN camp_logic camp bonuses the Rain Collector fills at dawn, more after rain
+PASS camp_logic camp bonuses the Rain Collector fills at dawn, more after rain
+RUN camp_logic camp bonuses the Water Filter adds water to every collection
+PASS camp_logic camp bonuses the Water Filter adds water to every collection
+RUN camp_logic camp bonuses the Drying Rack makes each fish more filling
+PASS camp_logic camp bonuses the Drying Rack makes each fish more filling
+RUN camp_logic herbs heal and calm without spending daylight
+PASS camp_logic herbs heal and calm without spending daylight
+RUN camp_logic save and restore every completed step notifies the autosave
+PASS camp_logic save and restore every completed step notifies the autosave
+RUN camp_logic save and restore a calm camp restores exactly
+PASS camp_logic save and restore a calm camp restores exactly
+RUN camp_logic save and restore a pending event resumes without a reroll or a second charge
+PASS camp_logic save and restore a pending event resumes without a reroll or a second charge
+RUN camp_logic save and restore an unread outcome and the coming night survive a restart
+PASS camp_logic save and restore an unread outcome and the coming night survive a restart
+RUN camp_logic save and restore a resolved night can still be slept through
+PASS camp_logic save and restore a resolved night can still be slept through
+RUN camp_logic save and restore closing the app before casting returns you to the pond
+PASS camp_logic save and restore closing the app before casting returns you to the pond
+RUN camp_logic save and restore closing the app mid-cast loses the bait, not the run
+PASS camp_logic save and restore closing the app mid-cast loses the bait, not the run
+RUN camp_logic save and restore a missing night event cannot block sleep
+PASS camp_logic save and restore a missing night event cannot block sleep
+RUN camp_logic save and restore another version or a broken save starts a fresh run
+PASS camp_logic save and restore another version or a broken save starts a fresh run
+RUN camp_logic (tearDownAll)
+PASS camp_logic (tearDownAll)
+RUN card_logic (setUpAll)
+PASS card_logic (setUpAll)
+RUN card_logic no situation offers more cards than fit on a phone
+PASS card_logic no situation offers more cards than fit on a phone
+RUN card_logic a catalog with a fifth card is rejected
+PASS card_logic a catalog with a fifth card is rejected
+RUN card_logic a stat-gated card appears only while the stat is low
+PASS card_logic a stat-gated card appears only while the stat is low
+RUN card_logic a card needing a herb is shown but locked without one
+PASS card_logic a card needing a herb is shown but locked without one
+RUN card_logic stat-gated cards unlock above their minimum
+PASS card_logic stat-gated cards unlock above their minimum
+RUN card_logic a calming card shows up for a shaken survivor only
+PASS card_logic a calming card shows up for a shaken survivor only
+RUN card_logic there is always an escape card visible and playable
+PASS card_logic there is always an escape card visible and playable
+RUN card_logic card icons an explicit icon key wins
+PASS card_logic card icons an explicit icon key wins
+RUN card_logic card icons hidden rewards never determine the icon; the action label does
+PASS card_logic card icons hidden rewards never determine the icon; the action label does
+RUN card_logic (tearDownAll)
+PASS card_logic (tearDownAll)
+RUN expedition_logic (setUpAll)
+PASS expedition_logic (setUpAll)
+RUN expedition_logic map ships seven valid locations with the planned time costs
+PASS expedition_logic map ships seven valid locations with the planned time costs
+RUN expedition_logic map day one: riverbank open, pond locked until day 2 or a rod
+PASS expedition_logic map day one: riverbank open, pond locked until day 2 or a rod
+RUN expedition_logic map day two reveals the pond but fishing still needs rod and bait
+PASS expedition_logic map day two reveals the pond but fishing still needs rod and bait
+RUN expedition_logic map wreck and ruins stay locked as later content
+PASS expedition_logic map wreck and ruins stay locked as later content
+RUN expedition_logic map travel needs enough daylight, daytime and an idle camp
+PASS expedition_logic map travel needs enough daylight, daytime and an idle camp
+RUN expedition_logic riverbank picks a riverbank event and charges 2 time only on decision
+PASS expedition_logic riverbank picks a riverbank event and charges 2 time only on decision
+RUN expedition_logic riverbank every riverbank event offers rod materials and bait
+PASS expedition_logic riverbank every riverbank event offers rod materials and bait
+RUN expedition_logic riverbank riverbank events never appear from camp forage or explore
+PASS expedition_logic riverbank riverbank events never appear from camp forage or explore
+RUN expedition_logic riverbank the last trip of the day leads straight into the night
+PASS expedition_logic riverbank the last trip of the day leads straight into the night
+RUN expedition_logic basic rod reports what is missing
+PASS expedition_logic basic rod reports what is missing
+RUN expedition_logic basic rod costs 2 wood, 3 fiber and 1 time, and is crafted only once
+PASS expedition_logic basic rod costs 2 wood, 3 fiber and 1 time, and is crafted only once
+RUN expedition_logic basic rod riverbank supplies are enough for a rod on day one
+PASS expedition_logic basic rod riverbank supplies are enough for a rod on day one
+RUN expedition_logic fishing trip charges 2 time on departure and opens a session
+PASS expedition_logic fishing trip charges 2 time on departure and opens a session
+RUN expedition_logic fishing trip one cast per trip, each cast uses one bait
+PASS expedition_logic fishing trip one cast per trip, each cast uses one bait
+RUN expedition_logic fishing trip a perfect catch brings 2 fish, a good catch 1
+PASS expedition_logic fishing trip a perfect catch brings 2 fish, a good catch 1
+RUN expedition_logic fishing trip the rod is reused across trips
+PASS expedition_logic fishing trip the rod is reused across trips
+RUN expedition_logic fishing trip returning before the cast keeps the bait
+PASS expedition_logic fishing trip returning before the cast keeps the bait
+RUN expedition_logic fishing trip abandoning or missing after the cast loses the bait
+PASS expedition_logic fishing trip abandoning or missing after the cast loses the bait
+RUN expedition_logic fishing trip a trip that ends the day continues into the night
+PASS expedition_logic fishing trip a trip that ends the day continues into the night
+RUN expedition_logic fishing trip running out of supplies on the trail ends the run
+PASS expedition_logic fishing trip running out of supplies on the trail ends the run
+RUN expedition_logic fishing trip restart clears an unfinished session
+PASS expedition_logic fishing trip restart clears an unfinished session
+RUN expedition_logic eating fish restores 25 food and uses no daylight
+PASS expedition_logic eating fish restores 25 food and uses no daylight
+RUN expedition_logic eating fish is unavailable when full, out of fish or busy
+PASS expedition_logic eating fish is unavailable when full, out of fish or busy
+RUN expedition_logic seeded play with map travel and fishing stays consistent
+PASS expedition_logic seeded play with map travel and fishing stays consistent
+RUN expedition_logic (tearDownAll)
+PASS expedition_logic (tearDownAll)
+RUN fishing time does not pass before the cast and only one cast is allowed
+PASS fishing time does not pass before the cast and only one cast is allowed
+RUN fishing hooking before the bite does nothing; the bite follows the delay
+PASS fishing hooking before the bite does nothing; the bite follows the delay
+RUN fishing bite delay always stays within 1.4 to 2.8 seconds
+PASS fishing bite delay always stays within 1.4 to 2.8 seconds
+RUN fishing missing the bite window lets the fish escape
+PASS fishing missing the bite window lets the fish escape
+RUN fishing a fast hook and steady tracking land a perfect catch
+PASS fishing a fast hook and steady tracking land a perfect catch
+RUN fishing a slow hook still catches, but only a good fish
+PASS fishing a slow hook still catches, but only a good fish
+RUN fishing never reeling lets the fish escape
+PASS fishing never reeling lets the fish escape
+RUN fishing invalid or paused updates do not advance the simulation
+PASS fishing invalid or paused updates do not advance the simulation
+RUN fishing one long update matches many short frames
+PASS fishing one long update matches many short frames
+RUN fishing abandoning ends the session once as a miss
+PASS fishing abandoning ends the session once as a miss
+RUN trip_logic (setUpAll)
+PASS trip_logic (setUpAll)
+RUN trip_logic the decision after a stop you may return or press on, never both
+PASS trip_logic the decision after a stop you may return or press on, never both
+RUN trip_logic the decision going deeper costs a step of daylight and supplies
+PASS trip_logic the decision going deeper costs a step of daylight and supplies
+RUN trip_logic the decision there is no going deeper without daylight
+PASS trip_logic the decision there is no going deeper without daylight
+RUN trip_logic the decision a trip that runs out the day heads home into the night
+PASS trip_logic the decision a trip that runs out the day heads home into the night
+RUN trip_logic the decision everything gathered is carried home and listed
+PASS trip_logic the decision everything gathered is carried home and listed
+RUN trip_logic danger deeper steps can meet an encounter first, and then the stop
+PASS trip_logic danger deeper steps can meet an encounter first, and then the stop
+RUN trip_logic danger no encounter ever happens on the first stop
+PASS trip_logic danger no encounter ever happens on the first stop
+RUN trip_logic danger the chance of trouble rises with every step and is capped
+PASS trip_logic danger the chance of trouble rises with every step and is capped
+RUN trip_logic a jaguar blocks the trail your gear decides which cards you have
+PASS trip_logic a jaguar blocks the trail your gear decides which cards you have
+RUN trip_logic a jaguar blocks the trail the torch scares it off and the trip goes on
+PASS trip_logic a jaguar blocks the trail the torch scares it off and the trip goes on
+RUN trip_logic a jaguar blocks the trail meat is spent to get past without a fight
+PASS trip_logic a jaguar blocks the trail meat is spent to get past without a fight
+RUN trip_logic a jaguar blocks the trail a won fight brings meat, a lost one costs blood and the pack
+PASS trip_logic a jaguar blocks the trail a won fight brings meat, a lost one costs blood and the pack
+RUN trip_logic a jaguar blocks the trail losing a fight drops everything gathered and ends the trip
+PASS trip_logic a jaguar blocks the trail losing a fight drops everything gathered and ends the trip
+RUN trip_logic a jaguar blocks the trail fleeing is always possible and costs the pack
+PASS trip_logic a jaguar blocks the trail fleeing is always possible and costs the pack
+RUN trip_logic a jaguar blocks the trail a bite is treated with a herb only while hurt
+PASS trip_logic a jaguar blocks the trail a bite is treated with a herb only while hurt
+RUN trip_logic a trip survives closing the app mid-decision, with the pack and depth intact
+PASS trip_logic a trip survives closing the app mid-decision, with the pack and depth intact
+RUN trip_logic a trip survives closing the app mid-encounter, with the danger still ahead and no time charged
+PASS trip_logic a trip survives closing the app mid-encounter, with the danger still ahead and no time charged
+RUN trip_logic a trip survives closing the app a damaged trip falls back to camp instead of getting stuck
+PASS trip_logic a trip survives closing the app a damaged trip falls back to camp instead of getting stuck
+RUN trip_logic the Plane Wreck needs the first camp upgrade and 3 daylight
+PASS trip_logic the Plane Wreck needs the first camp upgrade and 3 daylight
+RUN trip_logic deep riverbank stops can yield hardwood for camp upgrades
+PASS trip_logic deep riverbank stops can yield hardwood for camp upgrades
+RUN trip_logic raw meat can be cooked and eaten at camp
+PASS trip_logic raw meat can be cooked and eaten at camp
+RUN trip_logic (tearDownAll)
+PASS trip_logic (tearDownAll)
+RUN content_expansion new routes unlock at day two and camp tier one with distinct scenes
+PASS content_expansion new routes unlock at day two and camp tier one with distinct scenes
+RUN content_expansion bamboo_grove has distinct arrival and deeper stops; travel charged once
+PASS content_expansion bamboo_grove has distinct arrival and deeper stops; travel charged once
+RUN content_expansion mangrove_shallows has distinct arrival and deeper stops; travel charged once
+PASS content_expansion mangrove_shallows has distinct arrival and deeper stops; travel charged once
+RUN content_expansion crocodile_shallows / fish / success resolves once and reports actual result
+PASS content_expansion crocodile_shallows / fish / success resolves once and reports actual result
+RUN content_expansion crocodile_shallows / spear / success resolves once and reports actual result
+PASS content_expansion crocodile_shallows / spear / success resolves once and reports actual result
+RUN content_expansion crocodile_shallows / spear / failure resolves once and reports actual result
+PASS content_expansion crocodile_shallows / spear / failure resolves once and reports actual result
+RUN content_expansion crocodile_shallows / roots / success resolves once and reports actual result
+PASS content_expansion crocodile_shallows / roots / success resolves once and reports actual result
+RUN content_expansion crocodile_shallows / roots / failure resolves once and reports actual result
+PASS content_expansion crocodile_shallows / roots / failure resolves once and reports actual result
+RUN content_expansion crocodile_shallows / retreat / success resolves once and reports actual result
+PASS content_expansion crocodile_shallows / retreat / success resolves once and reports actual result
+RUN content_expansion crocodile_shallows restores its pending encounter and haul
+PASS content_expansion crocodile_shallows restores its pending encounter and haul
+RUN content_expansion hornet_nest / smoke / success resolves once and reports actual result
+PASS content_expansion hornet_nest / smoke / success resolves once and reports actual result
+RUN content_expansion hornet_nest / smoke / failure resolves once and reports actual result
+PASS content_expansion hornet_nest / smoke / failure resolves once and reports actual result
+RUN content_expansion hornet_nest / cover / success resolves once and reports actual result
+PASS content_expansion hornet_nest / cover / success resolves once and reports actual result
+RUN content_expansion hornet_nest / wait / success resolves once and reports actual result
+PASS content_expansion hornet_nest / wait / success resolves once and reports actual result
+RUN content_expansion hornet_nest / retreat / success resolves once and reports actual result
+PASS content_expansion hornet_nest / retreat / success resolves once and reports actual result
+RUN content_expansion hornet_nest restores its pending encounter and haul
+PASS content_expansion hornet_nest restores its pending encounter and haul
+RUN content_expansion monkey_raiders / ration / success resolves once and reports actual result
+PASS content_expansion monkey_raiders / ration / success resolves once and reports actual result
+RUN content_expansion monkey_raiders / guard / success resolves once and reports actual result
+PASS content_expansion monkey_raiders / guard / success resolves once and reports actual result
+RUN content_expansion monkey_raiders / guard / failure resolves once and reports actual result
+PASS content_expansion monkey_raiders / guard / failure resolves once and reports actual result
+RUN content_expansion monkey_raiders / recover / success resolves once and reports actual result
+PASS content_expansion monkey_raiders / recover / success resolves once and reports actual result
+RUN content_expansion monkey_raiders / recover / failure resolves once and reports actual result
+PASS content_expansion monkey_raiders / recover / failure resolves once and reports actual result
+RUN content_expansion monkey_raiders / leave / success resolves once and reports actual result
+PASS content_expansion monkey_raiders / leave / success resolves once and reports actual result
+RUN content_expansion monkey_raiders restores its pending encounter and haul
+PASS content_expansion monkey_raiders restores its pending encounter and haul
+RUN content_expansion spent gathered fiber is not lost again; camp supplies survive a stolen pack
+PASS content_expansion spent gathered fiber is not lost again; camp supplies survive a stolen pack
+RUN content_expansion fatal encounter still retains the result before run end
+PASS content_expansion fatal encounter still retains the result before run end
+RUN content_expansion 200 seeded runs exercise routes, events, save/restore and bounded transactions
+SIMULATION: 37502 transactions, 2288 restores, 28 event types across 200 runs
+PASS content_expansion 200 seeded runs exercise routes, events, save/restore and bounded transactions
+RUN illustrations every registered card illustration exists and has the same 3:2 aspect
+PASS illustrations every registered card illustration exists and has the same 3:2 aspect
+RUN illustrations single portrait card keeps its cap and image ratio at 320.0
+PASS illustrations single portrait card keeps its cap and image ratio at 320.0
+RUN illustrations single portrait card keeps its cap and image ratio at 390.0
+PASS illustrations single portrait card keeps its cap and image ratio at 390.0
+RUN illustrations single portrait card keeps its cap and image ratio at 768.0
+PASS illustrations single portrait card keeps its cap and image ratio at 768.0
+RUN illustrations standalone HUD art remains an icon, not a card background
+PASS illustrations standalone HUD art remains an icon, not a card background
+RUN widgets loads shipped content and presents the camp
+PASS widgets loads shipped content and presents the camp
+RUN widgets camp fits and actions remain reachable at Size(320.0, 568.0)
+PASS widgets camp fits and actions remain reachable at Size(320.0, 568.0)
+RUN widgets camp fits and actions remain reachable at Size(375.0, 667.0)
+PASS widgets camp fits and actions remain reachable at Size(375.0, 667.0)
+RUN widgets camp fits and actions remain reachable at Size(390.0, 844.0)
+PASS widgets camp fits and actions remain reachable at Size(390.0, 844.0)
+RUN widgets camp fits and actions remain reachable at Size(844.0, 390.0)
+PASS widgets camp fits and actions remain reachable at Size(844.0, 390.0)
+RUN widgets camp fits and actions remain reachable at Size(768.0, 1024.0)
+PASS widgets camp fits and actions remain reachable at Size(768.0, 1024.0)
+RUN widgets camp fits and actions remain reachable at Size(1440.0, 900.0)
+PASS widgets camp fits and actions remain reachable at Size(1440.0, 900.0)
+RUN widgets large text and reduced motion preserve readable controls
+PASS widgets large text and reduced motion preserve readable controls
+RUN widgets event selection and outcome return to camp without double spending
+PASS widgets event selection and outcome return to camp without double spending
+RUN widgets night event, sleep, dawn and restart work through the UI
+PASS widgets night event, sleep, dawn and restart work through the UI
+RUN widgets game over offers a complete fresh run
+PASS widgets game over offers a complete fresh run
+RUN camp_widgets craft a tool in the workshop and see it in the inventory
+PASS camp_widgets craft a tool in the workshop and see it in the inventory
+RUN camp_widgets tier-locked recipes explain what they need
+PASS camp_widgets tier-locked recipes explain what they need
+RUN camp_widgets building Basic Refuge changes the camp and the next goal
+PASS camp_widgets building Basic Refuge changes the camp and the next goal
+RUN camp_widgets herbs are brewed from the inventory
+PASS camp_widgets herbs are brewed from the inventory
+RUN camp_widgets tool choices show what they need and unlock with the tool
+PASS camp_widgets tool choices show what they need and unlock with the tool
+RUN camp_widgets upgraded camps get a moonlit night
+PASS camp_widgets upgraded camps get a moonlit night
+RUN camp_widgets starting a new run asks first
+PASS camp_widgets starting a new run asks first
+RUN camp_widgets the app autosaves and resumes a run mid-event
+PASS camp_widgets the app autosaves and resumes a run mid-event
+RUN camp_widgets a corrupt save falls back to a fresh run
+PASS camp_widgets a corrupt save falls back to a fresh run
+RUN camp_widgets workshop and camp fit at Size(320.0, 568.0), text x1.0
+PASS camp_widgets workshop and camp fit at Size(320.0, 568.0), text x1.0
+RUN camp_widgets workshop and camp fit at Size(844.0, 390.0), text x1.0
+PASS camp_widgets workshop and camp fit at Size(844.0, 390.0), text x1.0
+RUN camp_widgets workshop and camp fit at Size(375.0, 667.0), text x2.0
+PASS camp_widgets workshop and camp fit at Size(375.0, 667.0), text x2.0
+RUN card_widgets cards show actions and requirements without revealing their outcomes
+PASS card_widgets cards show actions and requirements without revealing their outcomes
+RUN card_widgets the healthy survivor is not offered the wound card
+PASS card_widgets the healthy survivor is not offered the wound card
+RUN card_widgets playing a stat-gated card resolves it through the scene
+PASS card_widgets playing a stat-gated card resolves it through the scene
+RUN card_widgets a locked card cannot be played
+PASS card_widgets a locked card cannot be played
+RUN card_widgets four cards fit and stay reachable at Size(320.0, 568.0), text x1.0
+PASS card_widgets four cards fit and stay reachable at Size(320.0, 568.0), text x1.0
+RUN card_widgets four cards fit and stay reachable at Size(390.0, 844.0), text x1.0
+PASS card_widgets four cards fit and stay reachable at Size(390.0, 844.0), text x1.0
+RUN card_widgets four cards fit and stay reachable at Size(844.0, 390.0), text x1.0
+PASS card_widgets four cards fit and stay reachable at Size(844.0, 390.0), text x1.0
+RUN card_widgets four cards fit and stay reachable at Size(768.0, 1024.0), text x1.0
+PASS card_widgets four cards fit and stay reachable at Size(768.0, 1024.0), text x1.0
+RUN card_widgets four cards fit and stay reachable at Size(375.0, 667.0), text x2.0
+PASS card_widgets four cards fit and stay reachable at Size(375.0, 667.0), text x2.0
+RUN expedition_widgets riverbank trip: map, event, outcome and back to camp
+PASS expedition_widgets riverbank trip: map, event, outcome and back to camp
+RUN expedition_widgets locked destinations explain why and cannot be travelled to
+PASS expedition_widgets locked destinations explain why and cannot be travelled to
+RUN expedition_widgets crafting the rod from the map shortcut unlocks the pond
+PASS expedition_widgets crafting the rod from the map shortcut unlocks the pond
+RUN expedition_widgets full fishing loop: cast, hook, reel, return and eat
+PASS expedition_widgets full fishing loop: cast, hook, reel, return and eat
+RUN expedition_widgets a late hook lets the fish escape and the bait is spent
+PASS expedition_widgets a late hook lets the fish escape and the bait is spent
+RUN expedition_widgets leaving before the cast keeps the bait
+PASS expedition_widgets leaving before the cast keeps the bait
+RUN expedition_widgets the leave dialog pauses the clock; staying resumes it
+PASS expedition_widgets the leave dialog pauses the clock; staying resumes it
+RUN expedition_widgets system back asks before leaving an active cast
+PASS expedition_widgets system back asks before leaving an active cast
+RUN expedition_widgets backgrounding the app pauses the fishing clock
+PASS expedition_widgets backgrounding the app pauses the fishing clock
+RUN expedition_widgets map, inventory and fishing fit at Size(320.0, 568.0), text x1.0
+PASS expedition_widgets map, inventory and fishing fit at Size(320.0, 568.0), text x1.0
+RUN expedition_widgets map, inventory and fishing fit at Size(390.0, 844.0), text x1.0
+PASS expedition_widgets map, inventory and fishing fit at Size(390.0, 844.0), text x1.0
+RUN expedition_widgets map, inventory and fishing fit at Size(844.0, 390.0), text x1.0
+PASS expedition_widgets map, inventory and fishing fit at Size(844.0, 390.0), text x1.0
+RUN expedition_widgets map, inventory and fishing fit at Size(375.0, 667.0), text x2.0
+PASS expedition_widgets map, inventory and fishing fit at Size(375.0, 667.0), text x2.0
+RUN trip_widgets the decision shows the pack, the danger and both cards
+PASS trip_widgets the decision shows the pack, the danger and both cards
+RUN trip_widgets going deeper leads to the next stop, returning ends the trip
+PASS trip_widgets going deeper leads to the next stop, returning ends the trip
+RUN trip_widgets an attack shows gear-based cards and locks the rest
+PASS trip_widgets an attack shows gear-based cards and locks the rest
+RUN trip_widgets fleeing drops the pack and brings you back to camp
+PASS trip_widgets fleeing drops the pack and brings you back to camp
+RUN trip_widgets decision and attack fit at Size(320.0, 568.0), text x1.0
+PASS trip_widgets decision and attack fit at Size(320.0, 568.0), text x1.0
+RUN trip_widgets decision and attack fit at Size(844.0, 390.0), text x1.0
+PASS trip_widgets decision and attack fit at Size(844.0, 390.0), text x1.0
+RUN trip_widgets decision and attack fit at Size(375.0, 667.0), text x2.0
+PASS trip_widgets decision and attack fit at Size(375.0, 667.0), text x2.0
+NATIVE TEST RESULTS: 179 passed, 0 failed, 0 skipped

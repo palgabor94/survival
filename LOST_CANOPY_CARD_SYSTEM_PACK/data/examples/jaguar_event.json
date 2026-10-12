@@ -1,0 +1,13 @@
+{
+  "id": "jaguar_encounter",
+  "location": "jungle_path",
+  "title": "Jaguar Encounter",
+  "description": "A jaguar blocks your path. Choose an action based on your gear.",
+  "scene": "references/screens/01_jaguar_encounter.png",
+  "choices": [
+    {"id":"use_torch","requires":{"item":"torch","count":1},"tag":"SAFE","cost":{"item":"torch","count":1}},
+    {"id":"use_spear","requires":{"item":"stone_spear","count":1},"tag":"RISKY"},
+    {"id":"throw_meat","requires":{"item":"raw_meat","count":1},"tag":"COSTS_ITEM","cost":{"item":"raw_meat","count":1}},
+    {"id":"retreat","tag":"LOSE_TIME","timeCost":2}
+  ]
+}

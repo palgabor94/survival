@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in imagegen",
+  "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-a87d1495-752d-4916-9943-a1c9f6bdc5cd.png",
+  "editTarget": "assets/art/hornet_encounter_isometric_v2.png",
+  "styleReference": "assets/art/jaguar_encounter_isometric.png",
+  "prompt": "assets/art/HORNET_ENCOUNTER_V3_PROMPT.md",
+  "file": "assets/art/hornet_encounter_isometric_v3.png",
+  "dimensions": [
+    941,
+    1672
+  ],
+  "sha256": "80368fa921657f8ed6ff866d5ee6d0b2c8ab381884d35a83b30020b2ca7c8814"
+}

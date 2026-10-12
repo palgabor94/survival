@@ -1,0 +1,1777 @@
+[
+  {
+    "id": "berry_patch",
+    "trigger": "forage",
+    "scene": "forage",
+    "title": "A flash of red",
+    "description": "Ripe berries grow at the edge of the clearing. A few unfamiliar fruits hide among the leaves.",
+    "choices": [
+      {
+        "id": "gather",
+        "label": "Pick the familiar berries",
+        "description": "A small, dependable meal.",
+        "effect": {
+          "stats": {
+            "food": 20
+          },
+          "resources": {
+            "fiber": 1
+          }
+        },
+        "result": "You eat the ripe berries and keep a handful of useful fibers."
+      },
+      {
+        "id": "risk",
+        "label": "Gather everything",
+        "description": "More food, if your instincts are right.",
+        "successChance": 0.7,
+        "effect": {
+          "stats": {
+            "food": 35
+          },
+          "resources": {
+            "fiber": 2
+          }
+        },
+        "result": "Your instincts were right. A generous meal awaits.",
+        "failureEffect": {
+          "stats": {
+            "food": 8,
+            "health": -16,
+            "sanity": -5
+          }
+        },
+        "failureResult": "The bitter fruit leaves you sick and shaken."
+      },
+      {
+        "id": "roots",
+        "label": "Dig roots and herbs",
+        "description": "Your knife reaches what hands cannot.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "effect": {
+          "stats": {
+            "food": 16
+          },
+          "resources": {
+            "herb": 2,
+            "fiber": 1
+          }
+        },
+        "result": "You cut starchy roots and bundle two healing herbs."
+      }
+    ]
+  },
+  {
+    "id": "riverbank",
+    "trigger": "forage",
+    "scene": "water",
+    "title": "Follow the water",
+    "description": "A shallow stream runs over smooth stones. You can collect water and boil it back at the campfire.",
+    "choices": [
+      {
+        "id": "water",
+        "label": "Collect and boil water",
+        "description": "Return to camp with a full flask.",
+        "effect": {
+          "stats": {
+            "water": 32
+          }
+        },
+        "result": "The fire does its work. Clean water has never tasted so good."
+      },
+      {
+        "id": "materials",
+        "label": "Search the riverbank",
+        "description": "Useful materials lie between the roots.",
+        "effect": {
+          "stats": {
+            "water": 10
+          },
+          "resources": {
+            "wood": 2,
+            "stone": 2
+          }
+        },
+        "result": "You bring back smooth stones, dry branches, and a little water."
+      },
+      {
+        "id": "reeds",
+        "label": "Cut riverside herbs",
+        "description": "Medicinal leaves grow among the reeds.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "effect": {
+          "stats": {
+            "water": 14
+          },
+          "resources": {
+            "herb": 1,
+            "fiber": 2
+          }
+        },
+        "result": "You drink from the stream and carry back fragrant herbs and reeds."
+      }
+    ]
+  },
+  {
+    "id": "fallen_branches",
+    "trigger": "forage",
+    "scene": "forage",
+    "title": "Gifts of the canopy",
+    "description": "Last night's wind scattered branches and coconuts across the trail. There is only time to carry so much.",
+    "choices": [
+      {
+        "id": "coconut",
+        "label": "Crack the coconuts",
+        "description": "Fresh water and a little food.",
+        "effect": {
+          "stats": {
+            "water": 18,
+            "food": 12
+          }
+        },
+        "result": "You split the shells on a rock and enjoy the fresh coconut."
+      },
+      {
+        "id": "wood",
+        "label": "Bundle the branches",
+        "description": "Keep the campfire burning tonight.",
+        "effect": {
+          "resources": {
+            "wood": 4,
+            "fiber": 2
+          }
+        },
+        "result": "A bundle of dry wood and long fibers makes the walk worthwhile."
+      },
+      {
+        "id": "chop",
+        "label": "Chop the fallen tree",
+        "description": "Split the trunk into solid firewood.",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {
+          "resources": {
+            "wood": 7,
+            "fiber": 1
+          }
+        },
+        "result": "The axe bites deep. You haul back a heavy load of wood."
+      }
+    ]
+  },
+  {
+    "id": "abandoned_bag",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "Someone was here",
+    "description": "A weathered backpack hangs from a broken branch. Its straps are tangled high above the trail.",
+    "choices": [
+      {
+        "id": "search",
+        "label": "Search the open pocket",
+        "description": "Take what you can reach safely.",
+        "effect": {
+          "stats": {
+            "food": 16,
+            "sanity": 5
+          },
+          "resources": {
+            "fiber": 2
+          }
+        },
+        "result": "A sealed ration and a length of cord. Someone else's loss is your lifeline.",
+        "icon": "search"
+      },
+      {
+        "id": "climb",
+        "label": "Climb for the whole bag",
+        "description": "A better haul, but the branch is fragile.",
+        "successChance": 0.65,
+        "effect": {
+          "stats": {
+            "food": 30,
+            "water": 24
+          },
+          "resources": {
+            "fiber": 3
+          }
+        },
+        "result": "You recover the bag: rations, water, and sturdy cord.",
+        "failureEffect": {
+          "stats": {
+            "health": -18,
+            "sanity": -8
+          }
+        },
+        "failureResult": "The branch snaps. You land hard, and the bag tumbles out of reach.",
+        "icon": "climb"
+      },
+      {
+        "id": "leave",
+        "label": "Leave it behind",
+        "description": "The walk still costs daylight and supplies.",
+        "effect": {
+          "stats": {
+            "sanity": 3
+          }
+        },
+        "result": "You mark the trail and return safely to camp.",
+        "icon": "retreat"
+      },
+      {
+        "id": "tend",
+        "label": "Tend your wounds",
+        "description": "Use a herb from the bag before moving on.",
+        "icon": "herb",
+        "requires": {
+          "herb": 1
+        },
+        "showWhenBelow": {
+          "health": 70
+        },
+        "effect": {
+          "stats": {
+            "health": 15
+          },
+          "resources": {
+            "herb": -1
+          }
+        },
+        "result": "You crush the herb into a poultice. The pain eases and the bag can wait."
+      }
+    ]
+  },
+  {
+    "id": "snake_trail",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "Snake on the trail",
+    "description": "A green coil moves beneath the leaves. Beyond it, a small spring glints in the sunlight.",
+    "choices": [
+      {
+        "id": "detour",
+        "label": "Take the long way around",
+        "description": "Reach the spring without disturbing it.",
+        "effect": {
+          "stats": {
+            "water": 22,
+            "sanity": -3
+          }
+        },
+        "result": "You give the snake plenty of room and fill your flask at the spring."
+      },
+      {
+        "id": "scare",
+        "label": "Throw a stone",
+        "description": "Spend a stone to drive it away.",
+        "requires": {
+          "stone": 1
+        },
+        "effect": {
+          "stats": {
+            "water": 28
+          },
+          "resources": {
+            "stone": -1,
+            "wood": 3
+          }
+        },
+        "result": "The snake slips into the brush. You gather wood beside the spring.",
+        "icon": "torch"
+      },
+      {
+        "id": "retreat",
+        "label": "Back away",
+        "description": "Return by the trail you know.",
+        "effect": {},
+        "result": "You return empty-handed, but unharmed.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "broken_bridge",
+    "trigger": "explore",
+    "scene": "explore",
+    "minDay": 2,
+    "title": "The broken bridge",
+    "description": "Old ropes span a narrow ravine. On the other side, an abandoned supply crate rests in the shade.",
+    "choices": [
+      {
+        "id": "cross",
+        "label": "Trust the ropes",
+        "description": "The crate could hold precious supplies.",
+        "successChance": 0.6,
+        "effect": {
+          "stats": {
+            "food": 32,
+            "water": 30
+          },
+          "resources": {
+            "wood": 3,
+            "fiber": 3
+          }
+        },
+        "result": "The bridge holds. You carry the crate's supplies back one careful step at a time.",
+        "failureEffect": {
+          "stats": {
+            "health": -22,
+            "sanity": -12
+          }
+        },
+        "failureResult": "A rope gives way. You scramble back, bruised and trembling.",
+        "icon": "cross"
+      },
+      {
+        "id": "salvage",
+        "label": "Salvage the loose ropes",
+        "description": "Stay on solid ground.",
+        "effect": {
+          "resources": {
+            "fiber": 4,
+            "wood": 2
+          }
+        },
+        "result": "You collect useful rope and boards without crossing the ravine.",
+        "icon": "search"
+      }
+    ]
+  },
+  {
+    "id": "low_water",
+    "trigger": "explore",
+    "scene": "water",
+    "maxWater": 35,
+    "title": "The last drop",
+    "description": "Your flask is nearly empty. Water trickles down a mossy rock face, but you cannot tell where it comes from.",
+    "choices": [
+      {
+        "id": "boil",
+        "label": "Bring water back to boil",
+        "description": "Use dry wood to make it safe.",
+        "requires": {
+          "wood": 1
+        },
+        "effect": {
+          "stats": {
+            "water": 45
+          },
+          "resources": {
+            "wood": -1
+          }
+        },
+        "result": "You return to the fire and boil enough water to refill your flask."
+      },
+      {
+        "id": "drink",
+        "label": "Drink from the rock",
+        "description": "Relief now, with a chance of sickness.",
+        "successChance": 0.7,
+        "effect": {
+          "stats": {
+            "water": 35
+          }
+        },
+        "result": "The water is cool and clear. You feel your strength returning.",
+        "failureEffect": {
+          "stats": {
+            "water": 20,
+            "health": -20
+          }
+        },
+        "failureResult": "The water eases your thirst, but soon your stomach cramps."
+      },
+      {
+        "id": "return",
+        "label": "Return to the clearing",
+        "description": "Try foraging near camp instead.",
+        "effect": {},
+        "result": "You turn back, saving your strength for another search.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "fire_dying",
+    "trigger": "night",
+    "scene": "fire",
+    "title": "The last embers",
+    "description": "The jungle grows louder as the fire fades. A little fuel could keep the darkness at bay.",
+    "choices": [
+      {
+        "id": "wood",
+        "label": "Feed the fire",
+        "description": "Trade two wood for a calmer night.",
+        "requires": {
+          "wood": 2
+        },
+        "effect": {
+          "stats": {
+            "sanity": 12
+          },
+          "resources": {
+            "wood": -2
+          }
+        },
+        "result": "Flames rise above the stones. For a moment, this clearing feels like home."
+      },
+      {
+        "id": "torch",
+        "label": "Rekindle with your torch",
+        "description": "Resin catches fast and burns bright.",
+        "requiresTools": [
+          "torch"
+        ],
+        "effect": {
+          "stats": {
+            "sanity": 10
+          }
+        },
+        "result": "The torch flares and the fire roars back to life without using your wood.",
+        "icon": "torch"
+      },
+      {
+        "id": "dark",
+        "label": "Save the wood",
+        "description": "Let the fire fade and shelter in the dark.",
+        "effect": {
+          "stats": {
+            "sanity": -10
+          }
+        },
+        "result": "You pull the bedroll close and listen to unfamiliar calls until dawn.",
+        "icon": "retreat"
+      },
+      {
+        "id": "breathe",
+        "label": "Steady your breathing",
+        "description": "Count slowly until the shaking stops.",
+        "icon": "calm",
+        "showWhenBelow": {
+          "sanity": 35
+        },
+        "effect": {
+          "stats": {
+            "sanity": 8
+          }
+        },
+        "result": "You count the embers instead of the shadows. The night feels a little smaller."
+      }
+    ]
+  },
+  {
+    "id": "strange_noise",
+    "trigger": "night",
+    "scene": "fire",
+    "title": "Something outside",
+    "description": "Leaves rustle just beyond the firelight. Something stops, listens, then moves again.",
+    "choices": [
+      {
+        "id": "quiet",
+        "label": "Stay perfectly still",
+        "description": "Wait for the visitor to pass.",
+        "effect": {
+          "stats": {
+            "sanity": -6
+          }
+        },
+        "result": "The footsteps fade. Whatever it was, it has moved on."
+      },
+      {
+        "id": "torch",
+        "label": "Hold up your torch",
+        "description": "Light pushes back whatever waits outside.",
+        "requiresTools": [
+          "torch"
+        ],
+        "effect": {
+          "stats": {
+            "sanity": 6
+          },
+          "resources": {
+            "wood": 1
+          }
+        },
+        "result": "Eyes glint and vanish. At the edge of the light you find a dropped branch.",
+        "icon": "torch"
+      },
+      {
+        "id": "check",
+        "label": "Look beyond the firelight",
+        "description": "Curiosity might settle your nerves.",
+        "successChance": 0.7,
+        "effect": {
+          "stats": {
+            "sanity": 8
+          },
+          "resources": {
+            "wood": 2
+          }
+        },
+        "result": "Only a small lizard. You laugh quietly and bring back a fallen branch.",
+        "failureEffect": {
+          "stats": {
+            "health": -10,
+            "sanity": -10
+          }
+        },
+        "failureResult": "A startled animal darts past. You stumble through thorns on your way back.",
+        "icon": "search"
+      },
+      {
+        "id": "hold",
+        "label": "Hold on tight",
+        "description": "Only a steady mind can stay still this long.",
+        "icon": "calm",
+        "requiresStats": {
+          "sanity": 30
+        },
+        "effect": {
+          "stats": {
+            "sanity": 5
+          }
+        },
+        "result": "You keep perfectly still until the sound moves on without you."
+      }
+    ]
+  },
+  {
+    "id": "storm_damage",
+    "trigger": "night",
+    "scene": "water",
+    "title": "Rain on the roof",
+    "description": "A sudden downpour pushes through the leaves of your shelter. Water begins to pool beside the bedroll.",
+    "choices": [
+      {
+        "id": "repair",
+        "label": "Tie down fresh leaves",
+        "description": "Use two fibers to keep the shelter dry.",
+        "requires": {
+          "fiber": 2
+        },
+        "effect": {
+          "stats": {
+            "sanity": 5,
+            "water": 12
+          },
+          "resources": {
+            "fiber": -2
+          }
+        },
+        "result": "The patched roof holds. You even collect a little clean rainwater."
+      },
+      {
+        "id": "wait",
+        "label": "Wait out the rain",
+        "description": "An uncomfortable night beneath the leaves.",
+        "effect": {
+          "stats": {
+            "health": -6,
+            "sanity": -8,
+            "water": 8
+          }
+        },
+        "result": "You save what rainwater you can, then curl up in the driest corner."
+      }
+    ]
+  },
+  {
+    "id": "river_supplies",
+    "trigger": "explore",
+    "locations": [
+      "riverbank"
+    ],
+    "scene": "water",
+    "title": "Along the riverbank",
+    "description": "Dry branches lie above the waterline. Beneath them, long vines and wriggling worms promise a useful haul.",
+    "choices": [
+      {
+        "id": "rod_materials",
+        "label": "Gather fishing supplies",
+        "description": "Enough materials for a Basic Rod, plus bait.",
+        "effect": {
+          "resources": {
+            "wood": 2,
+            "fiber": 3,
+            "bait": 2
+          }
+        },
+        "result": "You bundle branches and fibers, and tuck two worms into a leaf pouch."
+      },
+      {
+        "id": "water",
+        "label": "Collect and boil water",
+        "description": "Fill your flask and pick up a little bait.",
+        "effect": {
+          "stats": {
+            "water": 35
+          },
+          "resources": {
+            "bait": 1
+          }
+        },
+        "result": "You bring clean water and a fresh worm back to camp."
+      },
+      {
+        "id": "leave",
+        "label": "Return to camp",
+        "description": "The round trip still costs 2 daylight.",
+        "effect": {},
+        "result": "You retrace your steps to the clearing.",
+        "icon": "retreat"
+      }
+    ],
+    "maxDepth": 0
+  },
+  {
+    "id": "river_roots",
+    "trigger": "explore",
+    "locations": [
+      "riverbank"
+    ],
+    "scene": "water",
+    "title": "Beneath the roots",
+    "description": "A fallen tree exposes a tangle of vines beside the stream. Worms stir in the damp soil.",
+    "choices": [
+      {
+        "id": "supplies",
+        "label": "Collect branches, vines and bait",
+        "description": "Build your fishing supplies.",
+        "effect": {
+          "resources": {
+            "wood": 2,
+            "fiber": 3,
+            "bait": 3
+          }
+        },
+        "result": "You return with sturdy branches, flexible vines, and three worms."
+      },
+      {
+        "id": "refresh",
+        "label": "Gather coconuts and water",
+        "description": "A little food and water for the walk home.",
+        "effect": {
+          "stats": {
+            "food": 18,
+            "water": 22
+          },
+          "resources": {
+            "stone": 1
+          }
+        },
+        "result": "You eat a coconut and refill your flask, keeping the stone you used to crack the shell."
+      }
+    ],
+    "maxDepth": 0
+  },
+  {
+    "id": "jaguar_trail",
+    "trigger": "encounter",
+    "locations": [
+      "riverbank",
+      "plane_wreck"
+    ],
+    "minDepth": 1,
+    "scene": "explore",
+    "title": "Eyes in the grass",
+    "description": "A jaguar steps onto the trail and stops. It is watching your pack, and it is in no hurry. The next move is yours.",
+    "choices": [
+      {
+        "id": "torch",
+        "label": "Wave the torch",
+        "description": "Fire frightens it more than hunger does.",
+        "icon": "torch",
+        "requiresTools": [
+          "torch"
+        ],
+        "effect": {
+          "stats": {
+            "sanity": 4
+          }
+        },
+        "result": "The jaguar flinches from the flame and melts back into the leaves."
+      },
+      {
+        "id": "spear",
+        "label": "Hold your ground",
+        "description": "A spear keeps it at a distance. Maybe long enough.",
+        "icon": "spear",
+        "requiresTools": [
+          "stone_spear"
+        ],
+        "successChance": 0.7,
+        "effect": {
+          "stats": {
+            "sanity": 6
+          },
+          "resources": {
+            "raw_meat": 2
+          }
+        },
+        "result": "One clean thrust ends the standoff. You will not go hungry tonight.",
+        "failureEffect": {
+          "stats": {
+            "health": -24,
+            "sanity": -8
+          },
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "failureResult": "The jaguar is faster. You stumble away bleeding, and your pack is left behind."
+      },
+      {
+        "id": "meat",
+        "label": "Throw it meat",
+        "description": "A meal is easier than a fight.",
+        "icon": "food",
+        "requires": {
+          "raw_meat": 1
+        },
+        "effect": {
+          "resources": {
+            "raw_meat": -1
+          }
+        },
+        "result": "It drags the meat into the brush. You edge past, heart hammering."
+      },
+      {
+        "id": "flee",
+        "label": "Back away slowly",
+        "description": "Drop the pack if you must. It is only things.",
+        "icon": "retreat",
+        "effect": {
+          "stats": {
+            "sanity": -6
+          },
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "result": "You back away until the trail bends. The jungle keeps what you found."
+      }
+    ]
+  },
+  {
+    "id": "snake_thicket",
+    "background": "assets/art/snake_encounter_isometric_v2.png",
+    "trigger": "encounter",
+    "locations": [
+      "riverbank",
+      "plane_wreck"
+    ],
+    "minDepth": 1,
+    "scene": "explore",
+    "title": "Something in the leaves",
+    "description": "The thicket ahead moves in a way the wind does not explain. A snake, thick as your wrist, lies across the only path.",
+    "choices": [
+      {
+        "id": "knife",
+        "label": "Cut it clear",
+        "description": "A good blade and a steady hand.",
+        "icon": "search",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "effect": {
+          "stats": {
+            "sanity": 3
+          },
+          "resources": {
+            "herb": 1
+          }
+        },
+        "result": "You flip the snake aside with a branch and cut the vines in one stroke."
+      },
+      {
+        "id": "still",
+        "label": "Stand perfectly still",
+        "description": "Snakes strike what moves.",
+        "icon": "calm",
+        "successChance": 0.65,
+        "effect": {
+          "stats": {
+            "sanity": -2
+          }
+        },
+        "result": "It slides over your boot and is gone.",
+        "failureEffect": {
+          "stats": {
+            "health": -14,
+            "sanity": -6
+          }
+        },
+        "failureResult": "It strikes before you can breathe. The bite burns."
+      },
+      {
+        "id": "treat",
+        "label": "Treat the bite",
+        "description": "A herb poultice stops the worst of it.",
+        "icon": "herb",
+        "requires": {
+          "herb": 1
+        },
+        "showWhenBelow": {
+          "health": 60
+        },
+        "effect": {
+          "stats": {
+            "health": 15
+          },
+          "resources": {
+            "herb": -1
+          }
+        },
+        "result": "The poultice draws the heat out. You can walk again."
+      },
+      {
+        "id": "around",
+        "label": "Go around",
+        "description": "It costs nerves, not blood.",
+        "icon": "retreat",
+        "effect": {
+          "stats": {
+            "sanity": -3
+          }
+        },
+        "result": "You circle wide through the brush and rejoin the trail beyond it."
+      }
+    ]
+  },
+  {
+    "id": "boar_charge",
+    "background": "assets/art/boar_encounter_isometric_v2.png",
+    "trigger": "encounter",
+    "locations": [
+      "riverbank",
+      "plane_wreck"
+    ],
+    "minDepth": 1,
+    "scene": "explore",
+    "title": "Crash through the brush",
+    "description": "Branches snap. A wild boar bursts onto the trail, head down, and it has already decided about you.",
+    "choices": [
+      {
+        "id": "axe",
+        "label": "Swing the axe",
+        "description": "Heavy, slow, and it has one chance.",
+        "icon": "search",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "successChance": 0.65,
+        "effect": {
+          "stats": {
+            "sanity": 4
+          },
+          "resources": {
+            "raw_meat": 2
+          }
+        },
+        "result": "The axe lands true. It is a hard, ugly win, and a good meal.",
+        "failureEffect": {
+          "stats": {
+            "health": -20,
+            "sanity": -6
+          }
+        },
+        "failureResult": "It hits you low and you go down. By the time you stand, it is gone."
+      },
+      {
+        "id": "climb",
+        "label": "Scramble up a branch",
+        "description": "Boars cannot climb. Branches break.",
+        "icon": "climb",
+        "successChance": 0.6,
+        "effect": {
+          "stats": {
+            "sanity": -3
+          }
+        },
+        "result": "It snorts below, loses interest, and trots away.",
+        "failureEffect": {
+          "stats": {
+            "health": -12,
+            "sanity": -4
+          },
+          "dropLoot": true
+        },
+        "failureResult": "The branch gives. You land hard, and your pack tumbles into the mud and is gone."
+      },
+      {
+        "id": "fish",
+        "label": "Toss it a fish",
+        "description": "A distraction you can afford.",
+        "icon": "food",
+        "requires": {
+          "small_fish": 1
+        },
+        "effect": {
+          "resources": {
+            "small_fish": -1
+          }
+        },
+        "result": "It stops to wrestle with the fish. You are already walking."
+      },
+      {
+        "id": "flee",
+        "label": "Run for it",
+        "description": "Leave the pack and keep your legs.",
+        "icon": "retreat",
+        "effect": {
+          "stats": {
+            "sanity": -5
+          },
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "result": "You run until the sound behind you fades. The pack is somewhere back there."
+      }
+    ]
+  },
+  {
+    "id": "hardwood_grove",
+    "trigger": "explore",
+    "locations": [
+      "riverbank"
+    ],
+    "minDepth": 1,
+    "scene": "explore",
+    "title": "A grove of dark trunks",
+    "description": "Beyond the river the trees change. The wood here is dense and almost black, nothing like the soft branches near camp.",
+    "choices": [
+      {
+        "id": "chop",
+        "label": "Chop hardwood",
+        "description": "Only a real axe will bite.",
+        "icon": "wood",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {
+          "resources": {
+            "hardwood": 3,
+            "wood": 2
+          }
+        },
+        "result": "The axe rings. You split three solid lengths of hardwood and take a little more."
+      },
+      {
+        "id": "bark",
+        "label": "Pry loose bark",
+        "description": "A single hard branch and some cordage.",
+        "icon": "wood",
+        "effect": {
+          "resources": {
+            "hardwood": 1,
+            "fiber": 2
+          }
+        },
+        "result": "You pry off bark and a single hard branch. It is something."
+      },
+      {
+        "id": "fallen",
+        "label": "Take what has fallen",
+        "description": "Soft wood and a few good stones.",
+        "icon": "wood",
+        "effect": {
+          "resources": {
+            "wood": 3,
+            "stone": 1
+          }
+        },
+        "result": "You gather dry wood and one good stone from the roots."
+      }
+    ]
+  },
+  {
+    "id": "herb_glade",
+    "trigger": "explore",
+    "locations": [
+      "riverbank"
+    ],
+    "minDepth": 1,
+    "scene": "forage",
+    "title": "A glade of pale flowers",
+    "description": "The air changes. Pale flowers cover a quiet glade, and the plants between them smell of bitter medicine.",
+    "choices": [
+      {
+        "id": "cut",
+        "label": "Cut herbs and roots",
+        "description": "A knife takes the whole plant.",
+        "icon": "herb",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "effect": {
+          "stats": {
+            "food": 8
+          },
+          "resources": {
+            "herb": 3
+          }
+        },
+        "result": "You cut a bundle of herbs and dig starchy roots."
+      },
+      {
+        "id": "pluck",
+        "label": "Pluck a few leaves",
+        "description": "Gentle hands, small reward.",
+        "icon": "herb",
+        "effect": {
+          "stats": {
+            "sanity": 4
+          },
+          "resources": {
+            "herb": 1
+          }
+        },
+        "result": "You pluck what you can reach without tearing the plant."
+      },
+      {
+        "id": "rest",
+        "label": "Rest in the quiet",
+        "description": "Nothing here wants anything from you.",
+        "icon": "calm",
+        "effect": {
+          "stats": {
+            "health": 10,
+            "sanity": 8
+          }
+        },
+        "result": "For a few minutes the jungle is only a place."
+      }
+    ]
+  },
+  {
+    "id": "hidden_pool",
+    "trigger": "explore",
+    "locations": [
+      "riverbank"
+    ],
+    "minDepth": 1,
+    "scene": "water",
+    "title": "A hidden pool",
+    "description": "The stream widens into a still green pool. Shapes move slowly under the surface.",
+    "choices": [
+      {
+        "id": "drink",
+        "label": "Drink deeply",
+        "description": "Cold, clean, and nobody else's.",
+        "icon": "water",
+        "effect": {
+          "stats": {
+            "water": 40
+          }
+        },
+        "result": "It tastes of stone and rain."
+      },
+      {
+        "id": "hand",
+        "label": "Catch fish by hand",
+        "description": "Slow hands and a lot of patience.",
+        "icon": "food",
+        "successChance": 0.5,
+        "effect": {
+          "stats": {
+            "food": 6
+          },
+          "resources": {
+            "small_fish": 2
+          }
+        },
+        "result": "Two slippery fish, both kept, one nearly lost.",
+        "failureEffect": {
+          "stats": {
+            "sanity": -4,
+            "water": 10
+          }
+        },
+        "failureResult": "Every fish is somewhere else. You drink instead."
+      },
+      {
+        "id": "stones",
+        "label": "Collect smooth stones",
+        "description": "Good for tools, and heavy.",
+        "icon": "stone",
+        "effect": {
+          "resources": {
+            "stone": 3
+          }
+        },
+        "result": "You wade the shallows and fill your hands with round stones."
+      }
+    ]
+  },
+  {
+    "id": "wreck_cockpit",
+    "trigger": "explore",
+    "locations": [
+      "plane_wreck"
+    ],
+    "maxDepth": 0,
+    "scene": "explore",
+    "title": "The broken cockpit",
+    "description": "The nose of the plane lies in the roots like a split fruit. Instruments hang from wires. Something here is still worth taking.",
+    "choices": [
+      {
+        "id": "pry",
+        "label": "Pry the dashboard",
+        "description": "A real axe makes quick work of it.",
+        "icon": "search",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {
+          "resources": {
+            "metal_scrap": 4
+          }
+        },
+        "result": "Panels give with a screech. You carry out more scrap than you expected."
+      },
+      {
+        "id": "search",
+        "label": "Search the cockpit",
+        "description": "Careful, with your hands.",
+        "icon": "search",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2
+          }
+        },
+        "result": "You work free two panels and some loose metal."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it",
+        "description": "Some places are better left alone.",
+        "icon": "retreat",
+        "effect": {
+          "stats": {
+            "sanity": 3
+          }
+        },
+        "result": "You walk back from the nose of the plane without looking at the seats."
+      }
+    ]
+  },
+  {
+    "id": "wreck_cargo",
+    "trigger": "explore",
+    "locations": [
+      "plane_wreck"
+    ],
+    "maxDepth": 0,
+    "scene": "explore",
+    "title": "The split cargo hold",
+    "description": "Crates lie in the dirt, split open. Rain has been at them for weeks.",
+    "choices": [
+      {
+        "id": "rummage",
+        "label": "Rummage the crates",
+        "description": "Metal, rope, and not much else.",
+        "icon": "search",
+        "effect": {
+          "resources": {
+            "metal_scrap": 1,
+            "fiber": 3
+          }
+        },
+        "result": "You find scrap, a coil of rope, and a lot of ruined paper."
+      },
+      {
+        "id": "seats",
+        "label": "Check the seats",
+        "description": "You may find something. You may find a name.",
+        "icon": "food",
+        "effect": {
+          "stats": {
+            "food": 18,
+            "sanity": -4
+          }
+        },
+        "result": "An unopened snack pack, and a name you try not to read."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it",
+        "description": "You have enough to carry.",
+        "icon": "retreat",
+        "effect": {},
+        "result": "You step out of the hold and into the light."
+      }
+    ]
+  },
+  {
+    "id": "wreck_tail",
+    "trigger": "explore",
+    "locations": [
+      "plane_wreck"
+    ],
+    "minDepth": 1,
+    "scene": "explore",
+    "title": "The tail section",
+    "description": "The tail stands almost whole, nose-down in the ferns. There is a lot of good metal here, and a lot of dark inside.",
+    "choices": [
+      {
+        "id": "unbolt",
+        "label": "Unbolt the panels",
+        "description": "Hard work, but it comes away clean.",
+        "icon": "search",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {
+          "resources": {
+            "metal_scrap": 4,
+            "hardwood": 1
+          }
+        },
+        "result": "You work the bolts loose and carry out a stack of panels."
+      },
+      {
+        "id": "crawl",
+        "label": "Crawl inside",
+        "description": "The best scrap is in the dark.",
+        "icon": "climb",
+        "successChance": 0.6,
+        "effect": {
+          "resources": {
+            "metal_scrap": 5
+          }
+        },
+        "result": "You squeeze through the dark and come out with more than you can carry.",
+        "failureEffect": {
+          "stats": {
+            "health": -16,
+            "sanity": -6
+          }
+        },
+        "failureResult": "Something gives. You scrape out bruised, with nothing to show."
+      },
+      {
+        "id": "strip",
+        "label": "Strip the wiring",
+        "description": "Quick and safe. Less to show for it.",
+        "icon": "search",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "fiber": 2
+          }
+        },
+        "result": "You peel back the cladding and pull out what you can reach."
+      }
+    ]
+  },
+  {
+    "id": "bamboo_shoots",
+    "trigger": "explore",
+    "locations": [
+      "bamboo_grove"
+    ],
+    "scene": "explore",
+    "title": "Between the green stems",
+    "description": "Young shoots push through fallen leaves. Dry bamboo canes lie nearby, but the thick stems need a sharp edge.",
+    "choices": [
+      {
+        "id": "cut",
+        "label": "Cut young shoots",
+        "description": "Cut young shoots.",
+        "effect": {
+          "stats": {
+            "food": 14
+          },
+          "resources": {
+            "wood": 3,
+            "fiber": 2
+          }
+        },
+        "result": "Your knife frees tender shoots and a bundle of straight canes.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "icon": "food"
+      },
+      {
+        "id": "gather",
+        "label": "Gather dry canes",
+        "description": "Gather dry canes.",
+        "effect": {
+          "resources": {
+            "wood": 2,
+            "fiber": 3
+          }
+        },
+        "result": "You bundle the dry canes and peel useful fibers from their bark.",
+        "icon": "wood"
+      },
+      {
+        "id": "leave",
+        "label": "Return to camp",
+        "description": "Return to camp.",
+        "effect": {
+          "endsExpedition": true
+        },
+        "result": "You retrace the path to camp before the grove grows darker.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "bamboo_tangle",
+    "trigger": "explore",
+    "locations": [
+      "bamboo_grove"
+    ],
+    "scene": "explore",
+    "title": "A wall of bamboo",
+    "description": "The trail narrows into an interwoven thicket. A fallen trunk blocks the way; small green leaves grow beneath it.",
+    "choices": [
+      {
+        "id": "split",
+        "label": "Split the canes",
+        "description": "Split the canes.",
+        "effect": {
+          "resources": {
+            "wood": 4,
+            "hardwood": 2
+          }
+        },
+        "result": "The axe opens the thicket. You collect solid wood from the fallen trunk.",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "icon": "wood"
+      },
+      {
+        "id": "peel",
+        "label": "Peel loose bark",
+        "description": "Peel loose bark.",
+        "effect": {
+          "resources": {
+            "fiber": 4,
+            "wood": 1
+          }
+        },
+        "result": "Long strips of bark pull free without disturbing the thicket.",
+        "icon": "fiber"
+      },
+      {
+        "id": "crawl",
+        "label": "Crawl beneath",
+        "description": "Crawl beneath.",
+        "effect": {
+          "resources": {
+            "herb": 2,
+            "bait": 1
+          }
+        },
+        "result": "You slip under the trunk and find useful herbs in the damp soil.",
+        "icon": "herb",
+        "successChance": 0.7,
+        "failureEffect": {
+          "stats": {
+            "health": -8,
+            "sanity": -3
+          }
+        },
+        "failureResult": "A hidden splinter catches your arm. You squeeze out with nothing new to carry."
+      }
+    ],
+    "minDepth": 1
+  },
+  {
+    "id": "mangrove_driftwood",
+    "trigger": "explore",
+    "locations": [
+      "mangrove_shallows"
+    ],
+    "scene": "explore",
+    "title": "What the tide left",
+    "description": "Branches and reeds have washed against a dry root. Small movements stir the mud beside the pile.",
+    "choices": [
+      {
+        "id": "wood",
+        "label": "Gather driftwood",
+        "description": "Gather driftwood.",
+        "effect": {
+          "resources": {
+            "wood": 3,
+            "fiber": 2
+          }
+        },
+        "result": "You collect weathered wood and tough reed fibers from the dry bank.",
+        "icon": "wood"
+      },
+      {
+        "id": "bait",
+        "label": "Search the mud",
+        "description": "Search the mud.",
+        "effect": {
+          "resources": {
+            "bait": 3,
+            "stone": 1
+          }
+        },
+        "result": "You scoop worms from the soft mud and pick up a smooth stone.",
+        "icon": "bait"
+      },
+      {
+        "id": "leave",
+        "label": "Return to camp",
+        "description": "Return to camp.",
+        "effect": {
+          "endsExpedition": true
+        },
+        "result": "You follow the dry roots back to camp with your pack intact.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "mangrove_root_pool",
+    "trigger": "explore",
+    "locations": [
+      "mangrove_shallows"
+    ],
+    "scene": "explore",
+    "title": "Water between the roots",
+    "description": "A shallow pool sits beneath a web of roots. Fish flicker in the shade while broad medicinal leaves grow along the bank.",
+    "choices": [
+      {
+        "id": "reeds",
+        "label": "Cut the reeds",
+        "description": "Cut the reeds.",
+        "effect": {
+          "resources": {
+            "herb": 2,
+            "fiber": 2
+          }
+        },
+        "result": "You cut a bundle of medicinal leaves and long reed fibers.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "icon": "herb"
+      },
+      {
+        "id": "fish",
+        "label": "Lure the fish",
+        "description": "Lure the fish.",
+        "effect": {
+          "resources": {
+            "bait": -1,
+            "small_fish": 2
+          }
+        },
+        "result": "The fish follow your bait into the shallows. You catch two before they scatter.",
+        "requires": {
+          "bait": 1
+        },
+        "icon": "bait",
+        "successChance": 0.75,
+        "failureEffect": {
+          "resources": {
+            "bait": -1
+          },
+          "stats": {
+            "health": -8,
+            "water": -5
+          }
+        },
+        "failureResult": "You slip between the roots. The bait drifts away while you scramble back onto the bank."
+      },
+      {
+        "id": "stones",
+        "label": "Search the bank",
+        "description": "Search the bank.",
+        "effect": {
+          "resources": {
+            "stone": 2,
+            "bait": 1
+          }
+        },
+        "result": "Smooth stones and a handful of worms fill the empty corner of your pack.",
+        "icon": "stone"
+      },
+      {
+        "id": "leave",
+        "label": "Return to camp",
+        "description": "Return to camp.",
+        "effect": {
+          "endsExpedition": true
+        },
+        "result": "You leave the still pool behind and make your way home.",
+        "icon": "retreat"
+      }
+    ],
+    "minDepth": 1
+  },
+  {
+    "id": "crocodile_shallows",
+    "trigger": "encounter",
+    "locations": [
+      "riverbank",
+      "mangrove_shallows"
+    ],
+    "scene": "explore",
+    "title": "A ripple without wind",
+    "description": "A long shape rises from the shallows. A crocodile slides toward the bank, closing the gap between you and the water.",
+    "choices": [
+      {
+        "id": "fish",
+        "label": "Throw a fish",
+        "description": "Throw a fish.",
+        "effect": {
+          "resources": {
+            "small_fish": -1
+          }
+        },
+        "result": "The crocodile turns toward the fish. You step back onto the dry trail.",
+        "requires": {
+          "small_fish": 1
+        },
+        "icon": "food"
+      },
+      {
+        "id": "spear",
+        "label": "Brace the spear",
+        "description": "Brace the spear.",
+        "effect": {
+          "stats": {
+            "sanity": 4
+          }
+        },
+        "result": "You keep the spear between yourself and the jaws until the crocodile retreats.",
+        "requiresTools": [
+          "stone_spear"
+        ],
+        "icon": "spear",
+        "successChance": 0.65,
+        "failureEffect": {
+          "stats": {
+            "health": -22,
+            "sanity": -8
+          },
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "failureResult": "The jaws snap past the spear. You flee toward camp, wounded, leaving the haul behind."
+      },
+      {
+        "id": "roots",
+        "label": "Climb the roots",
+        "description": "Climb the roots.",
+        "effect": {
+          "stats": {
+            "sanity": -2
+          }
+        },
+        "result": "The roots hold. You climb above the water and pass along the dry bank.",
+        "icon": "climb",
+        "successChance": 0.7,
+        "failureEffect": {
+          "stats": {
+            "health": -12,
+            "water": -5
+          },
+          "dropLoot": true
+        },
+        "failureResult": "A wet root gives way. You recover your footing, but your gathered supplies sink into the water."
+      },
+      {
+        "id": "retreat",
+        "label": "Back away",
+        "description": "Back away.",
+        "effect": {
+          "stats": {
+            "sanity": -4
+          },
+          "endsExpedition": true
+        },
+        "result": "You backtrack to camp, keeping your pack well away from the water.",
+        "icon": "retreat"
+      }
+    ],
+    "minDepth": 1,
+    "background": "assets/art/crocodile_encounter_isometric_v2.png"
+  },
+  {
+    "id": "hornet_nest",
+    "trigger": "encounter",
+    "locations": [
+      "bamboo_grove",
+      "riverbank",
+      "plane_wreck"
+    ],
+    "scene": "explore",
+    "title": "The buzzing branch",
+    "description": "A papery nest hangs across the trail. The branch trembles as a swarm pours out into the warm air.",
+    "choices": [
+      {
+        "id": "smoke",
+        "label": "Raise the torch",
+        "description": "Raise the torch.",
+        "effect": {
+          "stats": {
+            "sanity": 3
+          }
+        },
+        "result": "Smoke rolls across the nest. The swarm parts long enough for you to pass.",
+        "requiresTools": [
+          "torch"
+        ],
+        "icon": "torch",
+        "successChance": 0.9,
+        "failureEffect": {
+          "stats": {
+            "health": -6,
+            "sanity": -3
+          }
+        },
+        "failureResult": "A gust clears the smoke. A few stings send you ducking beneath the branch."
+      },
+      {
+        "id": "cover",
+        "label": "Weave a cover",
+        "description": "Weave a cover.",
+        "effect": {
+          "resources": {
+            "fiber": -2
+          },
+          "stats": {
+            "sanity": -1
+          }
+        },
+        "result": "You weave a loose cover from the fibers and pass with your face protected.",
+        "requires": {
+          "fiber": 2
+        },
+        "icon": "fiber"
+      },
+      {
+        "id": "wait",
+        "label": "Wait quietly",
+        "description": "Wait quietly.",
+        "effect": {
+          "stats": {
+            "water": -3,
+            "sanity": -4
+          }
+        },
+        "result": "You crouch beyond the nest until the swarm settles, then slip past.",
+        "icon": "calm"
+      },
+      {
+        "id": "retreat",
+        "label": "Turn back",
+        "description": "Turn back.",
+        "effect": {
+          "stats": {
+            "sanity": -2
+          },
+          "endsExpedition": true
+        },
+        "result": "You choose the open path back to camp rather than crossing beneath the nest.",
+        "icon": "retreat"
+      }
+    ],
+    "minDepth": 1,
+    "background": "assets/art/hornet_encounter_isometric_v3.png"
+  },
+  {
+    "id": "monkey_raiders",
+    "trigger": "encounter",
+    "locations": [
+      "bamboo_grove",
+      "mangrove_shallows",
+      "plane_wreck"
+    ],
+    "scene": "explore",
+    "title": "Small hands, quick feet",
+    "description": "Two monkeys dart onto the path. One grabs a loose pack strap while the other watches the opening.",
+    "choices": [
+      {
+        "id": "ration",
+        "label": "Share a ration",
+        "description": "Share a ration.",
+        "effect": {
+          "stats": {
+            "food": -8
+          }
+        },
+        "result": "The monkeys seize the offered food and let your pack go.",
+        "requiresStats": {
+          "food": 20
+        },
+        "icon": "food"
+      },
+      {
+        "id": "guard",
+        "label": "Guard the pack",
+        "description": "Guard the pack.",
+        "effect": {
+          "stats": {
+            "sanity": 5
+          }
+        },
+        "result": "You cut the snagged strap free and pull the pack safely against your chest.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "icon": "search",
+        "successChance": 0.8,
+        "failureEffect": {
+          "stats": {
+            "health": -6
+          },
+          "dropLoot": true
+        },
+        "failureResult": "A sharp bite makes you let go. The monkeys scatter with everything gathered on this trip."
+      },
+      {
+        "id": "recover",
+        "label": "Pull it free",
+        "description": "Pull it free.",
+        "effect": {
+          "stats": {
+            "sanity": 2
+          },
+          "resources": {
+            "fiber": 1
+          }
+        },
+        "result": "You wrestle the strap back and collect a length of vine torn loose in the scuffle.",
+        "icon": "search",
+        "successChance": 0.65,
+        "failureEffect": {
+          "stats": {
+            "sanity": -6
+          },
+          "dropLoot": true
+        },
+        "failureResult": "The strap slips out of your hands. Your haul disappears into the canopy."
+      },
+      {
+        "id": "leave",
+        "label": "Leave the haul",
+        "description": "Leave the haul.",
+        "effect": {
+          "stats": {
+            "sanity": -4
+          },
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "result": "You let the gathered supplies go and walk back to camp without another struggle.",
+        "icon": "retreat"
+      }
+    ],
+    "minDepth": 1,
+    "background": "assets/art/monkey_encounter_isometric_v2.png"
+  }
+]

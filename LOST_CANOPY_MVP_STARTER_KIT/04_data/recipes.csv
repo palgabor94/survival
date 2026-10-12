@@ -1,0 +1,16 @@
+id,name,requires,unlocks_or_effect
+stone_knife,Stone Knife,"wood:1|stone:1|fiber:1",Herb/root foraging
+stone_axe,Stone Axe,"wood:2|stone:1|fiber:2",Wood chopping
+improved_axe,Improved Axe,"wood:2|metal_scrap:2|fiber:2",Hardwood chance + higher wood yield
+stone_spear,Stone Spear,"wood:2|stone:1|fiber:3",Basic hunting
+hardened_spear,Hardened Spear,"wood:2|metal_scrap:2|fiber:2",Better hunting loot
+basic_rod,Basic Fishing Rod,"wood:2|fiber:3",Small fish
+reinforced_rod,Reinforced Fishing Rod,"wood:2|fiber:3|metal_scrap:1",Medium fish + rare chance
+torch,Torch,"wood:1|fiber:1",Night/event option
+water_filter,Water Filter,"fiber:3|stone:2|wood:1",Safer water
+leaf_bed,Leaf Bed,"fiber:5|wood:2",Better rest
+storage_crate,Storage Crate,"wood:5",More camp storage
+rain_collector,Rain Collector,"wood:4|fiber:4",Passive water in rain
+drying_rack,Drying Rack,"wood:4|fiber:2",Food preservation bonus
+workbench,Workbench,"wood:6|stone:2",Tier-2 crafting
+emergency_beacon,Emergency Beacon,"battery:1|wire:1|metal_scrap:4|radio_module:1|beacon_core:1",Final objective

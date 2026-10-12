@@ -1,0 +1,6 @@
+id,name,unlock,main_loot,minigame
+camp,Camp,start,craft/build/rest,
+riverbank,Riverbank,start,"water|wood|fiber|herb",chopping/foraging
+fishing_pond,Fishing Pond,day_2_or_basic_rod,"small_fish|medium_fish|rare_catch",fishing
+plane_wreck,Plane Wreck,camp_tier_1,"metal_scrap|wire|battery|radio_module",search events
+ancient_ruins,Ancient Ruins,camp_tier_2_and_machete,"beacon_core|rare_materials",ruins puzzle

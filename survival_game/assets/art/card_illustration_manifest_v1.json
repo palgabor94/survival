@@ -1,0 +1,168 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in imagegen",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "aspectRatio": "3:2",
+  "reused": [
+    "torch",
+    "stone_spear",
+    "firewood",
+    "small_fish",
+    "back"
+  ],
+  "generated": [
+    {
+      "id": "stone_axe",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7bf90f29-be40-412a-8826-df578c4f6c5c.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_stone_axe_scene_v1.png"
+    },
+    {
+      "id": "basic_rod",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b25eecb5-07d2-4543-a4ae-86e55f255c7f.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_basic_rod_scene_v1.png"
+    },
+    {
+      "id": "trail",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7537af36-8db5-4e56-a213-22e74ac7925e.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_trail_scene_v1.png"
+    },
+    {
+      "id": "stone_knife",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-41772bd8-8a11-43ad-84df-e4203913f11e.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_stone_knife_scene_v1.png"
+    },
+    {
+      "id": "herb",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-85953390-d36d-4581-9b4f-58c0697e0d61.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_herb_scene_v1.png"
+    },
+    {
+      "id": "forage",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-d6acd73e-a221-4569-b4bb-92c5d3f93056.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_forage_scene_v1.png"
+    },
+    {
+      "id": "bait",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-8a6a87fa-3167-425e-b83c-cf4f75eb4160.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_bait_scene_v1.png"
+    },
+    {
+      "id": "rain_collector",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7357e934-0a4d-4c5f-93f9-2e50b33764c8.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_rain_collector_scene_v1.png"
+    },
+    {
+      "id": "journal",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-dbbcb182-734b-4f24-a576-5c66a2c7ad22.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_journal_scene_v1.png"
+    },
+    {
+      "id": "water_filter",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-4a602674-0ea3-4229-ae27-435698a93b7c.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_water_filter_scene_v1.png"
+    },
+    {
+      "id": "raw_meat",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-adb18bc1-cb65-438e-8287-4ca4e0c97fb0.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_raw_meat_scene_v1.png"
+    },
+    {
+      "id": "drying_rack",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-519d5592-7529-4e07-bc64-c3e7ddacc42c.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_drying_rack_scene_v1.png"
+    },
+    {
+      "id": "health",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-400de325-8fc5-4445-8f37-3111ee1c693e.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_health_scene_v1.png"
+    },
+    {
+      "id": "water",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-2b076e3e-4d38-422e-88f4-d20519e69ea7.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_water_scene_v1.png"
+    },
+    {
+      "id": "sanity",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-4b162c44-c852-438a-8a45-b1b634131334.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_sanity_scene_v1.png"
+    },
+    {
+      "id": "stone",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-462ec18f-6a4f-47c3-8afb-47f95c6a9a3c.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_stone_scene_v1.png"
+    },
+    {
+      "id": "sun",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-6aed7a60-adef-4dd1-b9cb-9807501b996e.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_sun_scene_v1.png"
+    },
+    {
+      "id": "inventory",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b07211c7-3ad7-49fa-b5a3-cfe8cf843092.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_inventory_scene_v1.png"
+    },
+    {
+      "id": "food",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-fa95d75f-28a5-484e-affd-60dfab9c2feb.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_food_scene_v1.png"
+    },
+    {
+      "id": "fiber",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-9fc28d5d-3e9e-4eb2-a1d6-9834feb5e3bf.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_fiber_scene_v1.png"
+    },
+    {
+      "id": "shelter",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-ed5e6755-6e5e-4c54-b431-ca0c813992b8.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_shelter_scene_v1.png"
+    },
+    {
+      "id": "map",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-e10de0d4-7429-4552-bd3e-495b4e5dcf55.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_map_scene_v1.png"
+    },
+    {
+      "id": "moon",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-423bb648-8d14-4d7d-816b-f4c3cddc9ec5.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_moon_scene_v1.png"
+    },
+    {
+      "id": "metal_scrap",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7212f78c-556c-48ca-94fd-bb47d0058fb5.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_metal_scrap_scene_v1.png"
+    },
+    {
+      "id": "hardwood",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-cf4807d6-69f3-4e48-81f2-5af76077844a.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_hardwood_scene_v1.png"
+    },
+    {
+      "id": "camp_tier_1",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-859d4cf8-4e01-4f68-9fe0-aba3b207f129.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_camp_tier_1_scene_v1.png"
+    },
+    {
+      "id": "camp_tier_3",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7869ad81-4cdb-4b98-b04b-80498faecc75.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_camp_tier_3_scene_v1.png"
+    },
+    {
+      "id": "craft",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-17f771e0-ce62-4d58-a37b-8991121ba32c.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_craft_scene_v1.png"
+    },
+    {
+      "id": "leaf_bed",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-f9441d30-b85c-49d8-aab4-96f56564e551.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_leaf_bed_scene_v1.png"
+    },
+    {
+      "id": "camp_tier_2",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7e1c43e9-4721-4d82-9e84-bdb7cf2073f8.png",
+      "file": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/card_camp_tier_2_scene_v1.png"
+    }
+  ]
+}

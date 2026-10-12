@@ -1,0 +1,184 @@
+[
+  {
+    "id": "basic_rod",
+    "name": "Basic Rod",
+    "kind": "tool",
+    "description": "Wood and vine lashed into a simple fishing rod.",
+    "effect": "Opens the Fishing Pond. Reusable.",
+    "costs": {
+      "wood": 2,
+      "fiber": 3
+    },
+    "timeCost": 1
+  },
+  {
+    "id": "stone_knife",
+    "name": "Stone Knife",
+    "kind": "tool",
+    "description": "A sharp flake of stone bound to a wooden grip.",
+    "effect": "Cut herbs and roots while foraging.",
+    "costs": {
+      "wood": 1,
+      "stone": 1,
+      "fiber": 1
+    },
+    "timeCost": 1
+  },
+  {
+    "id": "stone_axe",
+    "name": "Stone Axe",
+    "kind": "tool",
+    "description": "A heavy stone head wedged into a split branch.",
+    "effect": "Chop fallen trees for extra wood.",
+    "costs": {
+      "wood": 2,
+      "stone": 1,
+      "fiber": 2
+    },
+    "timeCost": 1
+  },
+  {
+    "id": "stone_spear",
+    "name": "Stone Spear",
+    "kind": "tool",
+    "description": "A stone point lashed to a long, straight shaft.",
+    "effect": "Holds predators at a distance. Opens fights you can win.",
+    "costs": {
+      "wood": 2,
+      "stone": 1,
+      "fiber": 3
+    },
+    "timeCost": 1
+  },
+  {
+    "id": "torch",
+    "name": "Torch",
+    "kind": "tool",
+    "description": "Resin-soaked fiber wrapped around a stick.",
+    "effect": "New choices when the night turns dark.",
+    "costs": {
+      "wood": 1,
+      "fiber": 1
+    },
+    "timeCost": 1
+  },
+  {
+    "id": "leaf_bed",
+    "name": "Leaf Bed",
+    "kind": "camp_item",
+    "description": "Layers of broad leaves on a low wooden frame.",
+    "effect": "Sleep restores +6 health and +4 sanity.",
+    "costs": {
+      "wood": 2,
+      "fiber": 5
+    },
+    "timeCost": 1,
+    "bonuses": {
+      "sleepHealth": 6,
+      "sleepSanity": 4
+    }
+  },
+  {
+    "id": "water_filter",
+    "name": "Water Filter",
+    "kind": "camp_item",
+    "description": "Sand, charcoal and stone layered in a bark funnel.",
+    "effect": "+6 water whenever you collect water.",
+    "costs": {
+      "wood": 1,
+      "stone": 2,
+      "fiber": 3
+    },
+    "timeCost": 1,
+    "bonuses": {
+      "waterGain": 6
+    }
+  },
+  {
+    "id": "rain_collector",
+    "name": "Rain Collector",
+    "kind": "camp_item",
+    "description": "A broad leaf funnel draining into a hollow log.",
+    "effect": "+5 water every dawn, +12 more after rain.",
+    "costs": {
+      "wood": 4,
+      "fiber": 4
+    },
+    "timeCost": 1,
+    "minCampTier": 1,
+    "bonuses": {
+      "dawnWater": 5,
+      "rainWater": 12
+    }
+  },
+  {
+    "id": "drying_rack",
+    "name": "Drying Rack",
+    "kind": "camp_item",
+    "description": "Smoke and dry your catch above the fire.",
+    "effect": "Each fish eaten restores +10 more food.",
+    "costs": {
+      "wood": 4,
+      "fiber": 2
+    },
+    "timeCost": 1,
+    "minCampTier": 1,
+    "bonuses": {
+      "fishFood": 10
+    }
+  },
+  {
+    "id": "camp_tier_1",
+    "name": "Basic Refuge",
+    "kind": "camp_tier",
+    "tier": 1,
+    "description": "A sturdier shelter, storage crates and a simple workbench.",
+    "effect": "Sleep restores +4 health and +4 sanity. Unlocks the Rain Collector, the Drying Rack and the road to the Plane Wreck.",
+    "costs": {
+      "wood": 8,
+      "fiber": 6
+    },
+    "timeCost": 2,
+    "bonuses": {
+      "sleepHealth": 4,
+      "sleepSanity": 4
+    }
+  },
+  {
+    "id": "camp_tier_2",
+    "name": "Established Camp",
+    "kind": "camp_tier",
+    "tier": 2,
+    "description": "A raised platform, water barrel, drying rack and cooking station.",
+    "effect": "+6 water every dawn and better recovery. Opens the way to the Ancient Ruins.",
+    "costs": {
+      "wood": 12,
+      "hardwood": 4,
+      "fiber": 8
+    },
+    "timeCost": 2,
+    "bonuses": {
+      "dawnWater": 6,
+      "sleepHealth": 4,
+      "sleepSanity": 3
+    }
+  },
+  {
+    "id": "camp_tier_3",
+    "name": "Rescue Base",
+    "kind": "camp_tier",
+    "tier": 3,
+    "description": "An advanced workbench, a radio corner and a proper bed.",
+    "effect": "The best recovery in the jungle. Unlocks beacon assembly.",
+    "costs": {
+      "hardwood": 8,
+      "metal_scrap": 5,
+      "fiber": 8
+    },
+    "timeCost": 2,
+    "bonuses": {
+      "sleepHealth": 6,
+      "sleepSanity": 5
+    }
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {"id":"shelter_roof","ingredients":{"wood":6,"fiber":4},"effect":{"maxHealth":30},"tag":"COMFORT"},
+  {"id":"storage_crate","ingredients":{"wood":8,"rope":2},"effect":{"inventorySlots":12},"tag":"STORAGE"},
+  {"id":"leaf_bed","ingredients":{"wood":6,"fiber":8},"effect":{"maxHealth":30},"tag":"COMFORT"},
+  {"id":"rain_collector","ingredients":{"wood":6,"fiber":4,"rope":2},"effect":{"dailyWater":20},"tag":"WATER"},
+  {"id":"drying_rack","ingredients":{"wood":8,"rope":4},"effect":{"foodSpoilModifier":0.5},"tag":"FOOD"},
+  {"id":"workbench","ingredients":{"wood":10,"stone":4},"effect":{"unlockGearTier":2},"tag":"CRAFTING"}
+]

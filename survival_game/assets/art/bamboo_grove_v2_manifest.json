@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in imagegen",
+  "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-cb5be47b-8719-4bc4-a5f3-3eabf85a4343.png",
+  "editTarget": "assets/art/bamboo_grove_isometric_v1.png",
+  "styleReference": "assets/art/jaguar_encounter_isometric.png",
+  "prompt": "assets/art/BAMBOO_GROVE_V2_PROMPT.md",
+  "file": "assets/art/bamboo_grove_isometric_v2.png",
+  "dimensions": [
+    941,
+    1672
+  ],
+  "sha256": "58e0bd576fbebf39a5f56cc05a66bd615e11ba735b4b537649be4cd71ca73992"
+}

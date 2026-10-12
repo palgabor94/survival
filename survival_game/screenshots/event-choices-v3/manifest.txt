@@ -1,0 +1,9 @@
+01-encounter-choices.png
+02-encounter-swiped.png
+03-encounter-result.png
+04-forage-choices.png
+05-forage-result.png
+06-night-choices.png
+07-night-result.png
+08-fatal-result.png
+09-game-over-after-result.png

@@ -1,0 +1,25 @@
+# Workspace and generated files
+.DS_Store
+**/.DS_Store
+.git-state/
+**/.dart_tool/
+**/build/
+**/coverage/
+**/__pycache__/
+**/*.pyc
+**/.idea/
+**/.github/modernize/
+.github/modernize/
+
+# Machine-specific configuration and credentials
+**/.env
+**/.env.*
+!**/.env.example
+**/local.properties
+**/key.properties
+**/*.jks
+**/*.keystore
+**/*.p12
+
+# Exported Git recovery bundles are stored beside the working copy.
+survival-state-*.bundle

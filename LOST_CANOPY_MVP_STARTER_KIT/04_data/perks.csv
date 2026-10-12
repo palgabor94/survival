@@ -1,0 +1,9 @@
+id,name,effect
+forager,Forager,+10% forage yield
+fisher,Fisher,+15% fishing safe zone
+medic,Medic,+25% healing
+scout,Scout,Reveal one location earlier
+craftsman,Craftsman,-10% common crafting cost
+survivor,Survivor,+10 starting Health
+woodsman,Woodsman,+10% chopping perfect zone
+calm_mind,Calm Mind,-15% sanity loss from events

@@ -1,0 +1,10 @@
+{
+  "id": "herb_patch",
+  "title": "Herb Patch",
+  "choices": [
+    {"id":"gather_carefully","tag":"SAFE","loot":{"berries":2,"herb":1}},
+    {"id":"use_knife","requires":{"item":"stone_knife","count":1},"tag":"LOW_RISK","loot":{"berries":4,"herb":3}},
+    {"id":"take_everything","tag":"RISKY","loot":{"berries":6,"herb":5},"risk":"damage_patch"},
+    {"id":"leave","tag":"LOSE_TIME"}
+  ]
+}

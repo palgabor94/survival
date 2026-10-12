@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in imagegen",
+  "reference": "assets/art/jaguar_encounter_isometric.png",
+  "referenceSha256": "ec5804b038145d28e239e6c2b62bd2fdee36a46aadd5ff146b188837347732e8",
+  "prompts": "assets/art/ENCOUNTER_STYLE_V2_PROMPTS.md",
+  "outputs": [
+    {
+      "id": "crocodile",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-03df978f-cfb9-4474-8d23-68e0ca300054.png",
+      "file": "assets/art/crocodile_encounter_isometric_v2.png",
+      "dimensions": [
+        940,
+        1672
+      ],
+      "sha256": "0caa21d3c5a9a13ef8ab2166b14ab99e455fc0c65ad25dde49aa239da18e23b3"
+    },
+    {
+      "id": "hornet",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-d99a6623-eb67-4c5f-a5aa-196f5fe2dd8f.png",
+      "file": "assets/art/hornet_encounter_isometric_v2.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "89b73b93fbd56c04e76622af99bfdd2059a70b4c441fedcf880978d1462c2223"
+    },
+    {
+      "id": "monkey",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-4c72305c-37e4-43ce-95e3-7866f5df43d4.png",
+      "file": "assets/art/monkey_encounter_isometric_v2.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "7b4aeb44b7e64d3d8098f78a2bf5a2d59f7d91b79680a3a109bb451a2787637c"
+    },
+    {
+      "id": "snake",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-07eda248-419e-4e7d-ab5b-646c0bd75b88.png",
+      "file": "assets/art/snake_encounter_isometric_v2.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "15d7190200cc2867838db9e96c5c52ad0b6564f2b5ec9bdbb54da7e7fe3834f1"
+    },
+    {
+      "id": "boar",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-ad7b838a-2726-4936-ab93-72724c32b08c.png",
+      "file": "assets/art/boar_encounter_isometric_v2.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "a3623e188b10f93aa66c16069698707b4da8ed0d6714bca82044977c55f7f90f"
+    }
+  ]
+}

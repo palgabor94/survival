@@ -1,0 +1,5 @@
+tier,name,requirements,visual_additions,gameplay_effect
+0,Crash Shelter,start,"leaf shelter|bedroll|campfire|lantern|crate",basic survival
+1,Basic Refuge,"wood:8|fiber:6","stronger shelter|storage|simple workbench",unlock plane wreck progression
+2,Established Camp,"wood:12|hardwood:4|fiber:8","platform|water barrel|drying rack|cooking station",better recovery + storage + ancient ruins progression
+3,Rescue Base,"hardwood:8|metal_scrap:5|fiber:8","advanced workbench|radio corner|proper bed|organized storage",unlock beacon assembly

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import '../game/game_engine.dart';
+import '../game/run_state.dart';
 import '../game/world_catalog.dart';
-import 'action_card.dart';
-import 'canopy_components.dart';
-import 'canopy_theme.dart';
+import 'card_art.dart';
+import 'parchment_components.dart';
 
 class InventoryDialog extends StatefulWidget {
   const InventoryDialog({super.key, required this.game});
@@ -17,11 +16,28 @@ class _InventoryDialogState extends State<InventoryDialog> {
   int tab = 0;
   String? selected;
   GameEngine get game => widget.game;
+  Future<void> details(String id) async {
+    setState(() => selected = id);
+    final command = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: const Color(0x8507130F),
+      builder: (context) => _ItemDetails(game: game, id: id),
+    );
+    if (!mounted || command == null) return;
+    if (command == 'workshop' ||
+        (command == 'consume:$id' && game.canConsume(id))) {
+      Navigator.pop(context, command);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final state = game.state;
-    final tools = game.recipes.crafts.where((r) => r.isOwnedBy(state)).toList();
+    final tools = game.recipes.crafts
+        .where((r) => r.isOwnedBy(game.state))
+        .toList();
     final items = tab == 2
         ? tools.map((r) => r.id).toList()
         : tab == 1
@@ -31,114 +47,276 @@ class _InventoryDialogState extends State<InventoryDialog> {
             'stone',
             'fiber',
             'bait',
-            for (final id in state.resources.keys)
+            for (final id in game.state.resources.keys)
               if (!GameEngine.consumables.contains(id)) id,
           }.toList();
-    final chosen = items.contains(selected)
-        ? selected
-        : (items.isEmpty ? null : items.first);
-    final consumable =
-        chosen != null && GameEngine.consumables.contains(chosen);
-    final foodId = consumable ? chosen : null;
-    final effect = foodId != null
-        ? (game.consumeEffect(foodId).summary.split(' · ')
-                ..removeWhere((part) => part.contains(foodId)))
-              .join(' · ')
-        : null;
-    final recipe = chosen == null ? null : game.recipes.find(chosen);
-    final large = MediaQuery.textScalerOf(context).scale(14) > 19;
-    return CanopyDialog(
-      title: 'Camp items',
-      art: 'inventory',
-      actions: [
-        if (foodId != null)
-          ActionCard(
-            key: ValueKey('consume-$chosen'),
-            title: chosen == 'herb' ? 'Brew tea' : 'Cook & eat',
-            art: chosen,
-            horizontal: true,
-            tag: 'USE 1',
-            description: effect,
-            onTap: game.canConsume(foodId)
-                ? () => Navigator.pop(context, 'consume:$chosen')
-                : null,
-          )
-        else
-          ActionCard(
-            key: const ValueKey('open-workshop'),
-            title: 'Workshop',
-            art: 'craft',
-            tone: CardTone.sand,
-            horizontal: true,
-            onTap: () => Navigator.pop(context, 'workshop'),
-          ),
-      ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Wrap(
-            spacing: 6,
+    return Dialog(
+      shape: const RoundedRectangleBorder(),
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 390,
+          maxHeight: MediaQuery.sizeOf(context).height * .85,
+        ),
+        child: PaperSurface(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              for (var i = 0; i < 3; i++)
-                OutlinedButton(
-                  key: ValueKey('inventory-tab-$i'),
-                  onPressed: () => setState(() {
-                    tab = i;
-                    selected = null;
-                  }),
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: tab == i ? CanopyColors.panelLight : null,
-                    side: BorderSide(
-                      color: tab == i ? CanopyColors.leaf : CanopyColors.border,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 10, 12),
+                child: Row(
+                  children: [
+                    const CardArt('inventory', size: 36),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ParchmentLabel(
+                            'CAMP INVENTORY',
+                            size: 11,
+                            color: ParchmentColors.muted,
+                          ),
+                          ParchmentLabel('ITEMS', size: 25),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    ['MATERIALS', 'FOOD', 'GEAR'][i],
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
+                    ParchmentClose(
+                      key: const ValueKey('close-dialog'),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
+                  ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    for (var i = 0; i < 3; i++) ...[
+                      if (i > 0) const SizedBox(width: 6),
+                      Expanded(
+                        child: parchmentButton(
+                          ['MATERIALS', 'FOOD', 'GEAR'][i],
+                          () => setState(() {
+                            tab = i;
+                            selected = null;
+                          }),
+                          secondary: tab != i,
+                          key: ValueKey('inventory-tab-$i'),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(12),
+                child: ParchmentLabel(
+                  'Tap an item to view details.',
+                  size: 12,
+                  color: ParchmentColors.muted,
+                  align: TextAlign.center,
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  key: const ValueKey('dialog-content-scroll'),
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                  child: items.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.all(24),
+                          child: ParchmentLabel(
+                            'Nothing crafted yet.',
+                            align: TextAlign.center,
+                            weight: FontWeight.w500,
+                          ),
+                        )
+                      : ParchmentCardGrid(
+                          children: [
+                            for (final id in items)
+                              ParchmentCard(
+                                key: ValueKey('inventory-$id'),
+                                title:
+                                    game.recipes.find(id)?.name ?? itemName(id),
+                                art: id,
+                                info: tab == 2
+                                    ? 'View equipment'
+                                    : 'View details',
+                                status: tab == 2
+                                    ? 'OWNED'
+                                    : '${game.state.resource(id)}',
+                                selected: selected == id,
+                                onTap: () => details(id),
+                              ),
+                          ],
+                        ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: parchmentButton(
+                  'OPEN WORKSHOP',
+                  () => Navigator.pop(context, 'workshop'),
+                  secondary: true,
+                  key: const ValueKey('open-workshop'),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 12),
-          if (items.isEmpty)
-            const Text('Nothing crafted yet.')
-          else
-            CardDeck(
-              columns: large
-                  ? 1
-                  : MediaQuery.sizeOf(context).width < 380
-                  ? 2
-                  : 3,
-              cards: [
-                for (final id in items)
-                  ActionCard(
-                    key: ValueKey('inventory-$id'),
-                    title: game.recipes.find(id)?.name ?? itemName(id),
-                    art: id,
-                    compact: true,
-                    horizontal: large,
-                    tone: tab == 2 ? CardTone.sand : CardTone.leaf,
-                    selected: id == chosen,
-                    tag: tab == 2 ? 'OWNED' : '${state.resource(id)}',
-                    onTap: () => setState(() => selected = id),
-                  ),
-              ],
-            ),
-          if (chosen != null) ...[
-            const SizedBox(height: 12),
-            CanopyTitle(
-              title: recipe?.name ?? itemName(chosen),
-              art: chosen,
-              subtitle: consumable
-                  ? '$effect · consumes 1 · no daylight'
-                  : recipe?.effect,
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
 }
+
+class _ItemDetails extends StatelessWidget {
+  const _ItemDetails({required this.game, required this.id});
+  final GameEngine game;
+  final String id;
+  @override
+  Widget build(BuildContext context) {
+    final recipe = game.recipes.find(id);
+    final consumable = GameEngine.consumables.contains(id);
+    final effect = consumable
+        ? (game.consumeEffect(id).summary.split(' · ')
+                ..removeWhere((part) => part.contains(id)))
+              .join(' · ')
+        : null;
+    final canUse = consumable && game.canConsume(id);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 16),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * .85,
+          maxWidth: 560,
+        ),
+        child: PaperSurface(
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
+                  child: Row(
+                    children: [
+                      CardArt(id, size: 48),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ParchmentLabel(
+                          (recipe?.name ?? itemName(id)).toUpperCase(),
+                          size: 19,
+                        ),
+                      ),
+                      ParchmentClose(onPressed: () => Navigator.pop(context)),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (recipe != null) ...[
+                          ParchmentLabel(
+                            recipe.description,
+                            size: 14,
+                            weight: FontWeight.w500,
+                          ),
+                          const SizedBox(height: 8),
+                          ParchmentLabel(
+                            recipe.effect,
+                            size: 13,
+                            color: ParchmentColors.muted,
+                            weight: FontWeight.w500,
+                          ),
+                        ],
+                        if (recipe != null &&
+                            RunState.toolDurability.containsKey(id))
+                          Padding(
+                            padding: const EdgeInsets.only(top: 14),
+                            child: ParchmentLabel(
+                              'Condition ${game.state.toolCondition(id)}/${RunState.toolDurability[id]}',
+                              size: 14,
+                            ),
+                          ),
+                        if (recipe == null) ...[
+                          ParchmentLabel(
+                            'IN STOCK · ${game.state.resource(id)}',
+                            size: 14,
+                          ),
+                          const SizedBox(height: 14),
+                          ParchmentLabel(
+                            consumable ? effect! : _description(id),
+                            size: 14,
+                            weight: FontWeight.w500,
+                          ),
+                        ],
+                        if (consumable) ...[
+                          const SizedBox(height: 14),
+                          const ParchmentLabel(
+                            'Consumes 1 · No daylight cost',
+                            size: 13,
+                            color: ParchmentColors.muted,
+                          ),
+                          if (!canUse)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: ParchmentLabel(
+                                game.state.resource(id) == 0
+                                    ? 'No ${itemName(id).toLowerCase()} available.'
+                                    : 'Cannot use this item right now.',
+                                size: 13,
+                                color: ParchmentColors.rust,
+                              ),
+                            ),
+                        ],
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: consumable
+                      ? parchmentButton(
+                          id == 'herb'
+                              ? 'BREW TEA · USE 1'
+                              : 'COOK & EAT · USE 1',
+                          canUse
+                              ? () => Navigator.pop(context, 'consume:$id')
+                              : null,
+                          key: ValueKey('consume-$id'),
+                        )
+                      : parchmentButton(
+                          'OPEN WORKSHOP',
+                          () => Navigator.pop(context, 'workshop'),
+                          secondary: true,
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+String _description(String id) => switch (id) {
+  'wood' => 'Used to build shelter, craft tools and fuel your fire.',
+  'stone' => 'Used for stone tools and camp construction.',
+  'fiber' => 'Plant fibers used for bindings, tools and shelter.',
+  'bait' => 'Use one bait to cast your fishing line.',
+  'hardwood' => 'Strong timber for advanced camp upgrades.',
+  'metal_scrap' => 'Salvaged metal used for camp upgrades and crafting.',
+  'battery' || 'wire' || 'metal_parts' || 'radio_module' || 'beacon_core' =>
+    'A rescue component needed to assemble the emergency beacon.',
+  _ => 'A crafting material. View recipes in the workshop to find its uses.',
+};

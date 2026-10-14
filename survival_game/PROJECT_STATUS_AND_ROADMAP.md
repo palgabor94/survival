@@ -70,3 +70,9 @@ Az első balanszlépés elkészült és újramért. Következő külön lépés 
 3. **Balansz és kiadás:** készülékes teljes sikeres/vesztes menet, process-kill és folytatás, mért játékidő, iOS/Android build és teljesítmény.
 
 Analitika és monetizáció külön termékdöntés után következik. A játék már nyerhető, de a starter kit teljes MVP-tartalma még nincs kész.
+
+## Pergamentes UI – első bekötött felületek (2026-10-14)
+
+A Craft és Camp upgrade képernyők, valamint az Items Materials / Food / Gear már az új pergamentes komponenseket használják. A közös 112×172-es kártyák 3:2 képaránnyal készülnek. Koppintás után részletpanel mutatja a költségeket, felszerelési feltételeket vagy a használatot; a megerősítés adja vissza a parancsot a tranzakciókat kezelő tábornak. Az X csak bezár. Nagy rendszerbetűnél minden kártya együtt nő; kis képernyőn kevesebb oszlop van.
+
+A működő felületekről 10 valódi Flutter screenshot készült: `screenshots/parchment-craft-v1/index.html`. 14 camp UI és 15 expedition UI teszt sikeres, köztük kis mobil, landscape és 2× szövegméret. A többi screen és popup pergamentes átépítése még hátravan; a 47 képes tervezési galéria továbbra is koncepciókat tartalmaz.

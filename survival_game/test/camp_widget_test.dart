@@ -82,7 +82,10 @@ void main() {
     await showCamp(tester, game, size: const Size(320, 568));
     await tapKey(tester, 'open-inventory');
     final close = find.byKey(const ValueKey('close-dialog'));
-    final header = findUiText('Camp items');
+    final header = find.descendant(
+      of: find.byType(InventoryDialog),
+      matching: findUiText('ITEMS'),
+    );
     final headerBounds = tester.getRect(header);
     expect(tester.getSize(close).shortestSide, greaterThanOrEqualTo(48));
     await tester.drag(
@@ -106,7 +109,7 @@ void main() {
     await showCamp(tester, game);
     await tapKey(tester, 'open-workshop');
     expect(find.byType(CraftScreen), findsOneWidget);
-    expect(findUiText('Stone Knife'), findsWidgets);
+    expect(find.text('STONE KNIFE'), findsWidgets);
 
     await tapKey(tester, 'recipe-stone_knife');
     await tapKey(tester, 'craft-stone_knife');
@@ -128,10 +131,10 @@ void main() {
     await showCamp(tester, game);
     await tapKey(tester, 'open-workshop');
     await tapKey(tester, 'recipe-drying_rack');
-    final craft = tester.widget<ActionCard>(
+    final craft = tester.widget<FilledButton>(
       find.byKey(const ValueKey('craft-drying_rack')),
     );
-    expect(craft.onTap, isNull);
+    expect(craft.onPressed, isNull);
     expect(findUiText('Needs Basic Refuge'), findsWidgets);
   });
 

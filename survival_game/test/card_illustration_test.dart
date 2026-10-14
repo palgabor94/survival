@@ -189,10 +189,12 @@ void main() {
               tester.getRect(surface(key)),
           ];
           for (final rect in bounds) {
-            expect(rect.width, lessThanOrEqualTo(160));
+            expect(rect.width, closeTo(112 * scale - 4, .01));
             expect(rect.height, closeTo(bounds[1].height, .01));
-            expect(rect.top, closeTo(bounds[1].top, .01));
-            expect(rect.bottom, closeTo(bounds[1].bottom, .01));
+            if (carousel) {
+              expect(rect.top, closeTo(bounds[1].top, .01));
+              expect(rect.bottom, closeTo(bounds[1].bottom, .01));
+            }
           }
           final imageSizes = [
             for (final key in ['short-card', 'tall-card', 'locked-card'])
@@ -285,7 +287,7 @@ void main() {
         final image = tester.getSize(
           find.descendant(of: card, matching: find.byType(AspectRatio)),
         );
-        expect(surface.width, 160);
+        expect(surface.width, 108);
         expect(image.aspectRatio, closeTo(1.5, .001));
         expect(tester.takeException(), isNull);
       },

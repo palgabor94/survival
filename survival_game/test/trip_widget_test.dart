@@ -97,7 +97,11 @@ void main() {
     expect(card('flee').onTap, isNotNull);
     expect(card('spear').onTap, isNull);
     expect(card('meat').onTap, isNull);
+    await tester.tap(find.byKey(const ValueKey('choice-spear')));
+    await tester.pumpAndSettle();
     expect(findUiText('Needs Stone Spear'), findsOneWidget);
+    await tester.tap(find.byTooltip('Close').last);
+    await tester.pumpAndSettle();
     expect(find.textContaining('lose your haul'), findsNothing);
 
     await tapKey(tester, 'choice-torch');

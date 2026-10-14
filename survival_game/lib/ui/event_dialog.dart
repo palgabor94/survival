@@ -6,6 +6,7 @@ import 'action_card.dart';
 import 'camp_widgets.dart';
 import 'canopy_components.dart';
 import 'canopy_theme.dart';
+import 'parchment_components.dart';
 
 class OutcomeDialog extends StatelessWidget {
   const OutcomeDialog({
@@ -15,8 +16,10 @@ class OutcomeDialog extends StatelessWidget {
     this.expeditionNext = false,
     this.runEnded = false,
     this.runRescued = false,
+    this.state,
   });
   final ActionReport report;
+  final RunState? state;
   final bool nightNext, expeditionNext;
   final bool runEnded;
   final bool runRescued;
@@ -69,37 +72,62 @@ class OutcomeDialog extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final change in report.changes.entries)
-              CampPanel(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ResourceIcon(change.key.toLowerCase(), size: 28),
-                    const SizedBox(width: 6),
-                    Flexible(
-                      child: Text(
-                        '${change.value > 0 ? '+' : ''}${change.value} ${itemName(change.key)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: change.value > 0
-                              ? CanopyColors.leaf
-                              : CanopyColors.food,
-                        ),
+        CampPanel(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              for (final change in report.changes.entries)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Row(
+                    children: [
+                      ResourceIcon(change.key.toLowerCase(), size: 26),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ParchmentLabel(_changeLabel(change), size: 12),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      ParchmentLabel(
+                        '${change.value > 0 ? '+' : ''}${change.value}',
+                        size: 13,
+                        color: change.value > 0
+                            ? CanopyColors.leaf
+                            : CanopyColors.food,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-          ],
+              if (state != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: Row(
+                    children: [
+                      const ResourceIcon('sun', size: 26),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: ParchmentLabel('Daylight remaining', size: 12),
+                      ),
+                      ParchmentLabel('${state!.timeLeft} / 6', size: 13),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ],
     ),
   );
+  String _changeLabel(MapEntry<String, int> change) {
+    final name = itemName(change.key);
+    if (state == null) return name;
+    final stat = SurvivalStat.values
+        .where((s) => s.label.toLowerCase() == change.key.toLowerCase())
+        .firstOrNull;
+    final after = stat == null
+        ? state!.resource(change.key)
+        : state!.value(stat);
+    return '$name · ${after - change.value} → $after';
+  }
 }
 
 class GameOverDialog extends StatelessWidget {

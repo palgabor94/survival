@@ -27,6 +27,9 @@ import 'beacon_screen.dart';
 import 'ruins_puzzle_screen.dart';
 import 'rescued_screen.dart';
 import 'gathering_screen.dart';
+import 'parchment_components.dart';
+import 'survival_guide_dialog.dart';
+import '../game/crafting.dart';
 
 class CampScreen extends StatefulWidget {
   const CampScreen({super.key, required this.engine, this.initialCampVariant});
@@ -76,6 +79,7 @@ class _CampScreenState extends State<CampScreen> {
               canPop: false,
               child: OutcomeDialog(
                 report: game.report!,
+                state: game.state,
                 runEnded: game.state.phase == RunPhase.gameOver,
                 runRescued: game.state.rescued,
                 nightNext:
@@ -509,29 +513,48 @@ class _CampScreenState extends State<CampScreen> {
       builder: (context) => CanopyDialog(
         title: 'Camp menu',
         art: 'journal',
+        actions: [
+          parchmentButton(
+            'START A NEW RUN',
+            () => Navigator.pop(context, 'new-run'),
+            key: const ValueKey('menu-new-run'),
+          ),
+        ],
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const MusicControls(),
-            const SoundControls(),
-            const HapticControls(),
-            for (final (id, title, art) in [
-              ('gather', 'Gather around camp', 'forage'),
-              ('journal', 'Survival journal', 'journal'),
-              ('guide', 'How to survive', 'map'),
-              ('beacon', 'Rescue signal', 'emergency_beacon'),
-              ('new-run', 'Start a new run', 'shelter'),
-            ])
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: ActionCard(
-                  key: ValueKey('menu-$id'),
-                  title: title,
-                  art: art,
-                  horizontal: true,
-                  tone: id == 'new-run' ? CardTone.sand : CardTone.river,
-                  onTap: () => Navigator.pop(context, id),
-                ),
+            const ParchmentLabel(
+              'Progress saves automatically.',
+              size: 13,
+              weight: FontWeight.w500,
+            ),
+            const SizedBox(height: 10),
+            CampPanel(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  for (final (id, title, art) in [
+                    ('gather', 'Gather around camp', 'forage'),
+                    ('journal', 'Survival journal', 'journal'),
+                    ('guide', 'How to survive', 'map'),
+                    ('beacon', 'Rescue signal', 'emergency_beacon'),
+                  ])
+                    ParchmentMenuRow(
+                      key: ValueKey('menu-$id'),
+                      title: title,
+                      art: art,
+                      onTap: () => Navigator.pop(context, id),
+                    ),
+                ],
               ),
+            ),
+            const SizedBox(height: 10),
+            const CampPanel(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [MusicControls(), SoundControls(), HapticControls()],
+              ),
+            ),
           ],
         ),
       ),
@@ -589,70 +612,96 @@ class _CampScreenState extends State<CampScreen> {
     _run(() => game.openGathering(kind));
   }
 
-  void _showJournal() => showDialog<void>(
-    context: context,
-    builder: (context) => CanopyDialog(
-      title: 'Survival journal',
-      art: 'journal',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (final entry in game.journal)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: CampPanel(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const CardArt('journal', size: 28),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(entry)),
-                  ],
-                ),
+  Future<void> _showJournal() async {
+    final next = game.recipes.campTiers
+        .where((r) => r.tier! > game.state.campTier)
+        .firstOrNull;
+    final command = await showDialog<String>(
+      context: context,
+      builder: (context) => CanopyDialog(
+        title: 'Survival journal',
+        art: 'journal',
+        subtitle:
+            'DAY ${game.state.day} · ${campTierName(game.recipes, game.state.campTier)}',
+        actions: [
+          parchmentButton(
+            'VIEW CAMP UPGRADES',
+            () => Navigator.pop(context, 'camp'),
+            key: const ValueKey('journal-camp'),
+          ),
+        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (next != null) ...[
+              ParchmentLabel('Build ${next.name}', size: 14),
+              const SizedBox(height: 5),
+              ParchmentLabel(
+                next.costs.entries
+                    .map(
+                      (e) =>
+                          '${itemName(e.key)} ${game.state.resource(e.key)}/${e.value}',
+                    )
+                    .join(' · '),
+                size: 12,
+                weight: FontWeight.w500,
+              ),
+              const SizedBox(height: 10),
+            ],
+            CampPanel(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  for (final r in game.recipes.campTiers)
+                    ParchmentMenuRow(
+                      title: r.name,
+                      art: 'shelter',
+                      onTap: null,
+                      trailing: r.isOwnedBy(game.state)
+                          ? 'DONE'
+                          : r.id == next?.id
+                          ? 'CURRENT'
+                          : 'LATER',
+                    ),
+                  ParchmentMenuRow(
+                    title: 'Recover rescue parts',
+                    art: 'emergency_beacon',
+                    onTap: null,
+                    trailing: '${game.state.foundComponents.length}/5',
+                  ),
+                  for (final entry in game.journal)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 7),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const CardArt('journal', size: 26),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ParchmentLabel(
+                              entry,
+                              size: 12,
+                              weight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
-        ],
-      ),
-    ),
-  );
-
-  void _showGuide() => showDialog<void>(
-    context: context,
-    builder: (context) => CanopyDialog(
-      title: 'Make daylight count',
-      art: 'journal',
-      child: const SingleChildScrollView(
-        child: Text(
-          'Each day gives you 6 time. Forage costs 1, explore 2, and rest 1.\n\n'
-          'Each time spent uses 4 water and 3 food. At zero water you lose 12 health per time; '
-          'at zero food you lose 6. Health at zero ends your run.\n\n'
-          'Forage for food, water, or firewood. Explore opens the map. A Riverbank trip costs 2 time, '
-          'and brings water, rod materials or bait. Rest restores 8 health and 12 sanity after its time cost.\n\n'
-          'Menu → Gather around camp opens wood chopping, plant gathering and hunting. '
-          'Start spends time once; pause freezes the attempt. Axes and spears wear with use; repair them in the workshop.\n\n'
-          'Open CRAFT to build tools and camp items. A Basic Rod costs 2 wood, 3 fiber and 1 time; '
-          'a Stone Knife cuts herbs, a Stone Axe chops extra wood and a Torch helps at night. '
-          'Upgrade your camp from the CAMP tab: every tier improves sleep and unlocks more. '
-          'Herbs brewed as tea restore 15 health and 6 sanity.\n\n'
-          'The Fishing Pond opens on day 2 or after you craft the rod. A fishing trip costs 2 time '
-          'including the return journey; each cast uses 1 bait. Hook on a bite, then hold to reel right '
-          'and release to drift left. Keep the marker in the green zone. A perfect catch gives 2 fish. '
-          'Cook and eat fish from the inventory for +25 food without spending daylight.\n\n'
-          'Some choices can fail. Low sanity makes risky decisions less reliable. '
-          'You discover the outcome after choosing.\n\n'
-          'At dusk, resolve a night event, then sleep. Sleep uses 10 water and 8 food, '
-          'costs 3 sanity, and restores 10 health if you are fed and hydrated. '
-          'Empty supplies also cause damage during sleep.\n\n'
-          'Event cards show what you can do and what equipment or supplies you need. '
-          'Recover four beacon parts at the Plane Wreck. Craft a Machete, upgrade to an Established Camp, '
-          'and bring at least 4 daylight to the Ancient Ruins. Match the three stone discs to the '
-          'carved sun, water and leaf pattern to recover the Beacon Core. Assemble the Emergency '
-          'Beacon at a Rescue Base, then send the signal. Prepare food, water and shelter before '
-          'you sleep: the next dawn starts three final storm decisions. Survive them to be rescued.\n\n'
-          'After choosing, a popup explains what happened and shows the actual total changes. '
-          'Time only passes when you decide. Your run is saved automatically.',
+          ],
         ),
       ),
-    ),
-  );
+    );
+    if (mounted && command == 'camp') await _showWorkshop(camp: true);
+  }
+
+  Future<void> _showGuide() async {
+    final command = await showDialog<String>(
+      context: context,
+      builder: (_) => const SurvivalGuideDialog(),
+    );
+    if (mounted && command == 'workshop') await _showWorkshop();
+  }
 }

@@ -40,7 +40,7 @@ class _FishingScreenState extends State<FishingScreen>
     _last = null;
     await showDialog<void>(
       context: context,
-      builder: (_) => const _FishingTutorial(),
+      builder: (_) => const FishingTutorial(),
     );
     if (!mounted) return;
     _confirming = false;
@@ -472,13 +472,13 @@ class _FishingSteps extends StatelessWidget {
 
 /// A separate simulation: learning never spends bait, daylight or awards loot.
 /// The practice bite waits for input, so the instructions can be read calmly.
-class _FishingTutorial extends StatefulWidget {
-  const _FishingTutorial();
+class FishingTutorial extends StatefulWidget {
+  const FishingTutorial({super.key});
   @override
-  State<_FishingTutorial> createState() => _FishingTutorialState();
+  State<FishingTutorial> createState() => FishingTutorialState();
 }
 
-class _FishingTutorialState extends State<_FishingTutorial>
+class FishingTutorialState extends State<FishingTutorial>
     with SingleTickerProviderStateMixin {
   FishingSession? _practice;
   late final Ticker _ticker;

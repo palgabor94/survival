@@ -1,0 +1,7 @@
+01-ready-instructions.png
+02-how-to-fish.png
+03-practice-bite.png
+04-practice-reeling.png
+05-real-bite.png
+06-real-reeling.png
+07-caught-with-touch.png

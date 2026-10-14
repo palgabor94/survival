@@ -1,3 +1,4 @@
+import 'expedition_widget_test.dart' show confirmCard;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/game/game_engine.dart';
@@ -48,7 +49,18 @@ void main() {
         find.byKey(const ValueKey('choice-tend')),
       );
       expect(tend.onTap, isNull);
+      await tester.ensureVisible(find.byKey(const ValueKey('choice-tend')));
+      await tester.tap(find.byKey(const ValueKey('choice-tend')));
+      await tester.pumpAndSettle();
       expect(find.textContaining('Needs 1 herb'), findsOneWidget);
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.byKey(const ValueKey('confirm-card-action')),
+            )
+            .onPressed,
+        isNull,
+      );
       expect(tester.takeException(), isNull);
     },
   );
@@ -70,6 +82,8 @@ void main() {
     await tester.ensureVisible(tend);
     await tester.pumpAndSettle();
     await tester.tap(tend);
+    await tester.pumpAndSettle();
+    await confirmCard(tester);
     await tester.pumpAndSettle();
     expect(find.byType(EventScene), findsNothing);
     expect(game.state.resource('herb'), 0);
@@ -107,6 +121,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await tester.tap(last);
+      await tester.pumpAndSettle();
+      await confirmCard(tester);
       await tester.pumpAndSettle();
       expect(find.byType(EventScene), findsNothing);
     });

@@ -4,6 +4,7 @@ import '../game/run_state.dart';
 import 'canopy_theme.dart';
 import 'action_card.dart';
 import 'card_art.dart';
+import 'parchment_components.dart';
 
 /// The original generated atlas is preserved; cells are selected at render time.
 class CanopyArt extends StatelessWidget {
@@ -77,32 +78,8 @@ class CampPanel extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: padding,
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: .96),
-      borderRadius: BorderRadius.circular(14),
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          color.withValues(alpha: .98),
-          CanopyColors.background.withValues(alpha: .98),
-        ],
-      ),
-      border: Border.all(
-        color: CanopyColors.border.withValues(alpha: .65),
-        width: 1.5,
-      ),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x55000000),
-          offset: Offset(0, 4),
-          blurRadius: 8,
-        ),
-      ],
-    ),
-    child: child,
+  Widget build(BuildContext context) => PaperSurface(
+    child: Padding(padding: padding, child: child),
   );
 }
 
@@ -125,65 +102,47 @@ class StatTile extends StatelessWidget {
   final int value;
 
   @override
-  Widget build(BuildContext context) {
-    final color = statColors[stat]!;
-    return Semantics(
-      label: stat.label,
-      value: '$value out of 100',
-      child: ExcludeSemantics(
-        child: Tooltip(
-          message: '${stat.label}: $value/100',
-          child: CampPanel(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    HudArt(stat.index, size: 18),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        '$value',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: value <= 20
-                              ? CanopyColors.health
-                              : CanopyColors.cream,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                FractionallySizedBox(
-                  widthFactor: .8,
-                  alignment: Alignment.centerRight,
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween(end: value / 100),
-                    duration: MediaQuery.disableAnimationsOf(context)
-                        ? Duration.zero
-                        : const Duration(milliseconds: 350),
-                    builder: (context, amount, _) => LinearProgressIndicator(
-                      value: amount,
-                      color: color,
-                      backgroundColor: Colors.black26,
-                      minHeight: 4,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                ),
-              ],
+  Widget build(BuildContext context) => Semantics(
+    label: stat.label,
+    value: '$value out of 100',
+    child: ExcludeSemantics(
+      child: Tooltip(
+        message: '${stat.label}: $value/100',
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/art/ui_stat_${stat.name}.png',
+              width: 43,
+              height: 43,
             ),
-          ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              color: const Color(0xDBEEE1BA),
+              child: Text(
+                '$value',
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: CanopyColors.cream,
+                ),
+              ),
+            ),
+            const SizedBox(height: 3),
+            SizedBox(
+              width: 32,
+              child: LinearProgressIndicator(
+                value: value / 100,
+                color: statColors[stat],
+                backgroundColor: CanopyColors.border,
+                minHeight: 3,
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }
 
 class ResourceStrip extends StatelessWidget {
@@ -191,38 +150,36 @@ class ResourceStrip extends StatelessWidget {
   final RunState state;
 
   @override
-  Widget build(BuildContext context) => Wrap(
-    alignment: WrapAlignment.end,
-    spacing: 4,
-    runSpacing: 4,
-    children: [
-      for (final entry in {'wood': 4, 'stone': 5, 'fiber': 6}.entries)
-        Tooltip(
-          message: '${entry.key}: ${state.resource(entry.key)}',
-          child: Semantics(
-            label: '${entry.key}: ${state.resource(entry.key)}',
-            child: ExcludeSemantics(
-              child: CampPanel(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    HudArt(entry.value, size: 20),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${state.resource(entry.key)}',
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                      ),
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerRight,
+    child: CampPanel(
+      padding: const EdgeInsets.all(4),
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        spacing: 10,
+        runSpacing: 4,
+        children: [
+          for (final id in ['wood', 'stone', 'fiber'])
+            Semantics(
+              label: '$id: ${state.resource(id)}',
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CardArt(id, size: 19),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${state.resource(id)}',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ),
-    ],
+        ],
+      ),
+    ),
   );
 }
 

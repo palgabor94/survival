@@ -1,0 +1,6 @@
+01-guide.png
+02-chopping-tutorial.png
+03-plants-tutorial.png
+04-hunting-tutorial.png
+05-ruins-tutorial.png
+06-fishing-tutorial.png

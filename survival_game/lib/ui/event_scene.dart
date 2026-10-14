@@ -157,6 +157,7 @@ class EventScene extends StatelessWidget {
     return Tooltip(
       message: [choice.label, ...requirements].join('. '),
       child: ActionCard(
+        confirmDetails: true,
         key: ValueKey('choice-${choice.id}'),
         title: _shortTitles[choice.label] ?? choice.label,
         compact: true,

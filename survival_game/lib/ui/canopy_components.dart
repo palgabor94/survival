@@ -7,6 +7,7 @@ import 'camp_widgets.dart';
 import 'canopy_theme.dart';
 import 'card_art.dart';
 import 'scene_artwork.dart';
+import 'parchment_components.dart';
 
 /// Keeps controls at the bottom, and scrolls naturally when text grows.
 /// Avoid a page-wide intrinsic-height calculation: card widths are capped,
@@ -199,7 +200,7 @@ class CanopyTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      CardArt(art, size: 44),
+      CardArt(art, size: 28),
       const SizedBox(width: 10),
       Expanded(
         child: Column(
@@ -209,7 +210,7 @@ class CanopyTitle extends StatelessWidget {
             Text(
               title.toUpperCase(),
               style: const TextStyle(
-                fontSize: 19,
+                fontSize: 17,
                 fontWeight: FontWeight.w900,
                 height: 1.15,
               ),
@@ -242,84 +243,108 @@ class CanopyDialog extends StatelessWidget {
   final Widget child;
   final List<Widget> actions;
   @override
-  Widget build(BuildContext context) => Dialog(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    // CampPanel supplies the single visible frame. The themed Dialog shape
-    // would otherwise draw a second border behind the scrollable content.
-    shape: const RoundedRectangleBorder(),
-    insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-    child: ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 480,
-        maxHeight:
-            MediaQuery.sizeOf(context).height -
-            MediaQuery.viewInsetsOf(context).bottom -
-            48,
-      ),
-      child: CampPanel(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: CanopyTitle(
-                    title: title,
-                    art: art,
-                    subtitle: subtitle,
+  Widget build(BuildContext context) {
+    final scrollActions = MediaQuery.sizeOf(context).height < 500;
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      // CampPanel supplies the single visible frame. The themed Dialog shape
+      // would otherwise draw a second border behind the scrollable content.
+      shape: const RoundedRectangleBorder(),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 24),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 368,
+          maxHeight:
+              MediaQuery.sizeOf(context).height -
+              MediaQuery.viewInsetsOf(context).bottom -
+              48,
+        ),
+        child: CampPanel(
+          padding: const EdgeInsets.all(7),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: CanopyTitle(
+                      title: title,
+                      art: art,
+                      subtitle: subtitle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const CanopyDialogCloseButton(),
+                ],
+              ),
+              const Divider(height: 14, color: CanopyColors.border),
+              Flexible(
+                child: SingleChildScrollView(
+                  key: const ValueKey('dialog-content-scroll'),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      child,
+                      if (scrollActions && actions.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        CardDeck(
+                          cards: [
+                            for (final action in actions)
+                              if (action is ActionCard)
+                                parchmentButton(
+                                  action.title.toUpperCase(),
+                                  action.onTap,
+                                  key: action.key,
+                                )
+                              else
+                                action,
+                          ],
+                          columns: 1,
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                const CanopyDialogCloseButton(),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Flexible(
-              child: SingleChildScrollView(
-                key: const ValueKey('dialog-content-scroll'),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    child,
-                    if (actions.isNotEmpty) ...[
-                      const SizedBox(height: 16),
-                      CardDeck(cards: actions, columns: 1),
-                    ],
-                  ],
-                ),
               ),
-            ),
-          ],
+              if (!scrollActions && actions.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                CardDeck(
+                  cards: [
+                    for (final action in actions)
+                      if (action is ActionCard)
+                        parchmentButton(
+                          action.title.toUpperCase(),
+                          action.onTap,
+                          key: action.key,
+                        )
+                      else
+                        action,
+                  ],
+                  columns: 1,
+                ),
+              ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class CanopyDialogCloseButton extends StatelessWidget {
   const CanopyDialogCloseButton({super.key});
 
   @override
-  Widget build(BuildContext context) => IconButton(
+  Widget build(BuildContext context) => ParchmentClose(
     key: const ValueKey('close-dialog'),
-    tooltip: 'Close',
     onPressed: () {
       HapticsScope.of(context)?.tap();
       Navigator.pop(context);
     },
-    style: IconButton.styleFrom(
-      minimumSize: const Size(48, 48),
-      backgroundColor: CanopyColors.panelLight,
-      foregroundColor: CanopyColors.gold,
-      side: const BorderSide(color: CanopyColors.border, width: 1.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    icon: const Icon(Icons.close_rounded, size: 26),
   );
 }
 

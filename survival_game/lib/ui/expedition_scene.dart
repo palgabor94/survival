@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/game_engine.dart';
+import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'action_card.dart';
 import 'camp_widgets.dart';
@@ -43,7 +44,7 @@ class ExpeditionScene extends StatelessWidget {
         sceneArt: 2,
         collapsedDescription: true,
         note: canGo
-            ? 'Next step: −1 time · −4 water · −3 food'
+            ? 'Tap a card to view costs and confirm.'
             : 'Not enough daylight to go deeper.',
       ),
       beforeCards: CampPanel(
@@ -89,6 +90,7 @@ class ExpeditionScene extends StatelessWidget {
       ),
       cards: [
         ActionCard(
+          confirmDetails: true,
           key: const ValueKey('expedition-return'),
           title: 'Return to camp',
           tone: CardTone.river,
@@ -105,7 +107,13 @@ class ExpeditionScene extends StatelessWidget {
           onTap: () => Navigator.pop(context, 'return'),
         ),
         ActionCard(
+          confirmDetails: true,
           key: const ValueKey('expedition-deeper'),
+          available: {
+            'time': state.timeLeft,
+            'water': state.value(SurvivalStat.water),
+            'food': state.value(SurvivalStat.food),
+          },
           title: 'Go deeper',
           tone: CardTone.danger,
           art: 'trail',

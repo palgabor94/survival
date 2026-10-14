@@ -1,6 +1,6 @@
 # Lost Canopy — állapot és további menetrend
 
-**Frissítve: 2026-10-13 · Megmentési játékfolyam, rétegzett Tier 0–3, szintenként 5 arányos karakterpóz, 13 egységes háttér és 3 új minijáték, hangok és haptic kész; 322 teszt sikeres, analyzer tiszta.**
+**Frissítve: 2026-10-14 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic és pergamentes felület. Az új, képen választható térkép be van kötve; 324 teszt sikeres.**
 
 Most már az új játéktól a sikeres befejezésig működik a lánc: táborfejlesztés → roncsalkatrészek → Machete → Ancient Ruins puzzle → Beacon Core → Rescue Base → Emergency Beacon → jeladás → végső vihar → RESCUED.
 
@@ -71,8 +71,10 @@ Az első balanszlépés elkészült és újramért. Következő külön lépés 
 
 Analitika és monetizáció külön termékdöntés után következik. A játék már nyerhető, de a starter kit teljes MVP-tartalma még nincs kész.
 
-## Pergamentes UI – első bekötött felületek (2026-10-14)
+## Pergamentes UI és képen választható térkép (2026-10-14)
 
-A Craft és Camp upgrade képernyők, valamint az Items Materials / Food / Gear már az új pergamentes komponenseket használják. A közös 112×172-es kártyák 3:2 képaránnyal készülnek. Koppintás után részletpanel mutatja a költségeket, felszerelési feltételeket vagy a használatot; a megerősítés adja vissza a parancsot a tranzakciókat kezelő tábornak. Az X csak bezár. Nagy rendszerbetűnél minden kártya együtt nő; kis képernyőn kevesebb oszlop van.
+A Craft, Camp upgrade, Items, Camp menu, Journal, Guide és annak minijáték-útmutatói, az események és expedíciók döntési részletei, az eredmény-popup, a Beacon, a romos puzzle és a megmentés képernyője az elfogadott pergamentes rendszert használja. A HUD kerek statikonokat és külön mennyiségjelzőket kapott. A döntési kártyák egységes 112 × 172 méretűek, 3:2 képpel; a hosszú költségek és feltételek a koppintásra nyíló részletpanelen jelennek meg. A kártya megérintése még nem költ időt vagy nyersanyagot, ehhez a megerősítés szükséges.
 
-A működő felületekről 10 valódi Flutter screenshot készült: `screenshots/parchment-craft-v1/index.html`. 14 camp UI és 15 expedition UI teszt sikeres, köztük kis mobil, landscape és 2× szövegméret. A többi screen és popup pergamentes átépítése még hátravan; a 47 képes tervezési galéria továbbra is koncepciókat tartalmaz.
+Az Explore térkép új, teljes képernyőn látható dzsungelképet használ. A hét helyszín saját tájrészletére vagy annak címkéjére lehet koppintani. A kiválasztott hely alul mutatja a pontos utazási költséget, a feloldási feltételt és az indulás gombját; a lezárt helyek is megtekinthetők. A horgásztó hiányzó bot esetén műhely-gyorsgombot ad. A helyszínválasztás nem indítja el az utat.
+
+A [tényleges Flutter screenshotok](screenshots/parchment-all-v1/README.md) külön mappákban fedik a fő játékfolyamot, mentést, minijátékokat, útmutatókat és a frissített világot. A korábbi [47 képes tervezési sorozat](design/parchment-ui-all-v1/manifest.json) koncepcióként marad meg; az új térkép terve a `design/map-on-scene-concept-v1/` mappában van. Az új térkép bekötése után a teljes tesztfutás **324/324**, ezen belül az új térkép 15/15 célzott tesztje sikeres.

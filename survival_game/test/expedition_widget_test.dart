@@ -30,6 +30,16 @@ Future<void> tapKey(WidgetTester tester, String key) async {
   await tester.pumpAndSettle();
   await tester.tap(target);
   await tester.pumpAndSettle();
+  await confirmCard(tester);
+}
+
+Future<void> confirmCard(WidgetTester tester) async {
+  final confirm = find.byKey(const ValueKey('confirm-card-action'));
+  if (confirm.evaluate().isNotEmpty &&
+      tester.widget<FilledButton>(confirm).onPressed != null) {
+    await tester.tap(confirm);
+    await tester.pumpAndSettle();
+  }
 }
 
 Future<void> openMapAndSelect(WidgetTester tester, String id) async {
@@ -89,7 +99,7 @@ void main() {
     final game = testGame();
     await showCamp(tester, game);
     await openMapAndSelect(tester, 'riverbank');
-    expect(findUiText('2 time · −8 Water · −6 Food'), findsOneWidget);
+    expect(findUiText('−8 Water'), findsOneWidget);
     await tapKey(tester, 'travel-destination');
 
     expect(find.byType(ExploreMapScreen), findsNothing);
@@ -99,6 +109,8 @@ void main() {
     );
     await tester.ensureVisible(choice);
     await tester.tap(choice);
+    await tester.pumpAndSettle();
+    await confirmCard(tester);
     await tester.pumpAndSettle();
     expect(game.state.timeLeft, 4);
     expect(game.state.resource('bait'), greaterThan(0));
@@ -134,7 +146,7 @@ void main() {
     await showCamp(tester, game);
     await openMapAndSelect(tester, 'plane_wreck');
     expect(find.textContaining('Requires Camp Tier 1'), findsWidgets);
-    expect(findUiText('3 time · −12 Water · −9 Food'), findsOneWidget);
+    expect(findUiText('−12 Water'), findsOneWidget);
     final travel = tester.widget<ActionCard>(
       find.byKey(const ValueKey('travel-destination')),
     );

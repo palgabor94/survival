@@ -1,3 +1,9 @@
+import 'package:survival_game/audio/music_controller.dart';
+import 'package:survival_game/audio/sounds_controller.dart';
+import 'package:survival_game/feedback/haptics_controller.dart';
+import '../../test/music_test.dart' show FakeMusicPlayer;
+import '../../test/sounds_test.dart' show FakeSoundPlayer;
+import '../../test/haptics_test.dart' show FakeHapticDevice;
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
@@ -76,43 +82,44 @@ Future<void> main() async {
   final itemsRefresh =
       Platform.environment['LOST_CANOPY_CAPTURE_ITEMS_REFRESH'] == '1';
   final directory = Directory(
-    itemsRefresh
-        ? 'screenshots/items-popup-v2'
-        : allCampLayers
-        ? 'screenshots/camp-layers-all-tiers-v1'
-        : campLayers
-        ? 'screenshots/camp-layers-tier0-v1'
-        : sceneWidth
-        ? 'screenshots/scene-width-v1'
-        : fishingTutorial
-        ? 'screenshots/fishing-tutorial-v1'
-        : minigames
-        ? 'screenshots/minigames-v1'
-        : starterVariants
-        ? 'screenshots/starter-camp-variants-v1'
-        : styleRefresh
-        ? 'screenshots/camp-style-refresh-v1'
-        : campVariants
-        ? 'screenshots/camp-variants-v2'
-        : rescue
-        ? 'screenshots/rescue-milestone-v1'
-        : encounterStyle
-        ? 'screenshots/encounter-style-v2'
-        : expansion
-        ? 'screenshots/expansion-v1'
-        : cardSet
-        ? 'screenshots/card-illustrations-v1'
-        : fiveCardExamples
-        ? 'screenshots/card-illustration-five-v1'
-        : cardExample
-        ? 'screenshots/card-illustration-example-v1'
-        : artReview
-        ? 'screenshots/card-art-v4'
-        : eventRevision
-        ? 'screenshots/event-choices-v3'
-        : sceneRevision
-        ? 'screenshots/scene-revision-v2'
-        : 'screenshots/unified-ui-v1',
+    Platform.environment['LOST_CANOPY_CAPTURE_OUTPUT'] ??
+        (itemsRefresh
+            ? 'screenshots/items-popup-v2'
+            : allCampLayers
+            ? 'screenshots/camp-layers-all-tiers-v1'
+            : campLayers
+            ? 'screenshots/camp-layers-tier0-v1'
+            : sceneWidth
+            ? 'screenshots/scene-width-v1'
+            : fishingTutorial
+            ? 'screenshots/fishing-tutorial-v1'
+            : minigames
+            ? 'screenshots/minigames-v1'
+            : starterVariants
+            ? 'screenshots/starter-camp-variants-v1'
+            : styleRefresh
+            ? 'screenshots/camp-style-refresh-v1'
+            : campVariants
+            ? 'screenshots/camp-variants-v2'
+            : rescue
+            ? 'screenshots/rescue-milestone-v1'
+            : encounterStyle
+            ? 'screenshots/encounter-style-v2'
+            : expansion
+            ? 'screenshots/expansion-v1'
+            : cardSet
+            ? 'screenshots/card-illustrations-v1'
+            : fiveCardExamples
+            ? 'screenshots/card-illustration-five-v1'
+            : cardExample
+            ? 'screenshots/card-illustration-example-v1'
+            : artReview
+            ? 'screenshots/card-art-v4'
+            : eventRevision
+            ? 'screenshots/event-choices-v3'
+            : sceneRevision
+            ? 'screenshots/scene-revision-v2'
+            : 'screenshots/unified-ui-v1'),
   )..createSync(recursive: true);
   final catalog = EventCatalog.fromJson(
     File('assets/data/events.json').readAsStringSync(),
@@ -167,6 +174,25 @@ Future<void> main() async {
       bool settle = true,
     }) async {
       await tester.pumpWidget(const SizedBox.shrink());
+      if (screen is LostCanopyApp && app) {
+        final music = MusicController(
+          player: FakeMusicPlayer(),
+          fadeStep: Duration.zero,
+        )..volume = .65;
+        final sounds = SoundsController(
+          ambience: FakeSoundPlayer(),
+          fire: FakeSoundPlayer(),
+          steps: FakeSoundPlayer(),
+          chopping: FakeSoundPlayer(),
+          fadeStep: Duration.zero,
+        )..volume = .8;
+        screen = LostCanopyApp(
+          engine: screen.engine,
+          music: music,
+          sounds: sounds,
+          haptics: HapticsController(device: FakeHapticDevice()),
+        );
+      }
       await tester.pumpWidget(
         RepaintBoundary(
           key: boundaryKey,
@@ -260,6 +286,12 @@ Future<void> main() async {
       await tester.ensureVisible(finder);
       await tester.tap(finder);
       await tester.pumpAndSettle();
+      final confirm = find.byKey(const ValueKey('confirm-card-action'));
+      if (confirm.evaluate().isNotEmpty &&
+          tester.widget<FilledButton>(confirm).onPressed != null) {
+        await tester.tap(confirm);
+        await tester.pumpAndSettle();
+      }
     }
 
     if (itemsRefresh) {
@@ -409,6 +441,36 @@ Future<void> main() async {
       File(
         '${directory.path}/manifest.txt',
       ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (Platform.environment['LOST_CANOPY_CAPTURE_GUIDE'] == '1') {
+      final engine = game();
+      final before = engine.state.toJson().toString();
+      await mount(LostCanopyApp(engine: engine), app: true);
+      await tap('camp-menu');
+      await tap('menu-guide');
+      await shot('01-guide');
+      var n = 2;
+      for (final kind in [
+        'chopping',
+        'plants',
+        'hunting',
+        'ruins',
+        'fishing',
+      ]) {
+        await tap('guide-$kind');
+        await shot('${n.toString().padLeft(2, '0')}-$kind-tutorial');
+        await tap('close-dialog');
+        n++;
+      }
+      if (engine.state.toJson().toString() != before) {
+        throw StateError('Tutorial browsing spent resources');
+      }
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      await tester.pumpWidget(const SizedBox.shrink());
       return;
     }
 
@@ -662,7 +724,7 @@ Future<void> main() async {
       await tap('recipe-machete');
       await shot('02-machete-workshop');
       await mount(ExploreMapScreen(game: survivor));
-      await tester.tap(find.text('Ancient Ruins'));
+      await tap('map-node-ancient_ruins');
       await tester.pumpAndSettle();
       await shot('03-ancient-ruins-map');
       survivor.travelTo('plane_wreck');
@@ -1448,13 +1510,18 @@ Future<void> main() async {
     await tap('close-dialog');
     await mount(ExploreMapScreen(game: camp));
     await shot('05-explore-map');
-    await tester.tap(find.text('Ancient Ruins'));
+    await tap('map-node-riverbank');
+    await tester.pumpAndSettle();
+    await shot('05b-explore-riverbank-selected');
+    await tap('map-node-ancient_ruins');
     await tester.pumpAndSettle();
     await shot('06-explore-locked');
     await mount(CraftScreen(game: camp));
     await shot('07-craft');
     await tap('recipe-rain_collector');
     await shot('08-craft-locked');
+    await tester.tap(find.byTooltip('Close').last);
+    await tester.pumpAndSettle();
     await tap('tab-camp');
     await shot('09-camp-upgrade');
     await tap('recipe-camp_tier_2');
@@ -1472,12 +1539,22 @@ Future<void> main() async {
     trip.continueFromReport();
     await mount(ExpeditionScene(game: trip));
     await shot('13-expedition');
+    await tester.tap(find.byKey(const ValueKey('expedition-deeper')));
+    await tester.pumpAndSettle();
+    await shot('13b-expedition-details');
+    await tester.tap(find.byTooltip('Close').last);
+    await tester.pumpAndSettle();
     final attack = game(roll: 0)..travelTo('riverbank');
     attack.choose(attack.visibleChoices.firstWhere(attack.canChoose).id);
     attack.continueFromReport();
     attack.goDeeper();
     await mount(EventScene(game: attack));
     await shot('14-encounter');
+    await tester.tap(find.byKey(const ValueKey('choice-torch')));
+    await tester.pumpAndSettle();
+    await shot('14b-encounter-details');
+    await tester.tap(find.byTooltip('Close').last);
+    await tester.pumpAndSettle();
     final night = game(
       state: camp.state.copyWith(phase: RunPhase.night, timeLeft: 0),
     );

@@ -1,3 +1,4 @@
+import '../ui/parchment_components.dart';
 import 'package:flutter/material.dart';
 import 'music_controller.dart';
 
@@ -62,45 +63,14 @@ class MusicControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final music = MusicScope.of(context);
-    if (music == null) return const SizedBox.shrink();
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SwitchListTile.adaptive(
-          key: const ValueKey('music-enabled'),
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Music'),
-          subtitle: Text(
-            music.available
-                ? 'Jungle soundtrack'
-                : 'Audio currently unavailable',
-          ),
-          secondary: Icon(
-            music.enabled ? Icons.music_note_rounded : Icons.music_off_rounded,
-          ),
-          value: music.enabled,
-          onChanged: music.setEnabled,
-        ),
-        Row(
-          children: [
-            const Icon(Icons.volume_down_rounded),
-            Expanded(
-              child: Slider(
-                key: const ValueKey('music-volume'),
-                label: '${(music.volume * 100).round()}%',
-                value: music.volume,
-                divisions: 20,
-                onChanged: music.enabled ? music.setVolume : null,
-              ),
-            ),
-            SizedBox(
-              width: 42,
-              child: Text('${(music.volume * 100).round()}%'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-      ],
+    return ParchmentSetting(
+      title: 'Music',
+      enabled: music?.enabled ?? false,
+      onEnabled: music?.setEnabled,
+      switchKey: const ValueKey('music-enabled'),
+      value: music?.volume ?? .35,
+      onVolume: music?.setVolume,
+      sliderKey: const ValueKey('music-volume'),
     );
   }
 }

@@ -1,9 +1,10 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../feedback/haptics_scope.dart';
-
 import 'canopy_theme.dart';
 import 'card_art.dart';
 import 'card_illustration.dart';
+import 'parchment_components.dart';
 
 enum CardTone { leaf, sand, river, danger }
 
@@ -14,11 +15,9 @@ class CardLine {
   final IconData? icon;
 }
 
-/// One shared silhouette for actions, recipes, upgrades and popup choices.
 class ActionCard extends StatelessWidget {
-  static const maxPortraitWidth = 160.0;
-  static const illustrationAspectRatio = 3 / 2;
-
+  static const maxPortraitWidth = 112.0;
+  static const illustrationAspectRatio = 1.5;
   const ActionCard({
     super.key,
     required this.title,
@@ -41,6 +40,9 @@ class ActionCard extends StatelessWidget {
     this.titleMaxLines,
     this.descriptionMaxLines,
     this.showStatus = true,
+    this.confirmDetails = false,
+    this.asButton = false,
+    this.available,
   });
   final String title;
   final IconData icon;
@@ -54,457 +56,302 @@ class ActionCard extends StatelessWidget {
   final double? illustrationSize;
   final double? fixedHeight;
   final int? titleMaxLines, descriptionMaxLines;
-  final bool showStatus;
+  final bool showStatus, confirmDetails, asButton;
+  final Map<String, int>? available;
 
   @override
   Widget build(BuildContext context) {
-    final haptics = HapticsScope.of(context);
-    final VoidCallback? activate = onTap == null
-        ? null
-        : () {
-            haptics?.tap();
-            onTap!();
-          };
-    final unavailable = locked || onTap == null;
-    final (top, bottom, rim) = switch (tone) {
-      CardTone.leaf => (
-        const Color(0xFF507E36),
-        const Color(0xFF203F2B),
-        const Color(0xFFB5D480),
-      ),
-      CardTone.sand => (
-        const Color(0xFFB28C55),
-        const Color(0xFF65492F),
-        const Color(0xFFE5C68D),
-      ),
-      CardTone.river => (
-        const Color(0xFF4B8196),
-        const Color(0xFF22485C),
-        const Color(0xFFADD9E1),
-      ),
-      CardTone.danger => (
-        const Color(0xFF985744),
-        const Color(0xFF612F29),
-        const Color(0xFFE1A088),
-      ),
-    };
-    final border = unavailable
-        ? CanopyColors.border
-        : (selected ? CanopyColors.cream : rim);
-    final illustrationHeight = horizontal ? 64.0 : (compact ? 80.0 : 104.0);
-    final footerColor = unavailable
-        ? const Color(0xFFB4B9A8)
-        : switch (tone) {
-            CardTone.leaf => const Color(0xFFC5DF98),
-            CardTone.sand => const Color(0xFFE5CD9F),
-            CardTone.river => const Color(0xFFBBDDE0),
-            CardTone.danger => const Color(0xFFE4B9A4),
-          };
-    final footerInk = horizontal ? CanopyColors.cream : const Color(0xFF243D2A);
+    final scale = math.max(
+      1.0,
+      MediaQuery.textScalerOf(context).scale(12) / 12,
+    );
     final subject = art ?? artForIcon(icon);
-    final illustrationPath = image ?? cardIllustrationFor(subject);
-    final rawIllustration = SizedBox(
-      height: illustrationHeight,
-      width: horizontal ? 64 * illustrationAspectRatio : double.infinity,
-      child: ClipRRect(
-        borderRadius: horizontal ? BorderRadius.circular(9) : BorderRadius.zero,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: top,
-                image: const DecorationImage(
-                  image: AssetImage('assets/art/card_foliage_backdrop_v1.png'),
-                  fit: BoxFit.cover,
-                  // Dim only the foliage; keep the foreground object vivid.
-                  colorFilter: ColorFilter.mode(
-                    Color(0x5A000000),
-                    BlendMode.srcOver,
+    final details = confirmDetails;
+    final unavailable = locked || onTap == null;
+    void perform() {
+      HapticsScope.of(context)?.tap();
+      onTap?.call();
+    }
+
+    Future<void> activate() async {
+      if (!details) {
+        if (!unavailable) perform();
+        return;
+      }
+      HapticsScope.of(context)?.tap();
+      final confirmed = await showModalBottomSheet<bool>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        backgroundColor: Colors.transparent,
+        barrierColor: const Color(0x8507130F),
+        builder: (context) =>
+            _ActionDetails(card: this, subject: subject, enabled: !unavailable),
+      );
+      if (confirmed == true && context.mounted && !unavailable) perform();
+    }
+
+    if (asButton) {
+      return parchmentButton(title.toUpperCase(), unavailable ? null : perform);
+    }
+    if (horizontal) {
+      return PaperSurface(
+        selected: selected,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: unavailable ? null : perform,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Row(
+                children: [
+                  artWidget ?? CardArt(subject, size: 28),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ParchmentLabel(
+                          title.toUpperCase(),
+                          size: 13,
+                          color: unavailable
+                              ? ParchmentColors.muted
+                              : ParchmentColors.ink,
+                        ),
+                        if (description != null)
+                          ParchmentLabel(
+                            description!,
+                            size: 12,
+                            weight: FontWeight.w500,
+                          ),
+                        for (final line in lines)
+                          ParchmentLabel(
+                            line.text,
+                            size: 12,
+                            weight: FontWeight.w500,
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+                  Icon(
+                    unavailable
+                        ? Icons.lock_rounded
+                        : Icons.arrow_forward_rounded,
+                    size: 20,
+                    color: ParchmentColors.leaf,
+                  ),
+                ],
               ),
             ),
-            if (artWidget != null)
-              artWidget!
-            else if (illustrationPath != null)
-              Image.asset(
-                illustrationPath,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
-                cacheWidth: 720,
-                cacheHeight: 480,
-                errorBuilder: (context, error, stackTrace) =>
-                    CardArt(subject, size: 160),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: CardArt(
-                  // A pile reads clearly in the large card illustration;
-                  // small HUD resource icons still use the single log.
-                  !horizontal && subject == 'wood' ? 'firewood' : subject,
-                  size: illustrationSize ?? (horizontal ? 64 : 160),
-                ),
-              ),
-          ],
+          ),
+        ),
+      );
+    }
+    final rawInfo = lines.isNotEmpty ? lines.first.text : description ?? '';
+    final info = details
+        ? 'View details'
+        : rawInfo.length <= 24
+        ? rawInfo
+        : 'Tap to begin';
+    return Align(
+      widthFactor: 1,
+      heightFactor: 1,
+      child: SizedBox(
+        width: 112 * scale,
+        height: 172 * scale,
+        child: ParchmentCard(
+          title: title,
+          art: subject,
+          image: image,
+          artWidget: artWidget,
+          info: info,
+          status: unavailable && tag != 'OWNED'
+              ? 'LOCKED'
+              : tag ?? (tone == CardTone.danger ? 'RISKY' : 'READY'),
+          selected: selected,
+          onTap: activate,
         ),
       ),
     );
-    final illustration = unavailable
-        ? ColorFiltered(
-            colorFilter: const ColorFilter.matrix([
-              .2126,
-              .7152,
-              .0722,
-              0,
-              0,
-              .2126,
-              .7152,
-              .0722,
-              0,
-              0,
-              .2126,
-              .7152,
-              .0722,
-              0,
-              0,
-              0,
-              0,
-              0,
-              1,
-              0,
-            ]),
-            child: rawIllustration,
-          )
-        : rawIllustration;
-    final status = unavailable && tag != 'OWNED' ? 'LOCKED' : tag;
-    final details = Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: horizontal
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
-      children: [
-        Text(
-          title.toUpperCase(),
-          maxLines: titleMaxLines,
-          overflow: titleMaxLines == null ? null : TextOverflow.ellipsis,
-          textAlign: horizontal ? TextAlign.start : TextAlign.center,
-          style: TextStyle(
-            fontSize: compact ? 12 : 15,
-            fontWeight: FontWeight.w900,
-            height: 1.15,
-            letterSpacing: .2,
-            color: footerInk,
-          ),
-        ),
-        if (description != null) ...[
-          const SizedBox(height: 4),
-          Text(
-            description!,
-            maxLines: descriptionMaxLines,
-            overflow: descriptionMaxLines == null
-                ? null
-                : TextOverflow.ellipsis,
-            textAlign: horizontal ? TextAlign.start : TextAlign.center,
-            style: TextStyle(
-              fontSize: horizontal ? 12 : 11,
-              height: 1.2,
-              color: footerInk,
-            ),
-          ),
-        ],
-        for (final line in lines) ...[
-          const SizedBox(height: 5),
-          Row(
+  }
+}
+
+class _ActionDetails extends StatelessWidget {
+  const _ActionDetails({
+    required this.card,
+    required this.subject,
+    required this.enabled,
+  });
+  final ActionCard card;
+  final String subject;
+  final bool enabled;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(10, 10, 10, 16),
+    child: ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: 560,
+        maxHeight: MediaQuery.sizeOf(context).height * .85,
+      ),
+      child: PaperSurface(
+        child: SafeArea(
+          top: false,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (line.icon != null) ...[
-                Icon(
-                  line.icon,
-                  size: 14,
-                  color: horizontal ? line.color : footerInk,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      card.image ??
+                          cardIllustrationFor(subject) ??
+                          'assets/art/card_trail_scene_v1.png',
+                      width: 66,
+                      height: 52,
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ParchmentLabel(card.title.toUpperCase(), size: 19),
+                    ),
+                    ParchmentClose(onPressed: () => Navigator.pop(context)),
+                  ],
                 ),
-                const SizedBox(width: 3),
-              ],
+              ),
               Flexible(
-                child: Text(
-                  line.text,
-                  textAlign: horizontal ? TextAlign.start : TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.25,
-                    fontWeight: FontWeight.w600,
-                    color: horizontal ? line.color : footerInk,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (card.description != null) ...[
+                        ParchmentLabel(
+                          card.description!,
+                          size: 14,
+                          weight: FontWeight.w500,
+                        ),
+                        const SizedBox(height: 14),
+                      ],
+                      for (final line in card.lines)
+                        if (line.text.contains('−1 time · −4 water · −3 food'))
+                          _ExpeditionCosts(available: card.available)
+                        else
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                if (line.icon != null) ...[
+                                  Icon(
+                                    line.icon,
+                                    color: ParchmentColors.ink,
+                                    size: 22,
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                                Expanded(
+                                  child: ParchmentLabel(
+                                    line.text,
+                                    size: 14,
+                                    weight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      if (card.tag != null) ...[
+                        const SizedBox(height: 12),
+                        ParchmentLabel(
+                          card.tag!,
+                          size: 13,
+                          color: card.tone == CardTone.danger
+                              ? ParchmentColors.rust
+                              : ParchmentColors.leaf,
+                        ),
+                      ],
+                      if (!enabled) ...[
+                        const SizedBox(height: 12),
+                        const ParchmentLabel(
+                          'This action is unavailable.',
+                          size: 13,
+                          color: ParchmentColors.rust,
+                        ),
+                      ],
+                      const SizedBox(height: 10),
+                    ],
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: parchmentButton(
+                  enabled ? card.title.toUpperCase() : 'UNAVAILABLE',
+                  enabled ? () => Navigator.pop(context, true) : null,
+                  key: const ValueKey('confirm-card-action'),
                 ),
               ),
             ],
           ),
-        ],
-        if (showStatus && (tag != null || unavailable)) ...[
-          const SizedBox(height: 7),
-          Container(
-            width: horizontal ? null : double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-            decoration: BoxDecoration(
-              color: horizontal ? Colors.black26 : bottom,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: (unavailable ? CanopyColors.muted : tagColor).withValues(
-                  alpha: .55,
-                ),
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (unavailable && tag != 'OWNED') ...[
-                  const Icon(
-                    Icons.lock_rounded,
-                    size: 12,
-                    color: CanopyColors.muted,
-                  ),
-                  const SizedBox(width: 3),
-                ],
-                Flexible(
-                  child: Text(
-                    status!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      color: horizontal
-                          ? (unavailable ? CanopyColors.muted : tagColor)
-                          : CanopyColors.cream,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
-    );
-    final card = Semantics(
-      button: true,
-      enabled: onTap != null,
-      onTap: activate,
-      selected: selected,
-      label: [
-        title,
-        ?tag,
-        ?description,
-        for (final l in lines) l.text,
-        if (unavailable) 'unavailable',
-      ].join('. '),
-      child: SizedBox(
-        height: fixedHeight,
-        child: ExcludeSemantics(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black45,
-                  blurRadius: 6,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Material(
-              color: unavailable ? CanopyColors.panelLight : bottom,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-                side: BorderSide(color: border, width: selected ? 3 : 2),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: activate,
-                child: Padding(
-                  padding: horizontal
-                      ? const EdgeInsets.all(6)
-                      : EdgeInsets.zero,
-                  child: horizontal
-                      ? Row(
-                          children: [
-                            illustration,
-                            const SizedBox(width: 10),
-                            Expanded(child: details),
-                          ],
-                        )
-                      : fixedHeight != null
-                      ? Column(
-                          children: [
-                            AspectRatio(
-                              aspectRatio: illustrationAspectRatio,
-                              child: illustration,
-                            ),
-                            Expanded(
-                              child: ColoredBox(
-                                color: footerColor,
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 4,
-                                    ),
-                                    child: details,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : IntrinsicHeight(
-                          child: Column(
-                            children: [
-                              AspectRatio(
-                                aspectRatio: illustrationAspectRatio,
-                                child: illustration,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  width: double.infinity,
-                                  constraints: BoxConstraints(
-                                    minHeight: illustrationHeight,
-                                  ),
-                                  padding: const EdgeInsets.all(6),
-                                  color: footerColor,
-                                  child: Center(child: details),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
-    );
-    final cappedCard = ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: horizontal ? 320 : maxPortraitWidth,
-      ),
-      child: card,
-    );
-    // Deck and carousel slots already cap the width. Preserve their tight
-    // height so every surface fills the tallest card instead of centering
-    // a shorter surface inside the equally sized slot.
-    if (context.dependOnInheritedWidgetOfExactType<_EqualHeightCards>() !=
-        null) {
-      return cappedCard;
-    }
-    // Standalone cards still need to loosen a full-width parent slot.
-    return Align(widthFactor: 1, heightFactor: 1, child: cappedCard);
-  }
+    ),
+  );
 }
 
-class _EqualHeightCards extends InheritedWidget {
-  const _EqualHeightCards({required super.child});
-
-  @override
-  bool updateShouldNotify(_EqualHeightCards oldWidget) => false;
-}
-
-/// Equal rows, with a vertical alternative for large text and small widths.
 class CardDeck extends StatelessWidget {
   const CardDeck({super.key, required this.cards, this.columns});
   final List<Widget> cards;
   final int? columns;
   @override
   Widget build(BuildContext context) {
-    final large =
-        MediaQuery.textScalerOf(context).scale(14) > 19 ||
-        MediaQuery.sizeOf(context).width < 360;
-    final count = large
-        ? 1
-        : (columns ?? (cards.length == 4 ? 2 : cards.length.clamp(1, 3)));
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var i = 0; i < cards.length; i += count)
-          Padding(
-            padding: EdgeInsets.only(top: i == 0 ? 0 : 8),
-            // A single card must measure at its capped width. An intrinsic
-            // row can predict a shorter height before the width cap applies,
-            // clipping wrapped costs and requirements at large text sizes.
-            child: count == 1
-                ? cards[i]
-                : Align(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth:
-                            count * ActionCard.maxPortraitWidth +
-                            (count - 1) * 8,
-                      ),
-                      child: _EqualHeightCards(
-                        child: IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              for (var j = i; j < i + count; j++) ...[
-                                if (j > i) const SizedBox(width: 8),
-                                Expanded(
-                                  child: j < cards.length
-                                      ? cards[j]
-                                      : const SizedBox.shrink(),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-          ),
-      ],
+    if (columns == 1 || cards.every((c) => c is ActionCard && c.horizontal)) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < cards.length; i++)
+            Padding(
+              padding: EdgeInsets.only(top: i == 0 ? 0 : 8),
+              child: cards[i],
+            ),
+        ],
+      );
+    }
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 8,
+      runSpacing: 8,
+      children: cards,
     );
   }
 }
 
-/// One natural-height row, fitting as many readable cards as the width allows.
 class CardCarousel extends StatefulWidget {
   const CardCarousel({super.key, required this.cards});
   final List<Widget> cards;
-
-  static double cardWidthFor(BuildContext context) {
-    final available = MediaQuery.sizeOf(context).width.clamp(24.0, 560.0) - 24;
-    final large = MediaQuery.textScalerOf(context).scale(14) > 19;
-    final count = ((available + 8) / 120).floor().clamp(1, 4);
-    final width = large ? available : (available - 8 * (count - 1)) / count;
-    return width.clamp(0.0, ActionCard.maxPortraitWidth);
-  }
-
+  static double cardWidthFor(BuildContext context) =>
+      112 * math.max(1.0, MediaQuery.textScalerOf(context).scale(12) / 12);
   @override
   State<CardCarousel> createState() => _CardCarouselState();
 }
 
 class _CardCarouselState extends State<CardCarousel> {
-  final _scroll = ScrollController();
-
+  final scroll = ScrollController();
   @override
   void dispose() {
-    _scroll.dispose();
+    scroll.dispose();
     super.dispose();
   }
 
-  void _page(double step) {
-    if (!_scroll.hasClients) return;
-    final target = (_scroll.offset + step).clamp(
-      0.0,
-      _scroll.position.maxScrollExtent,
-    );
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _scroll.jumpTo(target);
-    } else {
-      _scroll.animateTo(
-        target,
-        duration: const Duration(milliseconds: 180),
+  void page(double delta) {
+    if (scroll.hasClients) {
+      scroll.animateTo(
+        (scroll.offset + delta).clamp(0, scroll.position.maxScrollExtent),
+        duration: MediaQuery.disableAnimationsOf(context)
+            ? Duration.zero
+            : const Duration(milliseconds: 180),
         curve: Curves.easeOut,
       );
     }
@@ -512,78 +359,57 @@ class _CardCarouselState extends State<CardCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final available = MediaQuery.sizeOf(context).width.clamp(0.0, 560.0) - 24;
-    final large = MediaQuery.textScalerOf(context).scale(14) > 19;
-    final visibleCount = ((available + 8) / 120).floor().clamp(1, 4);
     final width = CardCarousel.cardWidthFor(context);
-    final step = width + 8;
-    return Semantics(
-      container: true,
-      label: 'Event choices. Swipe or use the arrows to browse.',
-      child: Column(
+    final scale = math.max(
+      1.0,
+      MediaQuery.textScalerOf(context).scale(12) / 12,
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (large || widget.cards.length > visibleCount)
-            AnimatedBuilder(
-              animation: _scroll,
-              builder: (context, _) {
-                final attached =
-                    _scroll.hasClients && _scroll.position.hasContentDimensions;
-                final offset = attached ? _scroll.offset : 0.0;
-                final canGoBack = offset > 1;
-                final canGoNext = !attached
-                    ? widget.cards.length > 1
-                    : offset < _scroll.position.maxScrollExtent - 1;
-                final index = (offset / step).round().clamp(
-                  0,
-                  widget.cards.length - 1,
-                );
-                return Row(
+          if (widget.cards.length * (width + 8) - 8 > constraints.maxWidth)
+            PaperSurface(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Row(
                   children: [
-                    IconButton(
-                      key: const ValueKey('encounter-previous'),
-                      tooltip: 'Previous choice',
-                      onPressed: canGoBack ? () => _page(-step) : null,
-                      icon: const Icon(Icons.chevron_left_rounded),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'SWIPE · ${index + 1} / ${widget.cards.length}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                          color: CanopyColors.cream,
-                          letterSpacing: .7,
-                        ),
+                    const Expanded(
+                      child: ParchmentLabel(
+                        'SWIPE FOR MORE',
+                        size: 10,
+                        color: ParchmentColors.muted,
                       ),
                     ),
                     IconButton(
-                      key: const ValueKey('encounter-next'),
-                      tooltip: 'Next choice',
-                      onPressed: canGoNext ? () => _page(step) : null,
+                      key: const ValueKey('choices-previous'),
+                      tooltip: 'Previous choices',
+                      onPressed: () => page(-width - 8),
+                      icon: const Icon(Icons.chevron_left_rounded),
+                    ),
+                    IconButton(
+                      key: const ValueKey('choices-next'),
+                      tooltip: 'Next choices',
+                      onPressed: () => page(width + 8),
                       icon: const Icon(Icons.chevron_right_rounded),
                     ),
                   ],
-                );
-              },
-            ),
-          SingleChildScrollView(
-            key: const ValueKey('encounter-card-rail'),
-            controller: _scroll,
-            scrollDirection: Axis.horizontal,
-            child: _EqualHeightCards(
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (var i = 0; i < widget.cards.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      SizedBox(width: width, child: widget.cards[i]),
-                    ],
-                  ],
                 ),
+              ),
+            ),
+          SizedBox(
+            height: 172 * scale,
+            child: SingleChildScrollView(
+              key: const ValueKey('event-choice-carousel'),
+              controller: scroll,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.cards.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 8),
+                    SizedBox(width: width, child: widget.cards[i]),
+                  ],
+                ],
               ),
             ),
           ),
@@ -591,4 +417,70 @@ class _CardCarouselState extends State<CardCarousel> {
       ),
     );
   }
+}
+
+class _ExpeditionCosts extends StatelessWidget {
+  const _ExpeditionCosts({this.available});
+  final Map<String, int>? available;
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const ParchmentLabel(
+        'COST TO CONTINUE',
+        size: 11,
+        color: ParchmentColors.muted,
+      ),
+      const SizedBox(height: 10),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final (art, value, label) in [
+            ('sun', '1', 'TIME'),
+            ('water', '4', 'WATER'),
+            ('food', '3', 'FOOD'),
+          ])
+            Container(
+              width: 92,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: CanopyColors.border),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (art == 'sun')
+                        const Icon(
+                          Icons.schedule_rounded,
+                          color: ParchmentColors.ink,
+                          size: 22,
+                        )
+                      else
+                        CardArt(art, size: 22),
+                      const SizedBox(width: 7),
+                      ParchmentLabel(value, size: 20),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  ParchmentLabel(label, size: 10),
+                  if (available != null) ...[
+                    const SizedBox(height: 5),
+                    ParchmentLabel(
+                      '${available![art == 'sun' ? 'time' : art]} available',
+                      size: 10,
+                      color: ParchmentColors.muted,
+                      weight: FontWeight.w500,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+        ],
+      ),
+    ],
+  );
 }

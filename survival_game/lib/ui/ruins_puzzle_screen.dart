@@ -25,7 +25,6 @@ class _RuinsPuzzleScreenState extends State<RuinsPuzzleScreen> {
   @override
   Widget build(BuildContext context) {
     final puzzle = widget.game.ruinsPuzzle!;
-    final large = MediaQuery.textScalerOf(context).scale(14) > 19;
     return SceneLayout(
       state: widget.game.state,
       background: 'assets/art/ancient_ruins_camp_style_v1.png',
@@ -72,21 +71,13 @@ class _RuinsPuzzleScreenState extends State<RuinsPuzzleScreen> {
             ActionCard(
               key: ValueKey('ruins-disc-$i'),
               title: RuinsPuzzle.symbolNames[puzzle.tiles[i]],
-              description: 'Disc ${i + 1} · tap to turn',
-              artWidget: ColoredBox(
-                color: const Color(0xFF8E9273),
-                child: Center(
-                  child: Icon(
-                    _symbols[puzzle.tiles[i]],
-                    color: const Color(0xFF344636),
-                    size: 42,
-                  ),
-                ),
-              ),
+              description: 'Disc ${i + 1}',
+              art: ['sun', 'water', 'fiber', 'moon'][puzzle.tiles[i]],
+              tag: 'TURN',
               tone: CardTone.sand,
               compact: true,
-              showStatus: false,
-              horizontal: large,
+              showStatus: true,
+              horizontal: true,
               onTap: () => setState(() => widget.game.turnRuinsTile(i)),
             ),
         ],
@@ -94,23 +85,25 @@ class _RuinsPuzzleScreenState extends State<RuinsPuzzleScreen> {
       cards: [
         ActionCard(
           key: const ValueKey('ruins-submit'),
+          asButton: true,
           title: 'Align the seal',
           description: '1 time',
           art: 'beacon_core',
           compact: true,
-          horizontal: large,
+          horizontal: true,
           onTap: widget.game.state.timeLeft >= 1
               ? () => Navigator.pop(context, 'submit')
               : null,
         ),
         ActionCard(
           key: const ValueKey('ruins-leave'),
+          asButton: true,
           title: 'Leave the altar',
           description: 'Return another time',
           art: 'back',
           tone: CardTone.river,
           compact: true,
-          horizontal: large,
+          horizontal: true,
           onTap: () => Navigator.pop(context, 'leave'),
         ),
       ],

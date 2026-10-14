@@ -136,6 +136,7 @@ class BeaconScreen extends StatelessWidget {
       cards: [
         ActionCard(
           key: const ValueKey('beacon-primary'),
+          confirmDetails: true,
           title: sent
               ? 'Prepare supplies'
               : assembled

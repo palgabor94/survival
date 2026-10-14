@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'card_illustration.dart';
+import 'card_art.dart';
 
 abstract final class ParchmentColors {
   static const ink = Color(0xFF203B31),
@@ -119,7 +120,11 @@ class ParchmentCard extends StatelessWidget {
     required this.onTap,
     this.info = '',
     this.selected = false,
+    this.image,
+    this.artWidget,
   });
+  final String? image;
+  final Widget? artWidget;
   final String title, art, info, status;
   final VoidCallback onTap;
   final bool selected;
@@ -156,11 +161,14 @@ class ParchmentCard extends StatelessWidget {
                 ),
                 AspectRatio(
                   aspectRatio: 1.5,
-                  child: Image.asset(
-                    cardIllustrationFor(art) ??
-                        'assets/art/card_trail_scene_v1.png',
-                    fit: BoxFit.cover,
-                  ),
+                  child:
+                      artWidget ??
+                      Image.asset(
+                        image ??
+                            cardIllustrationFor(art) ??
+                            'assets/art/card_trail_scene_v1.png',
+                        fit: BoxFit.cover,
+                      ),
                 ),
                 SizedBox(
                   height: 22 * scale,
@@ -213,4 +221,101 @@ class ParchmentCardGrid extends StatelessWidget {
       ],
     );
   }
+}
+
+/// A menu entry uses one shared group frame, as in the approved menu plan.
+class ParchmentMenuRow extends StatelessWidget {
+  const ParchmentMenuRow({
+    super.key,
+    required this.title,
+    required this.art,
+    required this.onTap,
+    this.trailing = '›',
+  });
+  final String title, art, trailing;
+  final VoidCallback? onTap;
+  @override
+  Widget build(BuildContext context) => Material(
+    color: Colors.transparent,
+    child: InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+        child: Row(
+          children: [
+            CardArt(art, size: 26),
+            const SizedBox(width: 8),
+            Expanded(child: ParchmentLabel(title, size: 13)),
+            const SizedBox(width: 8),
+            ParchmentLabel(trailing, size: 13, color: ParchmentColors.muted),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class ParchmentSetting extends StatelessWidget {
+  const ParchmentSetting({
+    super.key,
+    required this.title,
+    required this.enabled,
+    required this.onEnabled,
+    this.value,
+    this.onVolume,
+    this.switchKey,
+    this.sliderKey,
+  });
+  final String title;
+  final bool enabled;
+  final ValueChanged<bool>? onEnabled;
+  final double? value;
+  final ValueChanged<double>? onVolume;
+  final Key? switchKey, sliderKey;
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Row(
+        children: [
+          Expanded(child: ParchmentLabel(title, size: 13)),
+          if (value != null)
+            ParchmentLabel(
+              '${(value! * 100).round()}%',
+              size: 12,
+              color: ParchmentColors.muted,
+            ),
+          const SizedBox(width: 8),
+          Switch(
+            key: switchKey,
+            value: enabled,
+            onChanged: onEnabled,
+            activeThumbColor: ParchmentColors.cream,
+            activeTrackColor: ParchmentColors.leaf,
+            inactiveThumbColor: const Color(0xFFE6D6AE),
+            inactiveTrackColor: const Color(0xFFC3B58F),
+          ),
+        ],
+      ),
+      if (value != null)
+        SizedBox(
+          height: 32,
+          child: SliderTheme(
+            data: const SliderThemeData(
+              trackHeight: 3,
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+              activeTrackColor: ParchmentColors.leaf,
+              inactiveTrackColor: Color(0xFFC3B58F),
+              thumbColor: ParchmentColors.leaf,
+            ),
+            child: Slider(
+              key: sliderKey,
+              label: '${(value! * 100).round()}%',
+              value: value!,
+              onChanged: enabled ? onVolume : null,
+            ),
+          ),
+        ),
+    ],
+  );
 }

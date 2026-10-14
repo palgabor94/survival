@@ -6,18 +6,18 @@ BoxFit sceneBackgroundFit(Size viewport) =>
 
 abstract final class CanopyColors {
   static const background = Color(0xFF102A28);
-  static const panel = Color(0xFF202E29);
-  static const panelLight = Color(0xFF354337);
-  static const cream = Color(0xFFFFF0CC);
-  static const muted = Color(0xFFC8CBB5);
-  static const gold = Color(0xFFF0C773);
-  static const border = Color(0xFF8F926F);
+  static const panel = Color(0xFFF1E2BD);
+  static const panelLight = Color(0xFFE6D6AE);
+  static const cream = Color(0xFF203B31);
+  static const muted = Color(0xFF68705A);
+  static const gold = Color(0xFF294E36);
+  static const border = Color(0xFFB7A981);
   static const health = Color(0xFFFF7862);
   static const water = Color(0xFF62D8ED);
-  static const food = Color(0xFFF8B168);
+  static const food = Color(0xFF9B5437);
   static const sanity = Color(0xFFD2A2F2);
-  static const leaf = Color(0xFFBBD987);
-  static const workshop = Color(0xFF65492F);
+  static const leaf = Color(0xFF294E36);
+  static const workshop = Color(0xFFE2D2AA);
 }
 
 /// Scene navigation keeps the artwork in place instead of sliding pages.
@@ -47,11 +47,11 @@ class CanopyPageTransitionsBuilder extends PageTransitionsBuilder {
 }
 
 final canopyTheme = ThemeData(
-  brightness: Brightness.dark,
+  brightness: Brightness.light,
   scaffoldBackgroundColor: CanopyColors.background,
-  colorScheme: const ColorScheme.dark(
+  colorScheme: const ColorScheme.light(
     primary: CanopyColors.gold,
-    onPrimary: CanopyColors.background,
+    onPrimary: Color(0xFFFFF0CC),
     secondary: CanopyColors.leaf,
     surface: CanopyColors.panel,
     onSurface: CanopyColors.cream,
@@ -77,7 +77,7 @@ final canopyTheme = ThemeData(
         fontSize: 15,
         fontWeight: FontWeight.w800,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     ),
   ),
   textButtonTheme: TextButtonThemeData(
@@ -94,13 +94,13 @@ final canopyTheme = ThemeData(
         fontFamily: 'Arial',
         fontWeight: FontWeight.w800,
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     ),
   ),
   dialogTheme: DialogThemeData(
     backgroundColor: CanopyColors.panel,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(4),
       side: const BorderSide(color: CanopyColors.border, width: 2),
     ),
   ),

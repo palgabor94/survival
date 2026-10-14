@@ -10,7 +10,7 @@ import 'package:survival_game/ui/action_card.dart';
 import 'package:survival_game/ui/event_scene.dart';
 import 'package:survival_game/ui/inventory_dialog.dart';
 
-import 'expedition_widget_test.dart' show tapKey;
+import 'expedition_widget_test.dart' show tapKey, confirmCard;
 import 'game/game_engine_test.dart' show FixedRandom;
 import 'widget_test.dart' show testGame, showCamp, findUiText;
 
@@ -196,6 +196,8 @@ void main() {
     }
 
     expect((await rootsChoice({})).onTap, isNull);
+    await tester.tap(find.byKey(const ValueKey('choice-roots')));
+    await tester.pumpAndSettle();
     expect(findUiText('Needs Stone Knife'), findsOneWidget);
     expect((await rootsChoice({'stone_knife'})).onTap, isNotNull);
   });
@@ -262,6 +264,8 @@ void main() {
         .first;
     await tester.ensureVisible(choice);
     await tester.tap(choice);
+    await tester.pumpAndSettle();
+    await confirmCard(tester);
     await tester.pumpAndSettle();
     await tapKey(tester, 'continue-outcome');
     final state = RunState.fromJson(

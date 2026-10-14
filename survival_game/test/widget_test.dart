@@ -1,3 +1,4 @@
+import 'expedition_widget_test.dart' show confirmCard;
 import 'dart:io';
 import 'dart:math';
 
@@ -146,6 +147,8 @@ void main() {
       await tester.ensureVisible(choice);
       await tester.tap(choice);
       await tester.pumpAndSettle();
+      await confirmCard(tester);
+      await tester.pumpAndSettle();
       expect(game.state.timeLeft, 5);
       expect(game.pendingEvent, isNull);
       await tester.tap(find.byKey(const ValueKey('continue-outcome')));
@@ -170,6 +173,8 @@ void main() {
     final choice = find.byKey(ValueKey('choice-${available.id}'));
     await tester.ensureVisible(choice);
     await tester.tap(choice);
+    await tester.pumpAndSettle();
+    await confirmCard(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('continue-outcome')));
     await tester.pumpAndSettle();

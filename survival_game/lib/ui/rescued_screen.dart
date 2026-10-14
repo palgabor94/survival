@@ -88,6 +88,7 @@ class RescuedScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     ActionCard(
                       key: const ValueKey('rescue-new-run'),
+                      asButton: true,
                       title: 'New run',
                       art: 'shelter',
                       horizontal: true,

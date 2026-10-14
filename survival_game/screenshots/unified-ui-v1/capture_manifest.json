@@ -1,0 +1,242 @@
+[
+  {
+    "file": "01-camp-day.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "f78611014117ceb14f984a9a4a57507ec48aa20897e4ea9d69fd66cfdad22ed1"
+  },
+  {
+    "file": "02-inventory-materials.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "df9f9134e8b61806fe96c2ab2273d38657cf4fdbe7ca54d9ac4b883dd127615f"
+  },
+  {
+    "file": "03-inventory-food.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b0ba4d2aca61d4f52b7b4da279dbae50980a7850bda279054b3541548f0eeba8"
+  },
+  {
+    "file": "04-inventory-gear.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "965f41beb860b02375ee1e12c4e10cc335eb1d515f00367a3126108a44ed0503"
+  },
+  {
+    "file": "05-explore-map.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "163896f1305f17b5b8aa355c75299d04b4832512dc45d03fa0d500b4cac190bf"
+  },
+  {
+    "file": "06-explore-locked.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "6d725b60aa50ec4d3e07ef8bced9512fc832a75cd39d84deb5a4195076d3d87a"
+  },
+  {
+    "file": "07-craft.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "04f035670ff8783e02c7093cf105f76a3948f9b556248b34f02fef2093e0e414"
+  },
+  {
+    "file": "08-craft-locked.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "279c0b5b035364ab8488e99654a5db7952ec34a27a7bee39f11ab29a05de3634"
+  },
+  {
+    "file": "09-camp-upgrade.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "4245b228ff949490701a87da644d1ca63e0af6589e25532472cd03cedfc8e4c5"
+  },
+  {
+    "file": "10-camp-upgrade-locked.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "23935e11ece15c757a6a2de13eadf38bf6dba32feed18a2c4744d74c62cde53c"
+  },
+  {
+    "file": "11-camp-tier-1.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "43275735d77f60f1fb36e77b20ff2c66f66e282503c9f5b549d4e126a2221796"
+  },
+  {
+    "file": "12-riverbank-event.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "e546725f556eea907c8c2579d22c0fa21a7dfd034b060f9b693a08dff07189ee"
+  },
+  {
+    "file": "13-expedition.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "a48f133da82184635d4e8e9b44eb00942ecbc4bc449d0bc12986dc3dfbc20c02"
+  },
+  {
+    "file": "14-encounter.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "29bdc9aa4da134b03c778c3d1e6d0fd1b5dda9c87a82690ed1e287f5643e4727"
+  },
+  {
+    "file": "15-camp-night.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "85fd8d3d1c26fa87f7ca5343a1e05d9128b727cb41b9e61cda5d70a9e84fa123"
+  },
+  {
+    "file": "16-night-event.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "0f920f90fb6981e2022d39a4f520cad01b8beda40449e74a8cc93343a02dccd0"
+  },
+  {
+    "file": "17-fishing-ready.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "f52f3243eca823eb439be168b85a84ce5e413b874ab126319b7fdc2292a92766"
+  },
+  {
+    "file": "18-fishing-waiting.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "2f2585bdfb4906a74dcb52ba2d0475c4d3319405bcc1c090fd93dc619953e3a9"
+  },
+  {
+    "file": "19-fishing-bite.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "58673b738f0625a76dd0054eb00d597c9955134e330ecbfaf2702d7be43e071e"
+  },
+  {
+    "file": "20-fishing-reeling.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "06ab0e9d769c6d7e24086e79ab000854a3e32700ac801aeab8dcaa07bda47022"
+  },
+  {
+    "file": "21-fishing-exit.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "2054785ad8c028b2b26e490d6dfa301964b31299446286ded9a1651b0d6b9dc9"
+  },
+  {
+    "file": "22-fishing-result.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "71ef9cbce77b252978f79954d38aba031f5ba920754927ad621cb9d3600613f2"
+  },
+  {
+    "file": "23-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "604723c588c209959024dd1d5e83256fb960eaa499cd9f15bca3bec47ac498b9"
+  },
+  {
+    "file": "24-camp-menu.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "73ef6c67c41082cabe5e4c400b36a038287640989e3feb3e571a69cb6feeb7c8"
+  },
+  {
+    "file": "25-journal.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "18c4a15fc3cfb0438ab99a4bb92a9cfe5603cc940e77ffe41bb36e9b4e3cc27d"
+  },
+  {
+    "file": "26-guide.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "cb7d34505b48dec08fee31482280da23301e4b80fdaed4f3c50ad641e834fe1a"
+  },
+  {
+    "file": "27-restart-confirmation.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b3842b359720d1ece9962e2da397d5f2bec7018a836db1c5af841ef0e9fc3c93"
+  },
+  {
+    "file": "28-game-over.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "6a95b6802fea2a48963c06be5a066657e583a43fad62204dad22ea16ec9d3f47"
+  },
+  {
+    "file": "29-loading.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "054699ca683d162a580453151cdda94fca05504a5a4d31976be298a2a7c7f86d"
+  },
+  {
+    "file": "30-loading-error.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "500ecc1bc741b317a42302a1ceecc4fcc06fce93b4ca2512ed014dcad1136cdf"
+  }
+]

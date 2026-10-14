@@ -6,6 +6,7 @@ import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'action_card.dart';
 import 'camp_widgets.dart';
+import 'camp_character.dart';
 import 'choice_icon.dart';
 import 'scene_layout.dart';
 
@@ -13,31 +14,33 @@ import 'scene_layout.dart';
 /// thing the survivor can do about it given their stats and gear.
 /// Pops with the id of the chosen card.
 class EventScene extends StatelessWidget {
-  const EventScene({super.key, required this.game});
+  const EventScene({super.key, required this.game, this.campVariant = 0});
   final GameEngine game;
+  final int campVariant;
 
   String _background(GameEvent event, RunState state) {
     if (event.background != null) return event.background!;
     if (event.id == 'jaguar_trail') {
-      return 'assets/art/jaguar_encounter_isometric.png';
+      return 'assets/art/jaguar_encounter_camp_style_v1.png';
     }
     if (state.phase == RunPhase.night) {
-      return state.campTier == 0
-          ? 'assets/art/starter_camp_night.png'
-          : campArt(state.campTier);
+      return campArt(state.campTier, variant: campVariant);
     }
     final locationBackground = game.world.find(state.locationId)?.background;
     if (locationBackground != null) return locationBackground;
     if (state.locationId == 'riverbank') {
-      return 'assets/art/riverbank_isometric.png';
+      return 'assets/art/riverbank_camp_style_v2.png';
     }
-    return campArt(state.campTier);
+    return campArt(state.campTier, variant: campVariant);
   }
 
   String _eyebrow(GameEvent event, RunState state) {
     final place = game.world.find(state.locationId)?.name.toUpperCase();
     final cost = game.pendingCost;
     if (event.trigger == 'night') return 'NIGHT EVENT';
+    if (event.trigger == 'rescue') {
+      return 'FINAL STORM · ${state.rescueStep + 1}/3 · $cost TIME';
+    }
     if (event.trigger == 'encounter') return 'DANGER · ${place ?? 'THE TRAIL'}';
     if (state.locationId != 'camp' && place != null) {
       return '$place · $cost TIME';
@@ -53,6 +56,7 @@ class EventScene extends StatelessWidget {
     final event = game.pendingEvent!;
     final state = game.state;
     final encounter = event.trigger == 'encounter';
+    final background = _background(event, state);
     final scene = switch (event.scene) {
       'forage' => 1,
       'fire' => 3,
@@ -60,9 +64,20 @@ class EventScene extends StatelessWidget {
     };
     return SceneLayout(
       state: state,
-      background: _background(event, state),
+      background: background,
+      foregroundBuilder: background == campArt(state.campTier)
+          ? (context, rect) => CampCharacter(
+              artworkRect: rect,
+              tier: state.campTier,
+              variant: campVariant,
+              tint: state.phase == RunPhase.night ? campNightTint : null,
+            )
+          : null,
+      backgroundTint: state.phase == RunPhase.night ? campNightTint : null,
       cardCarousel: true,
-      backgroundAlignment: state.locationId == 'riverbank'
+      backgroundAlignment: background == campArt(state.campTier)
+          ? campAlignment(state.campTier)
+          : state.locationId == 'riverbank'
           ? const Alignment(-.2, -.15)
           : const Alignment(0, .1),
       dark: state.phase == RunPhase.night || event.trigger == 'encounter',
@@ -70,7 +85,10 @@ class EventScene extends StatelessWidget {
         eyebrow: _eyebrow(event, state),
         title: event.title,
         description: event.description,
-        collapsedDescription: encounter,
+        collapsedDescription:
+            encounter ||
+            event.trigger == 'rescue' ||
+            {'ancient_ruins', 'plane_wreck'}.contains(state.locationId),
         heroImage: event.heroImage,
         sceneArt: scene,
       ),
@@ -121,11 +139,12 @@ class EventScene extends StatelessWidget {
     final usable = game.canChoose(choice);
     final requirements = <String>[
       for (final id in choice.requiresTools)
-        'Needs ${game.recipes.find(id)?.name ?? itemName(id)}',
+        '${game.state.tools.contains(id) && !game.state.toolUsable(id) ? 'Repair' : 'Needs'} ${game.recipes.find(id)?.name ?? itemName(id)}',
       for (final r in choice.requires.entries)
         'Needs ${r.value} ${itemName(r.key).toLowerCase()}',
       for (final r in choice.requiresStats.entries)
         'Needs ${r.key.label} ${r.value}+',
+      if (choice.minigame == 'ruins_symbols') 'Needs 1 extra daylight',
     ];
     final textScale = MediaQuery.textScalerOf(context).scale(12) / 12;
     final baseHeight = 152.0 + (textScale > 1 ? (textScale - 1) * 94 : 0);

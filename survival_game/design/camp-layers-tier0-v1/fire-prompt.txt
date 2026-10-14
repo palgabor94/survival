@@ -1,0 +1,6 @@
+Use case: stylized-concept. Asset type: transparent game character sprite, one whole-body explorer, square canvas.
+Input 1 is ONLY the camp art style, lighting and elevated three-quarter isometric camera reference. Input 2 is ONLY the canonical character identity sheet. Create a NEW isolated character, do not modify or reproduce the camp or the sheet.
+Pose: standing, facing screen-right and slightly away from camera, both open hands extended gently forward/down at waist height to warm them beside a campfire that will be added separately. Stable relaxed stance, entire boots visible.
+Exact identity: angular dark brown short hair and full beard, cream rolled-sleeve shirt, dark green trousers, brown boots, brown diagonal shoulder strap and small satchel; no backpack.
+Match the camp's simple matte low-poly painted polygons, large clean color planes, restrained detail, muted warm palette. Moderately elevated camera looking down so top of head, shoulders and boots are visible, same ground-plane perspective as camp. Upper-left daylight.
+One character centered, occupying about 85% of canvas height; full body with margin. Genuine transparent alpha around subject, NO scenery, NO ground patch, NO shadow, NO campfire, NO text, NO frame, NO checkerboard baked into pixels.

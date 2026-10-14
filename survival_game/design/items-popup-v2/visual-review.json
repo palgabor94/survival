@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-13",
+  "checks": [
+    "Four material cards retain identical width and height",
+    "Single dialog frame",
+    "Close X and title remain visible while content scrolls",
+    "Informational dialogs have no separate dismissal card",
+    "Actual Flutter output inspected at 320x568, 390x844 and 430x932"
+  ],
+  "screenshots": [
+    {
+      "file": "items-materials-390x844.png",
+      "sha256": "8629544bb05e4e2d163f977c2260f05d19ab64d9104d33a5f29239f201342dcc"
+    },
+    {
+      "file": "menu-390x844.png",
+      "sha256": "242c8d3c69670e14e318e5960d1bf76a91018f7ef0161bd4726a1fba665cb3ed"
+    },
+    {
+      "file": "items-materials-430x932.png",
+      "sha256": "798176d2bf3f6f5159cc87925e8b7d02ad799d17ab2ec409ca05791ade098e5f"
+    },
+    {
+      "file": "menu-430x932.png",
+      "sha256": "6a2ed81170067a5252f1254c0b5c9e727d597a117603c0c4e0ed2d352b1310c8"
+    },
+    {
+      "file": "items-materials-320x568.png",
+      "sha256": "cfcd047b01ee96cec047e4e308f0fcb66a255bd0cb6a79be25785e0bca5043c6"
+    },
+    {
+      "file": "items-scrolled-320x568.png",
+      "sha256": "ba413ebf8182ac2f1dc8468696c4f19b0d40f1138a7fe694292ca3367c77efe1"
+    }
+  ]
+}

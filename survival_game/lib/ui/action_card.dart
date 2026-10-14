@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../feedback/haptics_scope.dart';
 
 import 'canopy_theme.dart';
 import 'card_art.dart';
@@ -57,6 +58,13 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final haptics = HapticsScope.of(context);
+    final VoidCallback? activate = onTap == null
+        ? null
+        : () {
+            haptics?.tap();
+            onTap!();
+          };
     final unavailable = locked || onTap == null;
     final (top, bottom, rim) = switch (tone) {
       CardTone.leaf => (
@@ -117,7 +125,9 @@ class ActionCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (illustrationPath != null)
+            if (artWidget != null)
+              artWidget!
+            else if (illustrationPath != null)
               Image.asset(
                 illustrationPath,
                 fit: BoxFit.cover,
@@ -127,8 +137,6 @@ class ActionCard extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) =>
                     CardArt(subject, size: 160),
               )
-            else if (artWidget != null)
-              artWidget!
             else
               Padding(
                 padding: const EdgeInsets.all(4),
@@ -283,7 +291,7 @@ class ActionCard extends StatelessWidget {
     final card = Semantics(
       button: true,
       enabled: onTap != null,
-      onTap: onTap,
+      onTap: activate,
       selected: selected,
       label: [
         title,
@@ -314,7 +322,7 @@ class ActionCard extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
-                onTap: onTap,
+                onTap: activate,
                 child: Padding(
                   padding: horizontal
                       ? const EdgeInsets.all(6)
@@ -439,13 +447,13 @@ class CardDeck extends StatelessWidget {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              for (
-                                var j = i;
-                                j < i + count && j < cards.length;
-                                j++
-                              ) ...[
+                              for (var j = i; j < i + count; j++) ...[
                                 if (j > i) const SizedBox(width: 8),
-                                Expanded(child: cards[j]),
+                                Expanded(
+                                  child: j < cards.length
+                                      ? cards[j]
+                                      : const SizedBox.shrink(),
+                                ),
                               ],
                             ],
                           ),

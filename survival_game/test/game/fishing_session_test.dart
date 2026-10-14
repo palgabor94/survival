@@ -34,6 +34,34 @@ void reelByTracking(FishingSession session) {
 }
 
 void main() {
+  test(
+    'hook starts the player inside the fish zone with no first-frame jump',
+    () {
+      for (var seed = 0; seed < 100; seed++) {
+        final session = FishingSession(random: Random(seed))..cast();
+        waitForBite(session);
+        session.update(1.5);
+        expect(session.hook(), isTrue);
+        expect(session.cursor, session.target);
+        final target = session.target;
+        session.update(frame);
+        expect(session.inZone, isTrue);
+        expect((session.target - target).abs(), lessThan(.01));
+      }
+    },
+  );
+
+  test('holding continuously still loses the fish', () {
+    for (var seed = 0; seed < 30; seed++) {
+      final session = FishingSession(random: Random(seed))..cast();
+      waitForBite(session);
+      session.hook();
+      session.holding = true;
+      session.update(10);
+      expect(session.stage, FishingStage.escaped, reason: 'seed $seed');
+    }
+  });
+
   test('time does not pass before the cast and only one cast is allowed', () {
     final session = FishingSession(random: ZeroRandom());
     session.update(5);

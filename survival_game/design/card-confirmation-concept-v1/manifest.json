@@ -1,0 +1,44 @@
+[
+  {
+    "id": "01-riverbank-cards",
+    "title": "RIVERBANK \u00b7 STEP 1",
+    "kind": "scene",
+    "background": "riverbank_camp_style_v2.png",
+    "cards": [
+      [
+        "shelter",
+        "RETURN TO\nCAMP",
+        "View details",
+        "SAFE"
+      ],
+      [
+        "trail",
+        "GO DEEPER",
+        "View details",
+        "RISKY"
+      ]
+    ]
+  },
+  {
+    "id": "02-go-deeper-details",
+    "title": "RIVERBANK \u00b7 STEP 1",
+    "kind": "scene",
+    "background": "riverbank_camp_style_v2.png",
+    "cards": [
+      [
+        "shelter",
+        "RETURN TO\nCAMP",
+        "View details",
+        "SAFE"
+      ],
+      [
+        "trail",
+        "GO DEEPER",
+        "View details",
+        "RISKY"
+      ]
+    ],
+    "details": true,
+    "selected": 1
+  }
+]

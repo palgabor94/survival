@@ -1,0 +1,155 @@
+[
+  {
+    "file": "01-jaguar_trail.png",
+    "label": "Jaguár",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c1e16bef8cabb123590ceb5a525fafe990d54c27cb85062b7e9d9404e69de461"
+  },
+  {
+    "file": "02-snake_thicket.png",
+    "label": "Kígyó",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "bfaaed939d659483ae76f87701b32f5a1db5f895d7504ee81f3f3475bc1cdfd5"
+  },
+  {
+    "file": "03-boar_charge.png",
+    "label": "Vaddisznó · javított kamera",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "cef2ac7e8720a9093aeff918fbf18fdbcfbf999b4c4bb660228041bd888587c3"
+  },
+  {
+    "file": "04-crocodile_shallows.png",
+    "label": "Krokodil",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c9967b4fdf68d561a0935e2ed17f49c82522e4a838d4d164b7c8cc162a0ecf78"
+  },
+  {
+    "file": "05-hornet_nest.png",
+    "label": "Darazsak",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "4c1b7e1335e1c3d1465b606f1a9fa567652a3d64f81bfb3f08522a6c6ee46584"
+  },
+  {
+    "file": "06-monkey_raiders.png",
+    "label": "Majmok",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "23a8edb4a4841c8a2e7b431a8ee90f91302fbfd30dee673054c352f397c50aa5"
+  },
+  {
+    "file": "07-ancient_ruins.png",
+    "label": "Ősi romok · esemény",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "0b97038ee03d7ea717fd88f7c11f98b189784290d42d7c8b91b9ff1fb1ddd9b1"
+  },
+  {
+    "file": "08-ruins-puzzle.png",
+    "label": "Romok · puzzle",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "18d91f7f7fa69b9231f0753cabfb146c9c197b992e533da2b28bcc12401c1f60"
+  },
+  {
+    "file": "09-bamboo_grove.png",
+    "label": "Bambuszliget · esemény",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "343dd9b7a1154eb5ff06ae4c339fa48fc2f69d029956e0925d101e20357a4b90"
+  },
+  {
+    "file": "10-bamboo-expedition.png",
+    "label": "Bambuszliget · expedíció",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "4af2f5c9e3a5471a964d50cee6076cce2d2f28897eeaf944dca183f232533cc9"
+  },
+  {
+    "file": "11-plane_wreck.png",
+    "label": "Repülőroncs",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "590d5cbea9b77a43705c59ddc251eb99cdfb43a16a3f44e393ae25af3ab685b9"
+  },
+  {
+    "file": "12-riverbank.png",
+    "label": "Folyópart",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b7db22e898540e37e217f82201ee5762cf23f2ff4dd4103217da6f9bb9306c60"
+  },
+  {
+    "file": "13-workshop.png",
+    "label": "Műhely",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b7820419a7ef0e017d1b468d05c949b0a48628215e8eb41ed5816d4d338a299a"
+  },
+  {
+    "file": "14-storm-camp.png",
+    "label": "Viharos tábor",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "79259f6a01703c08f12539aad0f2ba060428a051737c7e20a20c3754e18accef"
+  },
+  {
+    "file": "15-storm-event.png",
+    "label": "Vihar · esemény",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "ecc5cc4d53fe22bb69d2d33395cb2acf67d83f0ea9790d8531d39c18c69a0076"
+  },
+  {
+    "file": "16-rescue-arrival.png",
+    "label": "Megmentés",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "35e46e064d172c3542b0e9d9969a25bb07e382169d5c9e8f97c48a8acaaaa6be"
+  },
+  {
+    "file": "17-fishing-unchanged.png",
+    "label": "Horgászat · változatlan",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "1d6abbdac8eafb85a4d96f65538faa96eb5c9539e8d0a89630836820a4965aa8"
+  }
+]

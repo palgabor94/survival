@@ -3,7 +3,7 @@
     "id": "camp",
     "name": "Camp",
     "description": "Your clearing beneath the canopy. Rest, prepare supplies and craft a fishing rod.",
-    "loot": "Rest \u00b7 Craft \u00b7 Inventory",
+    "loot": "Rest · Craft · Inventory",
     "timeCost": 0,
     "x": 0.27,
     "y": 0.64
@@ -12,17 +12,17 @@
     "id": "riverbank",
     "name": "Riverbank",
     "description": "Follow the stream for drinking water, dry branches, fibers and worms for bait.",
-    "loot": "Water \u00b7 Wood \u00b7 Fiber \u00b7 Bait",
+    "loot": "Water · Wood · Fiber · Bait",
     "timeCost": 2,
     "x": 0.42,
     "y": 0.35,
-    "background": "assets/art/riverbank_isometric.png"
+    "background": "assets/art/riverbank_camp_style_v2.png"
   },
   {
     "id": "fishing_pond",
     "name": "Fishing Pond",
     "description": "A quiet pool beyond the river. Bring a Basic Rod and bait, then watch for a bite.",
-    "loot": "Small Fish \u00b7 Perfect catch: 2 fish",
+    "loot": "Small Fish · Perfect catch: 2 fish",
     "timeCost": 2,
     "x": 0.72,
     "y": 0.43,
@@ -32,40 +32,42 @@
   {
     "id": "plane_wreck",
     "name": "Plane Wreck",
-    "description": "The wreck lies beyond dense jungle. A stronger camp makes the trip survivable. Scrap metal is worth the walk.",
-    "loot": "Metal scrap \u00b7 Hardwood",
+    "description": "Search the broken aircraft for supplies and the working parts of a rescue radio.",
+    "loot": "Metal Scrap · Hardwood · Beacon Parts",
     "timeCost": 3,
     "x": 0.73,
     "y": 0.59,
-    "minCampTier": 1
+    "minCampTier": 1,
+    "background": "assets/art/plane_wreck_camp_style_v2.png"
   },
   {
     "id": "ancient_ruins",
     "name": "Ancient Ruins",
-    "description": "Moss-covered stonework hints at a path deeper into the island.",
-    "loot": "Rare materials \u00b7 Beacon component",
+    "description": "Cut through the dense trail and align the old stone seal. A survey cache lies beneath the altar.",
+    "loot": "Rare materials · Beacon component",
     "timeCost": 3,
     "x": 0.7,
     "y": 0.77,
     "minCampTier": 2,
-    "comingSoon": "The ruins need a Machete. They open in a later chapter."
+    "requiresTool": "machete",
+    "background": "assets/art/ancient_ruins_camp_style_v1.png"
   },
   {
     "id": "bamboo_grove",
     "name": "Bamboo Grove",
     "description": "A sunlit grove of hollow stems and young shoots. A blade helps with the thickest canes.",
-    "loot": "Wood \u00b7 Fiber \u00b7 Herbs",
+    "loot": "Wood · Fiber · Herbs",
     "timeCost": 2,
     "x": 0.26,
     "y": 0.47,
     "minDay": 2,
-    "background": "assets/art/bamboo_grove_isometric_v2.png"
+    "background": "assets/art/bamboo_grove_camp_style_v2.png"
   },
   {
     "id": "mangrove_shallows",
     "name": "Mangrove Shallows",
     "description": "Still water hides between tangled roots. Search the dry banks and watch what moves below the surface.",
-    "loot": "Driftwood \u00b7 Bait \u00b7 Small Fish \u00b7 Herbs",
+    "loot": "Driftwood · Bait · Small Fish · Herbs",
     "timeCost": 2,
     "x": 0.27,
     "y": 0.81,

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Portrait scenes keep both horizontal edges visible on tall phones.
+BoxFit sceneBackgroundFit(Size viewport) =>
+    viewport.width <= viewport.height ? BoxFit.fitWidth : BoxFit.cover;
+
 abstract final class CanopyColors {
   static const background = Color(0xFF102A28);
   static const panel = Color(0xFF202E29);
@@ -16,6 +20,32 @@ abstract final class CanopyColors {
   static const workshop = Color(0xFF65492F);
 }
 
+/// Scene navigation keeps the artwork in place instead of sliding pages.
+class CanopyPageTransitionsBuilder extends PageTransitionsBuilder {
+  const CanopyPageTransitionsBuilder();
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 180);
+
+  @override
+  Duration get reverseTransitionDuration => const Duration(milliseconds: 140);
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (MediaQuery.disableAnimationsOf(context)) return child;
+    return FadeTransition(
+      opacity: animation.drive(CurveTween(curve: Curves.easeOut)),
+      child: child,
+    );
+  }
+}
+
 final canopyTheme = ThemeData(
   brightness: Brightness.dark,
   scaffoldBackgroundColor: CanopyColors.background,
@@ -28,6 +58,12 @@ final canopyTheme = ThemeData(
     error: CanopyColors.health,
   ),
   fontFamily: 'Arial',
+  pageTransitionsTheme: PageTransitionsTheme(
+    builders: {
+      for (final platform in TargetPlatform.values)
+        platform: const CanopyPageTransitionsBuilder(),
+    },
+  ),
   textTheme: const TextTheme(
     bodyMedium: TextStyle(fontSize: 14, height: 1.4),
     bodyLarge: TextStyle(fontSize: 16, height: 1.45),

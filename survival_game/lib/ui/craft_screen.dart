@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../game/crafting.dart';
 import '../game/game_engine.dart';
+import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'action_card.dart';
 import 'camp_widgets.dart';
@@ -12,6 +13,8 @@ import 'canopy_theme.dart';
 import 'card_art.dart';
 
 const recipeIcons = {
+  'machete': Icons.content_cut_rounded,
+  'emergency_beacon': Icons.cell_tower_rounded,
   'basic_rod': Icons.phishing_rounded,
   'stone_knife': Icons.content_cut_rounded,
   'stone_axe': Icons.carpenter_rounded,
@@ -53,13 +56,14 @@ class _CraftScreenState extends State<CraftScreen> {
       if (recipe.id == _selected) return recipe;
     }
     for (final recipe in list) {
-      if (!recipe.isOwnedBy(game.state) &&
+      if ((!recipe.isOwnedBy(game.state) || game.canRepairTool(recipe.id)) &&
           game.craftBlockReason(recipe.id) == null) {
         return recipe;
       }
     }
     return list.firstWhere(
-      (recipe) => !recipe.isOwnedBy(game.state),
+      (recipe) =>
+          (!recipe.isOwnedBy(game.state) || game.canRepairTool(recipe.id)),
       orElse: () => list.first,
     );
   }
@@ -108,7 +112,8 @@ class _CraftScreenState extends State<CraftScreen> {
     final large =
         MediaQuery.textScalerOf(context).scale(14) > 19 ||
         MediaQuery.sizeOf(context).width < 360;
-    final owned = current.isOwnedBy(game.state);
+    final owned =
+        current.isOwnedBy(game.state) && !game.canRepairTool(current.id);
     final block = game.craftBlockReason(current.id);
     final costs = current.costs.entries
         .map((cost) => '${cost.value} ${itemName(cost.key).toLowerCase()}')
@@ -153,7 +158,11 @@ class _CraftScreenState extends State<CraftScreen> {
         cards: [
           ActionCard(
             key: ValueKey('craft-${current.id}'),
-            title: _camp ? 'Build ${current.name}' : 'Craft',
+            title: _camp
+                ? 'Build ${current.name}'
+                : game.canRepairTool(current.id)
+                ? 'Repair ${current.name}'
+                : 'Craft',
             art: _camp ? 'shelter' : 'craft',
             tone: CardTone.leaf,
             compact: true,
@@ -194,7 +203,7 @@ class _CraftScreenState extends State<CraftScreen> {
       body: CanopyBackdrop(
         background: _camp
             ? campArt(current.tier!)
-            : 'assets/art/workshop_scene.png',
+            : 'assets/art/workshop_camp_style_v1.png',
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -250,7 +259,8 @@ class _RecipeDetail extends StatelessWidget {
   final Recipe recipe;
   @override
   Widget build(BuildContext context) {
-    final owned = recipe.isOwnedBy(game.state);
+    final owned =
+        recipe.isOwnedBy(game.state) && !game.canRepairTool(recipe.id);
     final block = game.craftBlockReason(recipe.id);
     final tier = recipe.kind == RecipeKind.campTier;
     return CampPanel(
@@ -289,7 +299,10 @@ class _RecipeDetail extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      recipe.effect,
+                      RunState.toolDurability.containsKey(recipe.id) &&
+                              game.state.tools.contains(recipe.id)
+                          ? '${recipe.effect} · Condition ${game.state.toolCondition(recipe.id)}/${RunState.toolDurability[recipe.id]}'
+                          : recipe.effect,
                       style: const TextStyle(fontSize: 12, height: 1.3),
                     ),
                     if (owned)
@@ -413,7 +426,8 @@ class _RecipeStrip extends StatelessWidget {
   );
 
   Widget _tile(Recipe recipe, bool large) {
-    final owned = recipe.isOwnedBy(game.state);
+    final owned =
+        recipe.isOwnedBy(game.state) && !game.canRepairTool(recipe.id);
     final block = game.craftBlockReason(recipe.id);
     return ActionCard(
       key: ValueKey('recipe-${recipe.id}'),
@@ -427,7 +441,9 @@ class _RecipeStrip extends StatelessWidget {
       tag: owned
           ? 'OWNED'
           : block == null
-          ? 'READY'
+          ? game.canRepairTool(recipe.id)
+                ? 'REPAIR'
+                : 'READY'
           : 'LOCKED',
       onTap: () => onSelect(recipe.id),
     );

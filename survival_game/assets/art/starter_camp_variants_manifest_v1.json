@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-13",
+  "generator": "built-in image_gen",
+  "variants": [
+    {
+      "pose": "fire",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-e7109220-f93f-4241-a5c6-ce60b125cd0c.png",
+      "tier": 0,
+      "file": "camp_tier_0_fire_v1.png",
+      "prompt": "Use case: character-reposition. Strict preservation edit for Lost Canopy mobile survival game. Image 1 is the exact Tier 0 camp edit target and sole environment/style/camera reference. Image 2 is ONLY the canonical explorer identity reference. Produce ONE full-frame opaque portrait 9:16 scene, matching the original framing and moderately elevated isometric three-quarter camera EXACTLY. Preserve the original simple angular faceted painted style, sparse beginner camp, small green A-frame shelter, floor mat and rolled blanket, fire ring, lantern, single crate, rocks, golden dirt clearing, large jungle foliage, distant waterfall, sky, all environment geometry and sunlight. No extra tables, tools, shelters, buildings or advanced tier upgrades. Change ONLY the ONE explorer's position and activity; erase his original standing position naturally. Same small scale relative to shelter, brown angular hair and beard, cream rolled-sleeve shirt, green trousers, brown boots, diagonal brown shoulder strap. EXACTLY ONE person, no duplicate original figure. Natural correct limbs/contact shadows. No UI, lettering, borders, logo or watermark. Activity: Explorer stands just LEFT of the existing fire ring, in a turned three-quarter pose facing the flame, holding both hands toward it to warm them, safely outside the stones.",
+      "references": [
+        "assets/art/starter_camp.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "0b6b2ed92c1e069db9b0bb40676fdc34eeee6ce19206c6c3620c661332da314a"
+    },
+    {
+      "pose": "bed",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-4ddefaf2-ccab-45a6-a112-2342d6918316.png",
+      "tier": 0,
+      "file": "camp_tier_0_bed_v1.png",
+      "prompt": "Use case: character-reposition. Strict preservation edit for Lost Canopy mobile survival game. Image 1 is the exact Tier 0 camp edit target and sole environment/style/camera reference. Image 2 is ONLY the canonical explorer identity reference. Produce ONE full-frame opaque portrait 9:16 scene, matching the original framing and moderately elevated isometric three-quarter camera EXACTLY. Preserve the original simple angular faceted painted style, sparse beginner camp, small green A-frame shelter, floor mat and rolled blanket, fire ring, lantern, single crate, rocks, golden dirt clearing, large jungle foliage, distant waterfall, sky, all environment geometry and sunlight. No extra tables, tools, shelters, buildings or advanced tier upgrades. Change ONLY the ONE explorer's position and activity; erase his original standing position naturally. Same small scale relative to shelter, brown angular hair and beard, cream rolled-sleeve shirt, green trousers, brown boots, diagonal brown shoulder strap. EXACTLY ONE person, no duplicate original figure. Natural correct limbs/contact shadows. No UI, lettering, borders, logo or watermark. Activity: Explorer sits on the FRONT EDGE of the existing low sleeping mat under the green shelter, knees bent and both boots on the ground outside, hands resting on thighs, quietly resting. Do not add a raised bed or change shelter construction.",
+      "references": [
+        "assets/art/starter_camp.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "0473a3ce98cdd5f3272b18ae935c0dc81d7295f77886b25f7d6cddb66cffeeed"
+    },
+    {
+      "pose": "wood",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-a17ec500-c7cc-4dc8-a88a-1eb62663c1f6.png",
+      "tier": 0,
+      "file": "camp_tier_0_wood_v2.png",
+      "prompt": "Use case: character-reposition, one targeted composition correction. Image 1 is the exact Lost Canopy Tier 0 wood-stacking scene to edit; Image 2 is the canonical explorer identity reference. Keep the entire jungle backdrop, small shelter, mat, fire, lantern, crate, camera angle, zoom, framing, colors, opaque portrait 9:16 ratio and simple angular painted art EXACTLY unchanged. Move ONLY the sole crouching explorer and the small wood bundle he is holding from the far right edge to the FRONT-LEFT of the existing crate, between crate and fire but safely away from the flame. The explorer center must be at approximately 73% of image width instead of 86%, with his complete body and the complete wood bundle inside the central 80% of the canvas, because a tall phone crops the side edges. Keep same scale, crouching pose, bearded explorer identity, cream shirt, green pants and brown boots. Restore the dirt where the original character and pile were. Do not duplicate the person, add people, shift the background or move the crate/fire/lantern. Exactly one character, visible hands naturally stacking logs. No UI, text, border or watermark.",
+      "references": [
+        "design/camp-variants/tier0/wood-edge-trial-v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "cc266dc6c12a074309927fc433971a255ae66277a4807b524b27ef814d636e4d",
+      "firstCandidate": {
+        "pose": "wood",
+        "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-97f51c61-4f9c-48ee-ab4a-cbf3b488fdf7.png",
+        "tier": 0,
+        "file": "design/camp-variants/tier0/wood-edge-trial-v1.png",
+        "prompt": "Use case: character-reposition. Strict preservation edit for Lost Canopy mobile survival game. Image 1 is the exact Tier 0 camp edit target and sole environment/style/camera reference. Image 2 is ONLY the canonical explorer identity reference. Produce ONE full-frame opaque portrait 9:16 scene, matching the original framing and moderately elevated isometric three-quarter camera EXACTLY. Preserve the original simple angular faceted painted style, sparse beginner camp, small green A-frame shelter, floor mat and rolled blanket, fire ring, lantern, single crate, rocks, golden dirt clearing, large jungle foliage, distant waterfall, sky, all environment geometry and sunlight. No extra tables, tools, shelters, buildings or advanced tier upgrades. Change ONLY the ONE explorer's position and activity; erase his original standing position naturally. Same small scale relative to shelter, brown angular hair and beard, cream rolled-sleeve shirt, green trousers, brown boots, diagonal brown shoulder strap. EXACTLY ONE person, no duplicate original figure. Natural correct limbs/contact shadows. No UI, lettering, borders, logo or watermark. Activity: Explorer crouches BESIDE the existing single crate to the right of the shelter, gathering the existing loose firewood into a tidy small bundle, hands visibly gripping a log. Keep the fire ring and shelter untouched; do not add a workbench or axe.",
+        "references": [
+          "assets/art/starter_camp.png",
+          "design/references/explorer_character_master_v1.png"
+        ],
+        "dimensions": [
+          941,
+          1672
+        ],
+        "sha256": "14f180f68b38ec69ac58dbe1772263d27b469aca92d3d5c7112a37b2ded98811"
+      }
+    }
+  ]
+}

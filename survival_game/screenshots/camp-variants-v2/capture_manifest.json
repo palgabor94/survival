@@ -1,0 +1,74 @@
+[
+  {
+    "file": "01-tier-1-fire.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "154a1be0a3de64a12dc53e715f60bf52926139c9494326c1c5154fac9504e2f9"
+  },
+  {
+    "file": "02-tier-1-bed.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "af43d0df59b973c8d238b3d61072125f8bb815957a1294d97e4e67553fe31bd9"
+  },
+  {
+    "file": "03-tier-1-workbench.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "8b16427b6188399e508f1e343c5df09214464ae3a47a3203871e396d58cfdba0"
+  },
+  {
+    "file": "04-tier-2-fire.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "769261dc4854c6d99cc02fe4abf8dc118ab15af1f7fb8c714cb0662009c8ecf4"
+  },
+  {
+    "file": "05-tier-2-bed.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c6c437d972ff334f89202b875488b5f04f4c990d4b9d9b90a4f8958d77e9c0f6"
+  },
+  {
+    "file": "06-tier-2-workbench.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "e576e83e697f43a0f108b31f707b11e984ce19aed4702265dd5abb87bde0148d"
+  },
+  {
+    "file": "07-tier-3-fire.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "6a9c396128ab81d0a6e8985ffe1af8ac3d515bb82cf79045748f593dd8d1b601"
+  },
+  {
+    "file": "08-tier-3-bed.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "e43b86f90bd4795ed0c6fb26790d6571420b79e5bab94860f971eecee23e59fd"
+  },
+  {
+    "file": "09-tier-3-workbench.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "687e3daa1cb851f16a3185cbc4d0bb1e03d5dd72450fdd3726406ab386b8241e"
+  }
+]

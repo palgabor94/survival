@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-13",
+  "generator": "built-in image_gen; true transparent alpha; one call per sprite",
+  "character_reference": "design/references/explorer_character_master_v1.png",
+  "generated_source_directory": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9",
+  "backgrounds": [
+    {
+      "path": "assets/art/camp_tier_0_empty_v1.jpg",
+      "size": [
+        1536,
+        2752
+      ],
+      "mode": "RGB",
+      "sha256": "e2203b62971e9851cd9c7bb39360b3599f8bc3b1b5caabe74bed07f984e25bcd",
+      "tier": 0,
+      "source": "/Users/palgabor/Downloads/ca346231-d66c-43c1-a87a-6b7a4596076e.jpg",
+      "alignment_y": 0.18
+    },
+    {
+      "path": "assets/art/camp_tier_1_empty_v1.jpg",
+      "size": [
+        1536,
+        2752
+      ],
+      "mode": "RGB",
+      "sha256": "1334be334c9b935e40910f57ec691753c09ee7e305d416f635c83a19fd92a4e7",
+      "tier": 1,
+      "source": "/Users/palgabor/Downloads/172aac5e-6c20-4312-ace9-6d14731f67ff.jpg",
+      "alignment_y": 0.18
+    },
+    {
+      "path": "assets/art/camp_tier_2_empty_v1.jpg",
+      "size": [
+        1536,
+        2752
+      ],
+      "mode": "RGB",
+      "sha256": "25cfab6192c8d0e0c70012755a15be167ddb7861b34ec1352010dcc23c661137",
+      "tier": 2,
+      "source": "/Users/palgabor/Downloads/73bb524c-6bfe-4a19-a4af-788bf597dc66.jpg",
+      "alignment_y": -0.7
+    },
+    {
+      "path": "assets/art/camp_tier_3_empty_v1.jpg",
+      "size": [
+        1536,
+        2752
+      ],
+      "mode": "RGB",
+      "sha256": "aad800242abf1ea17897d624a03a3a0e06a2a63e5288e231742fd22c97acfe8f",
+      "tier": 3,
+      "source": "/Users/palgabor/Downloads/6caee149-5fee-4f48-a0ea-ba8d67764005.jpg",
+      "alignment_y": -0.7
+    }
+  ],
+  "sprites": [
+    {
+      "path": "assets/art/explorer_camp_fire_v2.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "567a1fd8d827bcd4fc732338e68a3365c01cc26ef14c042effc0d147e12594ce",
+      "activity": "fire",
+      "source_filename": "exec-6764c1e8-ea77-4170-8d3b-fd3b0a4b9e7f.png",
+      "prompt": "design/camp-layers-tier0-v1/fire-v2-prompt.txt"
+    },
+    {
+      "path": "assets/art/explorer_camp_wood_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "902b43905b96062b13292f870adefb0935540a9eeb90f0612f6649d296438741",
+      "activity": "wood",
+      "source_filename": "exec-27baad19-1640-4866-8710-8e8a680627a1.png",
+      "prompt": "design/camp-layers-tier0-v1/wood-prompt.txt"
+    },
+    {
+      "path": "assets/art/explorer_camp_craft_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "2d891294d9be8853aabecfffb8559efb4ea7058a1c0b3d4b1374b59ec958e0e8",
+      "activity": "craft",
+      "source_filename": "exec-e9a56dbe-61bb-4b9b-9463-3ce4f4457fb7.png",
+      "prompt": "design/camp-layers-tier0-v1/craft-prompt.txt"
+    },
+    {
+      "path": "assets/art/explorer_camp_seated_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "45f24de6d44e4f6f06a76698e09f05aa8d8880e013d230f64fe078d0fd84e170",
+      "activity": "seated",
+      "source_filename": "exec-d24f3e0e-e914-4e91-8afa-e16ad391b9e3.png",
+      "prompt": "design/camp-layers-tier0-v1/seated-prompt.txt"
+    },
+    {
+      "path": "assets/art/explorer_camp_inspect_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "d448be3648a404b1f97d74782f0da657b78ccdc6814b08dd3389d4cbeb60ecdf",
+      "activity": "inspect",
+      "source_filename": "exec-a6e7935e-403e-423d-b032-067d2ab63782.png",
+      "prompt": "design/camp-layers-tier0-v1/inspect-prompt.txt"
+    },
+    {
+      "path": "assets/art/explorer_camp_seated_right_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "0e8d49f96088228cc835c7307c8254a117d77884fbe7dd4e372093638e347a76",
+      "activity": "seated-right",
+      "source_filename": "exec-c5c336b8-5ca6-43b1-b0ba-f3246c7cf819.png",
+      "prompt": "design/camp-layers-tier0-v1/seated-right-prompt.txt"
+    }
+  ],
+  "layouts": [
+    {
+      "tier": 0,
+      "poses": [
+        {
+          "activity": "fire",
+          "asset": "assets/art/explorer_camp_fire_v2.png",
+          "contact_position": [
+            0.42,
+            0.69
+          ],
+          "width_relative_to_art": 0.31,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        },
+        {
+          "activity": "wood",
+          "asset": "assets/art/explorer_camp_wood_v1.png",
+          "contact_position": [
+            0.27,
+            0.615
+          ],
+          "width_relative_to_art": 0.295,
+          "sprite_contact_anchor": [
+            0.52,
+            0.95
+          ]
+        },
+        {
+          "activity": "craft",
+          "asset": "assets/art/explorer_camp_craft_v1.png",
+          "contact_position": [
+            0.47,
+            0.72
+          ],
+          "width_relative_to_art": 0.22,
+          "sprite_contact_anchor": [
+            0.5,
+            0.88
+          ]
+        },
+        {
+          "activity": "seated",
+          "asset": "assets/art/explorer_camp_seated_v1.png",
+          "contact_position": [
+            0.782,
+            0.593
+          ],
+          "width_relative_to_art": 0.24,
+          "sprite_contact_anchor": [
+            0.66,
+            0.635
+          ]
+        },
+        {
+          "activity": "inspect",
+          "asset": "assets/art/explorer_camp_inspect_v1.png",
+          "contact_position": [
+            0.32,
+            0.69
+          ],
+          "width_relative_to_art": 0.3,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        }
+      ]
+    },
+    {
+      "tier": 1,
+      "poses": [
+        {
+          "activity": "fire",
+          "asset": "assets/art/explorer_camp_fire_v2.png",
+          "contact_position": [
+            0.42,
+            0.69
+          ],
+          "width_relative_to_art": 0.31,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        },
+        {
+          "activity": "wood",
+          "asset": "assets/art/explorer_camp_wood_v1.png",
+          "contact_position": [
+            0.29,
+            0.65
+          ],
+          "width_relative_to_art": 0.295,
+          "sprite_contact_anchor": [
+            0.52,
+            0.95
+          ]
+        },
+        {
+          "activity": "craft",
+          "asset": "assets/art/explorer_camp_craft_v1.png",
+          "contact_position": [
+            0.48,
+            0.72
+          ],
+          "width_relative_to_art": 0.22,
+          "sprite_contact_anchor": [
+            0.5,
+            0.88
+          ]
+        },
+        {
+          "activity": "seated",
+          "asset": "assets/art/explorer_camp_seated_v1.png",
+          "contact_position": [
+            0.755,
+            0.589
+          ],
+          "width_relative_to_art": 0.24,
+          "sprite_contact_anchor": [
+            0.66,
+            0.635
+          ]
+        },
+        {
+          "activity": "inspect",
+          "asset": "assets/art/explorer_camp_inspect_v1.png",
+          "contact_position": [
+            0.34,
+            0.64
+          ],
+          "width_relative_to_art": 0.3,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        }
+      ]
+    },
+    {
+      "tier": 2,
+      "poses": [
+        {
+          "activity": "fire",
+          "asset": "assets/art/explorer_camp_fire_v2.png",
+          "contact_position": [
+            0.635,
+            0.8
+          ],
+          "width_relative_to_art": 0.31,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        },
+        {
+          "activity": "wood",
+          "asset": "assets/art/explorer_camp_wood_v1.png",
+          "contact_position": [
+            0.52,
+            0.68
+          ],
+          "width_relative_to_art": 0.295,
+          "sprite_contact_anchor": [
+            0.52,
+            0.95
+          ]
+        },
+        {
+          "activity": "craft",
+          "asset": "assets/art/explorer_camp_craft_v1.png",
+          "contact_position": [
+            0.43,
+            0.733
+          ],
+          "width_relative_to_art": 0.22,
+          "sprite_contact_anchor": [
+            0.5,
+            0.88
+          ]
+        },
+        {
+          "activity": "seated",
+          "asset": "assets/art/explorer_camp_seated_right_v1.png",
+          "contact_position": [
+            0.532,
+            0.752
+          ],
+          "width_relative_to_art": 0.25,
+          "sprite_contact_anchor": [
+            0.43,
+            0.635
+          ]
+        },
+        {
+          "activity": "inspect",
+          "asset": "assets/art/explorer_camp_inspect_v1.png",
+          "contact_position": [
+            0.46,
+            0.635
+          ],
+          "width_relative_to_art": 0.3,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        }
+      ]
+    },
+    {
+      "tier": 3,
+      "poses": [
+        {
+          "activity": "fire",
+          "asset": "assets/art/explorer_camp_fire_v2.png",
+          "contact_position": [
+            0.57,
+            0.79
+          ],
+          "width_relative_to_art": 0.31,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        },
+        {
+          "activity": "wood",
+          "asset": "assets/art/explorer_camp_wood_v1.png",
+          "contact_position": [
+            0.66,
+            0.635
+          ],
+          "width_relative_to_art": 0.295,
+          "sprite_contact_anchor": [
+            0.52,
+            0.95
+          ]
+        },
+        {
+          "activity": "craft",
+          "asset": "assets/art/explorer_camp_craft_v1.png",
+          "contact_position": [
+            0.43,
+            0.69
+          ],
+          "width_relative_to_art": 0.22,
+          "sprite_contact_anchor": [
+            0.5,
+            0.88
+          ]
+        },
+        {
+          "activity": "seated",
+          "asset": "assets/art/explorer_camp_seated_v1.png",
+          "contact_position": [
+            0.13,
+            0.607
+          ],
+          "width_relative_to_art": 0.24,
+          "sprite_contact_anchor": [
+            0.66,
+            0.635
+          ]
+        },
+        {
+          "activity": "inspect",
+          "asset": "assets/art/explorer_camp_inspect_v1.png",
+          "contact_position": [
+            0.39,
+            0.635
+          ],
+          "width_relative_to_art": 0.3,
+          "sprite_contact_anchor": [
+            0.55,
+            0.94
+          ]
+        }
+      ]
+    }
+  ],
+  "seats": [
+    "Tier 0 single ground crate",
+    "Tier 1 single ground crate in front of stack",
+    "Tier 2 front firewood stump",
+    "Tier 3 single front ground crate"
+  ],
+  "rendering": "Coordinates use the decoded background rectangle; original bitmap/alpha untouched; pose-specific scale accounts for canvas margins and anatomy; seated hip anchor replaces foot anchor. Night modulate preserves alpha.",
+  "gallery": "screenshots/camp-layers-all-tiers-v1/index.html"
+}

@@ -1,5 +1,12 @@
 /// Full-background card illustrations. Small HUD icons keep using CardArt.
 const cardIllustrationSubjects = <String>[
+  'machete',
+  'emergency_beacon',
+  'battery',
+  'wire',
+  'metal_parts',
+  'radio_module',
+  'beacon_core',
   'forage',
   'stone_axe',
   'basic_rod',

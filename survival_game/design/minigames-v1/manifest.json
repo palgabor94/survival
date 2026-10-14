@@ -1,0 +1,103 @@
+{
+  "tool": "built-in image_gen",
+  "staged": true,
+  "assets": [
+    {
+      "name": "wood_chopping_background_v1",
+      "kind": "background",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/references/explorer_character_master_v1.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/bamboo_grove_camp_style_v2.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: full-screen portrait mobile survival-game environment, opaque image, aspect ratio 9:16. Reference 1 is the AUTHORITY for moderately elevated three-quarter/isometric camera and simple camp art style. Reference 2 is the mandatory exact explorer character identity. Reference 3 illustrates looking down at ground with visible tops of objects; do not copy its environment. Match reference 1 simple chunky low-poly broad matte painted facets, few flat shaded planes, clean silhouettes, not detailed realism. Camera above the ground, looking diagonally down, orthographic-like, approx 50 degrees below horizontal, clear top planes and side planes, never eye-level, never near-vertical overhead. No horizon or sky. Ground and foliage crowns fill the image. Explorer exactly cream rolled-sleeve collared shirt, dark green trousers, dark brown boots, angular dark hair and short full beard, one brown diagonal satchel strap and small satchel. No backpack or crossed straps. One person only. Central interactive area y=40\u201366%, explorer roughly 18% of image height with full body visible. Upper 18% and bottom 22% remain environment for UI overlays. No words, text, logos, cards, UI, borders, lettering. Scene: warm dappled sun in a small broad clearing among massive buttress-root trees and a few broad ferns, with tan soil and three simple gray rocks. Clearly distinct from bamboo and the jaguar path, no camp structures or waterfall. At center slightly left, explorer in chopping pose with a primitive stone axe lifted in both hands beside a short wide cut tree stump slightly right of him; stump top is plainly visible from above and holds a wood billet, one large fallen log behind at a diagonal. A few wood chips, not many scattered details. Lower edge framed with very chunky large leaves, upper part nearby tree roots and leafy ground viewed from above. Balanced center composition with clean open ground around main chopping action. Keep torso/feet same above-camera perspective as jaguar reference.",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/wood_chopping_background_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-896a4fdd-5a38-4300-8e64-f4568ee2dba4.png",
+      "sha256": "7af2a60bf4661ac20d1c73cc75b286d71d25b2a956ac6b9f4ba2b37039c03315",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "foraging_background_v1",
+      "kind": "background",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/references/explorer_character_master_v1.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/bamboo_grove_camp_style_v2.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: full-screen portrait mobile survival-game environment, opaque image, aspect ratio 9:16. Reference 1 is the AUTHORITY for moderately elevated three-quarter/isometric camera and simple camp art style. Reference 2 is the mandatory exact explorer character identity. Reference 3 illustrates looking down at ground with visible tops of objects; do not copy its environment. Match reference 1 simple chunky low-poly broad matte painted facets, few flat shaded planes, clean silhouettes, not detailed realism. Camera above the ground, looking diagonally down, orthographic-like, approx 50 degrees below horizontal, clear top planes and side planes, never eye-level, never near-vertical overhead. No horizon or sky. Ground and foliage crowns fill the image. Explorer exactly cream rolled-sleeve collared shirt, dark green trousers, dark brown boots, angular dark hair and short full beard, one brown diagonal satchel strap and small satchel. No backpack or crossed straps. One person only. Central interactive area y=40\u201366%, explorer roughly 18% of image height with full body visible. Upper 18% and bottom 22% remain environment for UI overlays. No words, text, logos, cards, UI, borders, lettering. Scene: a secluded lush herb garden patch beside a shallow mossy seasonal stream bed in a jungle grove. Green cool palette with a small cream soil clearing, large smooth gray stones, several broad-leaf plants, sparse light shafts, no waterfall, no camp, no bamboo. Explorer kneeling near center slightly left to inspect a little herb plant with small leaf clusters. Around him three distinct low plant clumps: red berries upper-right, simple pale brown mushrooms on a fallen root lower-right, narrow bright fiber leaves left. They must be legible simple plant shapes, not dense botanical detailing. Water visible as a narrow turquoise ribbon near upper-right and local forest floor fills upper part from above, no distant corridor. Important: visible top of head, shoulders, rocks, plant crowns, full kneeling character and boots.",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/foraging_background_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-d71b49dc-4f61-4f96-b3ec-73d922ae61be.png",
+      "sha256": "a36fc6b5dbdca3a3f5048b080cc2b377150a5e9e72ffc195b3496a6663ac1f94",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "hunting_background_v1",
+      "kind": "background",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/references/explorer_character_master_v1.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/bamboo_grove_camp_style_v2.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: full-screen portrait mobile survival-game environment, opaque image, aspect ratio 9:16. Reference 1 is the AUTHORITY for moderately elevated three-quarter/isometric camera and simple camp art style. Reference 2 is the mandatory exact explorer character identity. Reference 3 illustrates looking down at ground with visible tops of objects; do not copy its environment. Match reference 1 simple chunky low-poly broad matte painted facets, few flat shaded planes, clean silhouettes, not detailed realism. Camera above the ground, looking diagonally down, orthographic-like, approx 50 degrees below horizontal, clear top planes and side planes, never eye-level, never near-vertical overhead. No horizon or sky. Ground and foliage crowns fill the image. Explorer exactly cream rolled-sleeve collared shirt, dark green trousers, dark brown boots, angular dark hair and short full beard, one brown diagonal satchel strap and small satchel. No backpack or crossed straps. One person only. Central interactive area y=40\u201366%, explorer roughly 18% of image height with full body visible. Upper 18% and bottom 22% remain environment for UI overlays. No words, text, logos, cards, UI, borders, lettering. Scene: a wide sandy amber animal trail across a small sunlit jungle clearing with dry grasses, two pale flat boulders, a thick fallen branch and palm fronds along the edges. Distinct open scrubby tropical environment, not same jaguar forest corridor, no ruin, waterfall, camp or bamboo. Explorer at x=29%, y=60%, full body roughly18% frame height, holding a long primitive stone-tipped spear poised to throw toward upper-right. Character seen from elevated three-quarter rear/side view with top of shoulders visible. Reserve a CLEAR EMPTY patch of tan dirt at x=64%, y=47% for a separate moving animal sprite to be overlaid later. No animals, no target symbol, no reticle, no projectile, no blood. No bushes covering clear target area. Upper area is nearby ground with grass and broad palm crowns seen from above, never horizon. Spear point should be simple gray angular stone, readable.",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/hunting_background_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-55a2fc53-f833-4243-84ee-9920b7694ffc.png",
+      "sha256": "114afbea884b91e45f2c23be501c5e3c4c2a15d7f767b7638bbd0bd860085de1",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "mushroom_card_scene_v1",
+      "kind": "card",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/jaguar-camp-style-test/jaguar_camp_style_v3.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: landscape 3:2 card illustration, no frame no words no UI. Use attached image only for its simple broad low-poly faceted art style and muted natural palette. Subject: centered cluster of three small edible-looking tan and brown mushrooms with short pale stems on a little mossy root, filling 60% width and70%height. All caps and stems inside image with generous margins, center of cluster at exact image center. Each mushroom fully visible, same simple chunky art style as reference. Own fitting deep dark green jungle leaf background, darkened behind bright warm caps for separation, large broad leaf silhouettes and simple soil, no tiny detail. Camera elevated three-quarter looking down at visible cap tops. No people animals lettering watermark, no outlines, no UI. Output aspect ratio3:2.",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/mushroom_card_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-8750a6ed-3016-475e-89c3-a50ac4180017.png",
+      "sha256": "fe0d9ba96a12db8786c345534f5240a6321d73ef65ea4ff8d91ca421c4f003b6",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "name": "unknown_plant_card_scene_v1",
+      "kind": "card",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/jaguar-camp-style-test/jaguar_camp_style_v3.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: landscape 3:2 card illustration, no frame no words no UI. Use attached image only for simple broad low-poly faceted art style. Centered unfamiliar jungle plant with a few broad violet-green waxy leaves and small purple berries, on a simple mossy soil mound. Subject fills60%width70%height, complete silhouette with even margins, visual mass at exact center. Own fitting deep dark green jungle background of a few chunky leaf silhouettes, subtly darkened so violet berries and plant read clearly. Moderately elevated three-quarter looking down at leaf top surfaces, soft warm sunlight, matte broad facets only, not intricate botanical realism. No skull, hazard icons, text, character, frame or watermark. Aspect ratio3:2.",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/unknown_plant_card_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-228f3eee-15e5-4161-a111-f6668b48bea3.png",
+      "sha256": "eca2ecfc253191e788dfcf4f9d9235d7830dd02fcf09498e54bef7cd36bc5205",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "name": "hunting_boar_sprite_v2",
+      "kind": "sprite",
+      "refs": [
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/hunting_boar_sprite_v1.png",
+        "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/hunting_background_v1.png"
+      ],
+      "prompt": "Use case: background-extraction. Edit image1, the isolated boar sprite. Preserve its species, low-poly faceted shape, complete four legs and tusks, exact pose and above-view camera. Image2 is only lighting/style reference for game integration; do not include its person or any of its background. Fix alpha and edge quality only: remove the brown smoky outer halo, fog, glow, feathered vignette and all broad shadow. Keep the boar's body SOLID fully opaque, 100% visible, crisp clean edges with tiny normal antialiasing. All pixels outside its actual complete silhouette fully transparent, genuinely transparent alpha, not black. No ground shadow at all. No fuzzy edges or semitransparent body. One centered boar sprite, transparent background, 3:2 landscape. No additional objects, text, UI, background, frame.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b3c51ce4-40c4-4c81-b1ab-d558da13be37.png",
+      "path": "/Users/palgabor/Documents/flutter/survival/survival_game/design/minigames-v1/assets/hunting_boar_sprite_v2.png",
+      "sha256": "409dd1b17df2d6b44bf9d6a511bea5ed2d204fe0590318790b13d5d237cf6935",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    }
+  ]
+}

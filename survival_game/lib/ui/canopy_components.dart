@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../feedback/haptics_scope.dart';
 
 import '../game/run_state.dart';
 import 'action_card.dart';
 import 'camp_widgets.dart';
 import 'canopy_theme.dart';
 import 'card_art.dart';
+import 'scene_artwork.dart';
 
 /// Keeps controls at the bottom, and scrolls naturally when text grows.
 /// Avoid a page-wide intrinsic-height calculation: card widths are capped,
@@ -48,7 +50,16 @@ class CanopyHud extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CardArt(night ? 'moon' : 'sun', size: 24),
+          if (!night && state.weather != 'Sunny')
+            Icon(
+              state.weather == 'Storm'
+                  ? Icons.thunderstorm_rounded
+                  : Icons.water_drop_rounded,
+              color: CanopyColors.water,
+              size: 24,
+            )
+          else
+            CardArt(night ? 'moon' : 'sun', size: 24),
           const SizedBox(width: 5),
           Flexible(
             child: Column(
@@ -132,25 +143,29 @@ class CanopyBackdrop extends StatelessWidget {
     this.dark = false,
     this.alignment = Alignment.center,
     this.imageTop = 0,
+    this.tint,
+    this.foregroundBuilder,
   });
   final Widget child;
   final String background;
   final bool dark;
   final Alignment alignment;
   final double imageTop;
+  final Color? tint;
+  final Widget Function(BuildContext context, Rect artworkRect)?
+  foregroundBuilder;
   @override
   Widget build(BuildContext context) => Stack(
     fit: StackFit.expand,
     children: [
+      const ColoredBox(color: CanopyColors.background),
       Positioned.fill(
         top: imageTop,
-        child: Image.asset(
-          background,
-          fit: BoxFit.cover,
+        child: SceneArtwork(
+          asset: background,
           alignment: alignment,
-          excludeFromSemantics: true,
-          errorBuilder: (context, error, stackTrace) =>
-              const ColoredBox(color: CanopyColors.background),
+          tint: tint,
+          foregroundBuilder: foregroundBuilder,
         ),
       ),
       DecoratedBox(
@@ -230,6 +245,9 @@ class CanopyDialog extends StatelessWidget {
   Widget build(BuildContext context) => Dialog(
     backgroundColor: Colors.transparent,
     elevation: 0,
+    // CampPanel supplies the single visible frame. The themed Dialog shape
+    // would otherwise draw a second border behind the scrollable content.
+    shape: const RoundedRectangleBorder(),
     insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
     child: ConstrainedBox(
       constraints: BoxConstraints(
@@ -239,25 +257,69 @@ class CanopyDialog extends StatelessWidget {
             MediaQuery.viewInsetsOf(context).bottom -
             48,
       ),
-      child: SingleChildScrollView(
-        child: CampPanel(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CanopyTitle(title: title, art: art, subtitle: subtitle),
-              const SizedBox(height: 16),
-              child,
-              if (actions.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                CardDeck(cards: actions, columns: 1),
+      child: CampPanel(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CanopyTitle(
+                    title: title,
+                    art: art,
+                    subtitle: subtitle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const CanopyDialogCloseButton(),
               ],
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            Flexible(
+              child: SingleChildScrollView(
+                key: const ValueKey('dialog-content-scroll'),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    child,
+                    if (actions.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      CardDeck(cards: actions, columns: 1),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ),
+  );
+}
+
+class CanopyDialogCloseButton extends StatelessWidget {
+  const CanopyDialogCloseButton({super.key});
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+    key: const ValueKey('close-dialog'),
+    tooltip: 'Close',
+    onPressed: () {
+      HapticsScope.of(context)?.tap();
+      Navigator.pop(context);
+    },
+    style: IconButton.styleFrom(
+      minimumSize: const Size(48, 48),
+      backgroundColor: CanopyColors.panelLight,
+      foregroundColor: CanopyColors.gold,
+      side: const BorderSide(color: CanopyColors.border, width: 1.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    icon: const Icon(Icons.close_rounded, size: 26),
   );
 }
 
@@ -311,7 +373,12 @@ class CanopyShortcut extends StatelessWidget {
   final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) => OutlinedButton(
-    onPressed: onPressed,
+    onPressed: onPressed == null
+        ? null
+        : () {
+            HapticsScope.of(context)?.tap();
+            onPressed!();
+          },
     style: OutlinedButton.styleFrom(
       backgroundColor: CanopyColors.panel.withValues(alpha: .96),
       foregroundColor: CanopyColors.cream,

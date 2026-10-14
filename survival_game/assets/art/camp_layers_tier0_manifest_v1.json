@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-13",
+  "scope": "Tier 0 only; tiers 1\u20133 unchanged",
+  "background": {
+    "path": "assets/art/camp_tier_0_empty_v1.jpg",
+    "size": [
+      1536,
+      2752
+    ],
+    "mode": "RGB",
+    "sha256": "e2203b62971e9851cd9c7bb39360b3599f8bc3b1b5caabe74bed07f984e25bcd"
+  },
+  "background_source": "/Users/palgabor/Downloads/ca346231-d66c-43c1-a87a-6b7a4596076e.jpg",
+  "character_reference": "design/references/explorer_character_master_v1.png",
+  "generator": "built-in image_gen; transparent_background=true; separate call per pose",
+  "generated_source_directory": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9",
+  "poses": [
+    {
+      "path": "assets/art/explorer_camp_fire_v2.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "567a1fd8d827bcd4fc732338e68a3365c01cc26ef14c042effc0d147e12594ce",
+      "activity": "fire",
+      "source_filename": "exec-6764c1e8-ea77-4170-8d3b-fd3b0a4b9e7f.png",
+      "prompt": "design/camp-layers-tier0-v1/fire-v2-prompt.txt",
+      "ground_position": [
+        0.42,
+        0.69
+      ],
+      "width_relative_to_art": 0.31,
+      "sprite_ground_anchor": [
+        0.55,
+        0.94
+      ]
+    },
+    {
+      "path": "assets/art/explorer_camp_wood_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "902b43905b96062b13292f870adefb0935540a9eeb90f0612f6649d296438741",
+      "activity": "wood",
+      "source_filename": "exec-27baad19-1640-4866-8710-8e8a680627a1.png",
+      "prompt": "design/camp-layers-tier0-v1/wood-prompt.txt",
+      "ground_position": [
+        0.27,
+        0.615
+      ],
+      "width_relative_to_art": 0.295,
+      "sprite_ground_anchor": [
+        0.52,
+        0.95
+      ]
+    },
+    {
+      "path": "assets/art/explorer_camp_craft_v1.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "2d891294d9be8853aabecfffb8559efb4ea7058a1c0b3d4b1374b59ec958e0e8",
+      "activity": "craft",
+      "source_filename": "exec-e9a56dbe-61bb-4b9b-9463-3ce4f4457fb7.png",
+      "prompt": "design/camp-layers-tier0-v1/craft-prompt.txt",
+      "ground_position": [
+        0.47,
+        0.72
+      ],
+      "width_relative_to_art": 0.22,
+      "sprite_ground_anchor": [
+        0.5,
+        0.88
+      ]
+    }
+  ],
+  "revision_note": "Fire v2 faces northeast toward flames; crafting moved to the open central clearing, away from foreground shrubs."
+}

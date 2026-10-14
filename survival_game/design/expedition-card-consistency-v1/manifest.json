@@ -1,0 +1,22 @@
+[
+  {
+    "id": "01-riverbank-matching-example",
+    "title": "RIVERBANK \u00b7 STEP 1",
+    "kind": "scene",
+    "background": "riverbank_camp_style_v2.png",
+    "cards": [
+      [
+        "shelter",
+        "RETURN TO\nCAMP",
+        "Keep carried loot",
+        "SAFE"
+      ],
+      [
+        "trail",
+        "GO DEEPER",
+        "Danger rises",
+        "40% DANGER"
+      ]
+    ]
+  }
+]

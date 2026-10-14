@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in imagegen",
+  "art_style_reference": "assets/art/jaguar_encounter_isometric.png",
+  "card_style_reference": "assets/art/card_stone_spear_scene_v1.png",
+  "assets": [
+    {
+      "key": "ruins",
+      "file": "assets/art/ancient_ruins_isometric_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-3408eb26-7ff0-46bb-8ab9-b633684a43e6.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "570d8e5ccce57b19b0957174eff0e3357fb5af7e72bb92c46bc8a8493c265c21",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "wreck",
+      "file": "assets/art/plane_wreck_isometric_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-77613b06-018f-4aad-8190-28a73d182010.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "193c155eca06e0b5b24a26339b42348e3b95eff0390bf8527636326e4fcd545f",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "rescue",
+      "file": "assets/art/rescue_arrival_isometric_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b32ac366-4769-4883-932b-d8a42ec03068.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "c682dbaa0b45460fdb4e618ba844043c2137f5eaa4e5294657ac1f6d01487b48",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "machete",
+      "file": "assets/art/card_machete_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-a0810395-008a-45d8-a0bd-d5ff4914e315.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "0cba971bf2020baf2fdf65ab986f145902061df99b3e9135ff31010428b7d3d1",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "beacon",
+      "file": "assets/art/card_emergency_beacon_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-3cafcc1a-db61-4cda-956e-6071488808de.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "485cac6cb5e1a042a888d103d5a6235b4fccda840714616966968a0df01f212d",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "storm",
+      "file": "assets/art/rescue_storm_camp_isometric_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-7a8a235f-6fd1-4125-b6c2-164e65a2a96a.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "0974bbaaa8e095a50ee6e012dfdb207a51ab5726f10c797277c9daa41e3f8e5d",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "battery",
+      "file": "assets/art/card_battery_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-094929f2-1c4f-48c4-8388-0cc3800310d5.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "aab9d4de40ec387cea1b19a281557f9293811486b17a2030b48e99f4e45e6ec3",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "wire",
+      "file": "assets/art/card_wire_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-ac87a827-11f0-4b2d-98fe-e4d15fdb9853.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "0a3025a327a62fc42af0625298f719804c4b15311153d20b3bbb13e18447c1a1",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "metal_parts",
+      "file": "assets/art/card_metal_parts_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-3f08a6ed-2b79-4242-8e18-500bdb54b137.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "a0cd85a98ca8146f6cfaeba5ad62889a0bc67100240fb7bbd52d2a632b6b04ed",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "radio_module",
+      "file": "assets/art/card_radio_module_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-f7462a33-6707-49d5-9662-08bc6087fc8f.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "1506647ebfc364fa9d9588fcb1025113e5869751c16c0f0ebbcb74507b22d69d",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "beacon_core",
+      "file": "assets/art/card_beacon_core_scene_v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-09609c4a-34ba-47f4-a10a-34443343512b.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "sha256": "3cf527bbb7e5a27d4050c5a89b27a7474ecb66a53ae7bbce9c0b07b4dc80abc9",
+      "prompt": "assets/art/RESCUE_MILESTONE_PROMPTS.md",
+      "transparent": false
+    },
+    {
+      "key": "ui_concept",
+      "file": "design/rescue-milestone/ui-concept-v1.png",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-6406df85-b98f-4fe5-9ca2-23b51e6b824f.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "be6c55b88486db16803a6172e97bbf977c533f76068c010e1ec224621084d058",
+      "prompt": "design/rescue-milestone/UI_CONCEPT_PROMPT.md",
+      "transparent": false
+    }
+  ]
+}

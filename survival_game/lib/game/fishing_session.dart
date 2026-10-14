@@ -17,13 +17,14 @@ class FishingSession {
   late final double _biteDelay, _wavePhase;
   double _phaseTime = 0;
   double _inZoneTime = 0;
+  double _reeledTime = 0;
   double _hookReaction = 1;
   double cursor = .48;
   double target = .5;
-  double progress = .2;
+  double progress = .3;
   bool holding = false;
   static const double zoneHalfWidth = .18;
-  static const double biteWindow = 1.2;
+  static const double biteWindow = 2;
   static const double reelDuration = 8;
   bool get complete =>
       stage == FishingStage.caught || stage == FishingStage.escaped;
@@ -44,7 +45,8 @@ class FishingSession {
     _hookReaction = _phaseTime;
     _phaseTime = 0;
     stage = FishingStage.reeling;
-    target = .5;
+    // Start together instead of jumping the fish away on the first reel frame.
+    cursor = target = .5 + .25 * sin(_wavePhase);
     return true;
   }
 
@@ -67,10 +69,15 @@ class FishingSession {
       } else if (stage == FishingStage.bite && _phaseTime >= biteWindow) {
         abandon();
       } else if (stage == FishingStage.reeling) {
-        target = .5 + .25 * sin(_phaseTime * 1.7 + _wavePhase);
+        target = .5 + .25 * sin(_phaseTime * 1.2 + _wavePhase);
         cursor = (cursor + (holding ? .40 : -.28) * dt).clamp(0, 1);
+        if (holding) _reeledTime += dt;
         if (inZone) _inZoneTime += dt;
-        progress = (progress + (inZone ? .30 : -.16) * dt).clamp(0, 1);
+        // Drifting with the fish alone is not a catch: the player must reel.
+        progress = (progress + (inZone ? .30 : -.16) * dt).clamp(
+          0,
+          _reeledTime >= .2 ? 1 : .95,
+        );
         if (progress >= 1) {
           quality = _hookReaction <= .45 && _inZoneTime / _phaseTime >= .8
               ? CatchQuality.perfect

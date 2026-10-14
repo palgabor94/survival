@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'run_state.dart';
 import 'world_catalog.dart';
+import 'gathering_session.dart';
 
 class EventEffect {
   EventEffect({
@@ -56,6 +57,7 @@ class EventChoice {
     Map<SurvivalStat, int> showWhenBelow = const {},
     this.icon,
     this.cardImage,
+    this.minigame,
   }) : requires = Map.unmodifiable(requires),
        requiresTools = Set.unmodifiable(requiresTools),
        requiresStats = Map.unmodifiable(requiresStats),
@@ -83,6 +85,7 @@ class EventChoice {
   /// Icon key for the card, and an optional card illustration asset path.
   final String? icon;
   final String? cardImage;
+  final String? minigame;
   bool get isRisky => successChance < 1;
 
   /// A choice that is always visible and always affordable can serve as the
@@ -113,6 +116,7 @@ class EventChoice {
     showWhenBelow: _stats(json['showWhenBelow']),
     icon: json['icon'] as String?,
     cardImage: json['cardImage'] as String?,
+    minigame: json['minigame'] as String?,
   );
 
   static Map<SurvivalStat, int> _stats(Object? json) => {
@@ -136,6 +140,8 @@ class GameEvent {
     this.heroImage,
     this.minDepth = 0,
     this.maxDepth = 99,
+    this.priority = 0,
+    this.missingResource,
   }) : choices = List.unmodifiable(choices),
        locations = List.unmodifiable(locations);
   final String id;
@@ -155,8 +161,14 @@ class GameEvent {
 
   /// Expedition steps this event can appear at (0 is the first stop).
   final int minDepth, maxDepth;
+  final int priority;
+  final String? missingResource;
   bool eligible(RunState state) =>
-      state.day >= minDay && state.value(SurvivalStat.water) <= maxWater;
+      state.day >= minDay &&
+      state.value(SurvivalStat.water) <= maxWater &&
+      (missingResource == null ||
+          (!state.tools.contains('emergency_beacon') &&
+              state.resource(missingResource!) == 0));
 
   factory GameEvent.fromJson(Map<String, dynamic> json) => GameEvent(
     id: json['id'] as String,
@@ -171,6 +183,8 @@ class GameEvent {
     heroImage: json['heroImage'] as String?,
     minDepth: json['minDepth'] as int? ?? 0,
     maxDepth: json['maxDepth'] as int? ?? 99,
+    priority: json['priority'] as int? ?? 0,
+    missingResource: json['missingResource'] as String?,
     choices: (json['choices'] as List)
         .map((e) => EventChoice.fromJson(e as Map<String, dynamic>))
         .toList(),
@@ -192,6 +206,11 @@ class EventCatalog {
         throw FormatException('Invalid event or duplicate ID: ${event.id}');
       }
       for (final choice in event.choices) {
+        if (choice.minigame != null &&
+            choice.minigame != 'ruins_symbols' &&
+            GatheringKind.fromId(choice.minigame) == null) {
+          throw FormatException('Unknown minigame: ${choice.minigame}');
+        }
         if (choice.successChance < 0 ||
             choice.successChance > 1 ||
             (choice.isRisky &&

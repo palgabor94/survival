@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'item_icon.dart';
 
 /// Fits each complete painted object from its atlas into the available space.
 class CardArt extends StatelessWidget {
@@ -51,6 +52,15 @@ class CardArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final standalone = itemIconFor(id);
+    if (standalone != null) {
+      return ExcludeSemantics(
+        child: SizedBox.square(
+          dimension: size,
+          child: Image.asset(standalone, fit: BoxFit.contain, cacheWidth: 180),
+        ),
+      );
+    }
     final camp = _campObjects[id];
     final hud = _hud[id];
     final bounds = camp ?? hud ?? _objects[id] ?? _objects['trail']!;

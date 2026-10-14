@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'gathering_test.dart' show resolveGatheringForSimulation;
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -434,6 +435,8 @@ void main() {
             session.holding = session.cursor < session.target;
             session.update(.1);
           }
+        } else if (game.gathering != null) {
+          resolveGatheringForSimulation(game);
         } else if (game.pendingEvent != null) {
           final choices = game.pendingEvent!.choices
               .where(game.canChoose)

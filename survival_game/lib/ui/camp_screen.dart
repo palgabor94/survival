@@ -3,9 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../game/game_engine.dart';
+import '../audio/music_scope.dart';
+import '../audio/sounds_scope.dart';
+import '../feedback/haptics_scope.dart';
 import '../game/run_state.dart';
+import '../game/rescue_progress.dart';
 import '../game/world_catalog.dart';
+import '../game/gathering_session.dart';
 import 'camp_widgets.dart';
+import 'camp_backdrop.dart';
 import 'canopy_components.dart';
 import 'action_card.dart';
 import 'card_art.dart';
@@ -17,16 +23,23 @@ import 'expedition_scene.dart';
 import 'explore_map_screen.dart';
 import 'fishing_screen.dart';
 import 'inventory_dialog.dart';
+import 'beacon_screen.dart';
+import 'ruins_puzzle_screen.dart';
+import 'rescued_screen.dart';
+import 'gathering_screen.dart';
 
 class CampScreen extends StatefulWidget {
-  const CampScreen({super.key, required this.engine});
+  const CampScreen({super.key, required this.engine, this.initialCampVariant});
   final GameEngine engine;
+  final int? initialCampVariant;
   @override
   State<CampScreen> createState() => _CampScreenState();
 }
 
 class _CampScreenState extends State<CampScreen> {
   GameEngine get game => widget.engine;
+  late int _campVariant =
+      widget.initialCampVariant ?? CampBackdrop.variantForDay(game.state.day);
   bool _presenting = false;
   bool _openingMap = false;
   bool _openingInventory = false;
@@ -36,7 +49,9 @@ class _CampScreenState extends State<CampScreen> {
   void initState() {
     super.initState();
     // A restored run may resume mid-event, mid-report or at the pond.
-    if (game.isBusy || game.state.phase == RunPhase.gameOver) {
+    if (game.isBusy ||
+        game.state.phase == RunPhase.gameOver ||
+        game.state.rescued) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) unawaited(_showFlow());
       });
@@ -62,6 +77,7 @@ class _CampScreenState extends State<CampScreen> {
               child: OutcomeDialog(
                 report: game.report!,
                 runEnded: game.state.phase == RunPhase.gameOver,
+                runRescued: game.state.rescued,
                 nightNext:
                     game.state.timeLeft == 0 &&
                     game.state.phase == RunPhase.day &&
@@ -74,6 +90,15 @@ class _CampScreenState extends State<CampScreen> {
           setState(game.continueFromReport);
 
           continue;
+        }
+        if (game.state.rescued) {
+          final command = await Navigator.push<String>(
+            context,
+            MaterialPageRoute(builder: (context) => RescuedScreen(game: game)),
+          );
+          if (!mounted) return;
+          if (command == 'restart') setState(game.restart);
+          return;
         }
         if (game.state.phase == RunPhase.gameOver) {
           await showDialog<void>(
@@ -88,7 +113,29 @@ class _CampScreenState extends State<CampScreen> {
           setState(game.restart);
           return;
         }
-        if (game.fishing != null) {
+        if (game.gathering != null) {
+          final command = await Navigator.push<String>(
+            context,
+            MaterialPageRoute(builder: (_) => GatheringScreen(game: game)),
+          );
+          if (!mounted) return;
+          setState(() {});
+          if (command == 'workshop') {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) unawaited(_showWorkshop());
+            });
+            return;
+          }
+        } else if (game.ruinsPuzzle != null) {
+          final command = await Navigator.push<String>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RuinsPuzzleScreen(game: game),
+            ),
+          );
+          if (!mounted || command == null) return;
+          setState(() => game.finishRuinsPuzzle(leave: command == 'leave'));
+        } else if (game.fishing != null) {
           await Navigator.push<void>(
             context,
             MaterialPageRoute(builder: (context) => FishingScreen(game: game)),
@@ -98,7 +145,10 @@ class _CampScreenState extends State<CampScreen> {
         } else if (game.pendingEvent != null) {
           final choice = await Navigator.push<String>(
             context,
-            MaterialPageRoute(builder: (context) => EventScene(game: game)),
+            MaterialPageRoute(
+              builder: (context) =>
+                  EventScene(game: game, campVariant: _campVariant),
+            ),
           );
           if (!mounted || choice == null) return;
           setState(() => game.choose(choice));
@@ -132,38 +182,21 @@ class _CampScreenState extends State<CampScreen> {
     final largeText =
         MediaQuery.textScalerOf(context).scale(14) > 19 ||
         MediaQuery.sizeOf(context).width < 360;
-    final night = state.phase == RunPhase.night;
+    final shortcutWidth =
+        64 *
+        (MediaQuery.textScalerOf(context).scale(10) / 10).clamp(
+          1.0,
+          double.infinity,
+        );
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            campArt(state.campTier),
-            key: ValueKey('camp-art-${state.campTier}'),
-            fit: BoxFit.cover,
-            alignment: const Alignment(0, .18),
-            excludeFromSemantics: true,
-          ),
-          AnimatedOpacity(
-            opacity: night ? 1 : 0,
-            duration: MediaQuery.disableAnimationsOf(context)
-                ? Duration.zero
-                : const Duration(milliseconds: 650),
-            child: state.campTier == 0
-                ? Image.asset(
-                    'assets/art/starter_camp_night.png',
-                    fit: BoxFit.cover,
-                    alignment: const Alignment(0, .18),
-                    excludeFromSemantics: true,
-                  )
-                : Image.asset(
-                    campArt(state.campTier),
-                    fit: BoxFit.cover,
-                    alignment: const Alignment(0, .18),
-                    color: const Color(0xFF4A5F8E),
-                    colorBlendMode: BlendMode.multiply,
-                    excludeFromSemantics: true,
-                  ),
+          CampBackdrop(
+            state: state,
+            busy: game.isBusy,
+            initialVariant: widget.initialCampVariant,
+            onVariantChanged: (variant) => _campVariant = variant,
           ),
           const DecoratedBox(
             decoration: BoxDecoration(
@@ -209,20 +242,28 @@ class _CampScreenState extends State<CampScreen> {
                           ),
                         ),
                       Wrap(
-                        alignment: WrapAlignment.spaceBetween,
+                        alignment: WrapAlignment.end,
                         spacing: 8,
                         runSpacing: 8,
-                        children: [
-                          _inventoryButton(),
-                          _workshopButton(),
-                          CanopyShortcut(
-                            key: const ValueKey('camp-menu'),
-                            label: 'MENU',
-                            art: 'journal',
-                            onPressed: _showMenu,
-                          ),
-                          _mapButton(),
-                        ],
+                        children:
+                            <Widget>[
+                                  _inventoryButton(),
+                                  _workshopButton(),
+                                  CanopyShortcut(
+                                    key: const ValueKey('camp-menu'),
+                                    label: 'MENU',
+                                    art: 'journal',
+                                    onPressed: _showMenu,
+                                  ),
+                                  _mapButton(),
+                                ]
+                                .map(
+                                  (button) => SizedBox(
+                                    width: shortcutWidth,
+                                    child: button,
+                                  ),
+                                )
+                                .toList(),
                       ),
                       const SizedBox(height: 8),
                       CardDeck(
@@ -255,7 +296,19 @@ class _CampScreenState extends State<CampScreen> {
     final next = game.recipes.nextTier(state);
     final firstNight = state.day == 1 && next != null && state.campTier == 0;
     final String title, detail;
-    if (next == null) {
+    if (state.rescueStage == RescueStage.storm) {
+      title = 'Keep the signal alive';
+      detail = '${state.rescueStep}/3 storm decisions';
+    } else if (state.rescueStage == RescueStage.signalSent) {
+      title = 'Rescue comes tomorrow';
+      detail = 'Prepare before you sleep';
+    } else if (state.tools.contains('emergency_beacon')) {
+      title = 'Send the rescue signal';
+      detail = 'Final storm starts next dawn';
+    } else if (state.campTier >= 3) {
+      title = 'Build a rescue signal';
+      detail = '${game.heldBeaconComponents}/5 parts · Rescue Base required';
+    } else if (next == null) {
       title = 'Keep the fire alive';
       detail = '${state.day - 1} nights survived';
     } else if (firstNight && state.phase == RunPhase.night) {
@@ -277,7 +330,14 @@ class _CampScreenState extends State<CampScreen> {
         child: InkWell(
           key: const ValueKey('camp-objective'),
           borderRadius: BorderRadius.circular(14),
-          onTap: next == null ? null : () => _showWorkshop(camp: true),
+          onTap: game.isBusy
+              ? null
+              : state.campTier >= 3 ||
+                    state.rescueStage == RescueStage.signalSent
+              ? _showBeacon
+              : next == null
+              ? null
+              : () => _showWorkshop(camp: true),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Row(
@@ -322,7 +382,7 @@ class _CampScreenState extends State<CampScreen> {
   );
   Widget _inventoryButton() => CanopyShortcut(
     key: const ValueKey('open-inventory'),
-    label: 'INVENTORY',
+    label: 'ITEMS',
     art: 'inventory',
     onPressed: game.isBusy ? null : _showInventory,
   );
@@ -338,7 +398,10 @@ class _CampScreenState extends State<CampScreen> {
     _openingMap = true;
     final destination = await Navigator.push<String>(
       context,
-      MaterialPageRoute(builder: (context) => ExploreMapScreen(game: game)),
+      MaterialPageRoute(
+        settings: const RouteSettings(name: 'map'),
+        builder: (context) => ExploreMapScreen(game: game),
+      ),
     );
     _openingMap = false;
     if (!mounted || destination == null) return;
@@ -377,6 +440,32 @@ class _CampScreenState extends State<CampScreen> {
     _openingWorkshop = false;
     if (!mounted || id == null) return;
     _run(() => game.craft(id));
+  }
+
+  Future<void> _showBeacon() async {
+    if (_openingWorkshop || _presenting || game.isBusy) return;
+    _openingWorkshop = true;
+    final command = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            BeaconScreen(game: game, campVariant: _campVariant),
+      ),
+    );
+    _openingWorkshop = false;
+    if (!mounted || command == null) return;
+    switch (command) {
+      case 'assemble':
+        _run(() => game.craft('emergency_beacon'));
+      case 'activate':
+        _run(game.activateBeacon);
+      case 'map':
+        await _showMap();
+      case 'workshop':
+        await _showWorkshop(camp: game.state.campTier < 3);
+      case 'inventory':
+        await _showInventory();
+    }
   }
 
   Future<void> _confirmNewRun() async {
@@ -420,21 +509,16 @@ class _CampScreenState extends State<CampScreen> {
       builder: (context) => CanopyDialog(
         title: 'Camp menu',
         art: 'journal',
-        actions: [
-          ActionCard(
-            key: const ValueKey('close-menu'),
-            title: 'Close',
-            art: 'back',
-            tone: CardTone.river,
-            horizontal: true,
-            onTap: () => Navigator.pop(context),
-          ),
-        ],
         child: Column(
           children: [
+            const MusicControls(),
+            const SoundControls(),
+            const HapticControls(),
             for (final (id, title, art) in [
+              ('gather', 'Gather around camp', 'forage'),
               ('journal', 'Survival journal', 'journal'),
               ('guide', 'How to survive', 'map'),
+              ('beacon', 'Rescue signal', 'emergency_beacon'),
               ('new-run', 'Start a new run', 'shelter'),
             ])
               Padding(
@@ -454,8 +538,55 @@ class _CampScreenState extends State<CampScreen> {
     );
     if (!mounted) return;
     if (choice == 'journal') _showJournal();
+    if (choice == 'gather') await _showGathering();
     if (choice == 'guide') _showGuide();
+    if (choice == 'beacon') await _showBeacon();
     if (choice == 'new-run') await _confirmNewRun();
+  }
+
+  Future<void> _showGathering() async {
+    if (game.isBusy || _presenting) return;
+    final kind = await showDialog<GatheringKind>(
+      context: context,
+      builder: (dialogContext) => CanopyDialog(
+        title: 'Gather around camp',
+        art: 'forage',
+        subtitle: 'SHORT SKILL CHALLENGES',
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Choose a nearby activity. Starting an attempt uses 1 daylight.',
+            ),
+            const SizedBox(height: 12),
+            CardDeck(
+              columns: 3,
+              cards: [
+                for (final kind in GatheringKind.values)
+                  ActionCard(
+                    key: ValueKey('open-gathering-${kind.name}'),
+                    title: kind.title,
+                    art: kind == GatheringKind.foraging ? 'forage' : kind.art,
+                    compact: true,
+                    fixedHeight:
+                        MediaQuery.textScalerOf(dialogContext).scale(14) > 19
+                        ? 240
+                        : 180,
+                    titleMaxLines: 2,
+                    showStatus: false,
+                    onTap: game.canAct(CampAction.forage)
+                        ? () => Navigator.pop(dialogContext, kind)
+                        : null,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || kind == null) return;
+    _run(() => game.openGathering(kind));
   }
 
   void _showJournal() => showDialog<void>(
@@ -463,16 +594,6 @@ class _CampScreenState extends State<CampScreen> {
     builder: (context) => CanopyDialog(
       title: 'Survival journal',
       art: 'journal',
-      actions: [
-        ActionCard(
-          key: const ValueKey('close-journal'),
-          title: 'Back to camp',
-          art: 'back',
-          tone: CardTone.river,
-          horizontal: true,
-          onTap: () => Navigator.pop(context),
-        ),
-      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -500,16 +621,6 @@ class _CampScreenState extends State<CampScreen> {
     builder: (context) => CanopyDialog(
       title: 'Make daylight count',
       art: 'journal',
-      actions: [
-        ActionCard(
-          key: const ValueKey('close-guide'),
-          title: 'Back to camp',
-          art: 'back',
-          tone: CardTone.river,
-          horizontal: true,
-          onTap: () => Navigator.pop(context),
-        ),
-      ],
       child: const SingleChildScrollView(
         child: Text(
           'Each day gives you 6 time. Forage costs 1, explore 2, and rest 1.\n\n'
@@ -517,6 +628,8 @@ class _CampScreenState extends State<CampScreen> {
           'at zero food you lose 6. Health at zero ends your run.\n\n'
           'Forage for food, water, or firewood. Explore opens the map. A Riverbank trip costs 2 time, '
           'and brings water, rod materials or bait. Rest restores 8 health and 12 sanity after its time cost.\n\n'
+          'Menu → Gather around camp opens wood chopping, plant gathering and hunting. '
+          'Start spends time once; pause freezes the attempt. Axes and spears wear with use; repair them in the workshop.\n\n'
           'Open CRAFT to build tools and camp items. A Basic Rod costs 2 wood, 3 fiber and 1 time; '
           'a Stone Knife cuts herbs, a Stone Axe chops extra wood and a Torch helps at night. '
           'Upgrade your camp from the CAMP tab: every tier improves sleep and unlocks more. '
@@ -531,6 +644,11 @@ class _CampScreenState extends State<CampScreen> {
           'costs 3 sanity, and restores 10 health if you are fed and hydrated. '
           'Empty supplies also cause damage during sleep.\n\n'
           'Event cards show what you can do and what equipment or supplies you need. '
+          'Recover four beacon parts at the Plane Wreck. Craft a Machete, upgrade to an Established Camp, '
+          'and bring at least 4 daylight to the Ancient Ruins. Match the three stone discs to the '
+          'carved sun, water and leaf pattern to recover the Beacon Core. Assemble the Emergency '
+          'Beacon at a Rescue Base, then send the signal. Prepare food, water and shelter before '
+          'you sleep: the next dawn starts three final storm decisions. Survive them to be rescued.\n\n'
           'After choosing, a popup explains what happened and shows the actual total changes. '
           'Time only passes when you decide. Your run is saved automatically.',
         ),

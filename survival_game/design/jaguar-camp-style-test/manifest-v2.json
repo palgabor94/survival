@@ -1,0 +1,13 @@
+{
+  "generator": "built-in imagegen",
+  "reference": "assets/art/camp_tier_1_fire_v2.png",
+  "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-0476e9c9-2e43-4a17-afb1-5a8abd51d498.png",
+  "preview_only": true,
+  "file": "jaguar_camp_style_v2.png",
+  "prompt": "PROMPT_V2.md",
+  "dimensions": [
+    941,
+    1672
+  ],
+  "sha256": "ffb119cffcb3a1cdb521aa114e618b8d9e9a708adac4edf21aacc395389c625b"
+}

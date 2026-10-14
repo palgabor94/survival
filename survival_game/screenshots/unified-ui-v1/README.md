@@ -1,14 +1,14 @@
 # Lost Canopy — elkészült UI, sorban
 
-**Aktuális esemény-UI: [rövid, fix magasságú kártyák és utólagos eredmény-popup](../event-choices-v3/index.html).**
+**Aktuális esemény-UI: [rövid, soronként azonos magasságú kártyák és utólagos eredmény-popup](../event-choices-v3/index.html).**
 
 **2026-10-12 · 30 friss képernyőkép, saját hátteres kártyákkal.**
 
-[35 külön illusztráció](../card-illustrations-v1/index.html) · [Új expedíciók és encounterek](../expansion-v1/index.html) · [179 sikeres teszt és tiszta analyzer](../../design/unified-card-ui/VALIDATION_2026_10_12.md).
+[42 külön illusztráció](../card-illustrations-v1/index.html) · [Új expedíciók és encounterek](../expansion-v1/index.html) · [221 sikeres teszt és tiszta analyzer](../../design/rescue-milestone/VALIDATION.md).
 
 Az expedíció és az encounter a felülnézeti, izometrikus változatra frissült; az encounter egysoros kártyái lapozhatók. [A javítás 6 képe](../scene-revision-v2/index.html).
 
-[Az összes kép számozott galériája](index.html)
+[Az összes kép számozott galériája](index.html) · [9 shelter-változat](../camp-variants-v2/index.html) · [32 rescue kép](../rescue-milestone-v1/index.html)
 
 A képek az implementált Flutter-felületből készültek, 390 × 844 logikai mobilméreten, 2× exporttal (780 × 1688 PNG). Előkészített játékállapotok és tényleges UI-műveletek mutatják a képernyőket; nem generált látványtervek és nem készülékfotók. A horgászati sorozat valóban végiglépteti a minijátékot. A hosszabb panelek kezdő görgetési pozíciója látszik.
 

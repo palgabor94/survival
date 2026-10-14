@@ -1,0 +1,258 @@
+[
+  {
+    "file": "01-beacon-missing-components.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "70e07aa04caae8f17637cafd3481aa7ff284289f9b1153b0331c2f193dc7122d"
+  },
+  {
+    "file": "02-machete-workshop.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "d5f57972f3963c325cf60ab362a1347e9200588b99a7d951be0b84a89bc81795"
+  },
+  {
+    "file": "03-ancient-ruins-map.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "014a11b0252bb84586d18b7033677175fb7f51f93d96df92ecb3b07f2c0a7410"
+  },
+  {
+    "file": "04-wreck-battery.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "d0cff93bea4ca0ad3313a37360ce2e3e3570e691808f4fcf6685a4e1d2e55994"
+  },
+  {
+    "file": "05-battery-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "93d651ca576d1f50276a8da6d13b35d6fe4c458de5dbca852b6cf4b0e1401f79"
+  },
+  {
+    "file": "06-wreck-wire.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "bc105e7227e3c80876815dd400fff6e8c7351dc60eac5bc005786b931cdfa53b"
+  },
+  {
+    "file": "07-wire-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "bc6290eb6edd941ddd51a8096e699701ad87e77ca0122ecaf2aafa39b513de15"
+  },
+  {
+    "file": "08-wreck-metal_parts.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "9a63f55bbd54c6936273f7781f5843a9f4cf5861a92140c4a9e8fcf3b24dd46f"
+  },
+  {
+    "file": "09-metal_parts-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "cf0cdd1accfd92c79c89f74052a707b6a42342d17f6af0d43c0015709d169949"
+  },
+  {
+    "file": "10-wreck-radio_module.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b10b4b66e2014c754942c96ae24eb9537379311693af698110d2ce8ef879914b"
+  },
+  {
+    "file": "11-radio_module-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "ac01e14c8e7cae778ebfc5aa91700c7de4b4be14c7079ad774a37e7816fa1afa"
+  },
+  {
+    "file": "12-ruins-sealed-altar.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b93dd3f67225f63e668f3cc5ea927e3fc6c7ab20da20ff4623b510a95a3a5f70"
+  },
+  {
+    "file": "13-ruins-stone-puzzle.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "0a7c965d8d96ca0bbc7170433e93b9ea6c3d0f9cf829f77e02068b8af06838d3"
+  },
+  {
+    "file": "14-ruins-aligned-discs.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "401ddc923055b7bf39717fc839ac13c85cc9cccc0b529fc753fb0a56561a5bbe"
+  },
+  {
+    "file": "15-beacon-core-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "478c729aeb0355c9b63bdb177b4854921659246ceb0337eed24717056032adcd"
+  },
+  {
+    "file": "16-core-in-expedition-pack.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c34a5ed4ffd084c3f61cb90766e4dbde78f0ba939dc4a8883f45d251f79d1ff4"
+  },
+  {
+    "file": "17-core-returned-to-camp.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "58c142fe3036688790dc6ec43b146a97f92f5db6917f397b471340a07e1abde9"
+  },
+  {
+    "file": "18-beacon-complete-components.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c6d27be90fdff1e4003e615fe9480a493dadec787a8c9ed0c6196e4e95925aa9"
+  },
+  {
+    "file": "19-beacon-crafted-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "e174467c5030be9568bdcb98bf08d07391050e1d568f806477addf967953ddc2"
+  },
+  {
+    "file": "20-beacon-ready-to-send.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "5703cd69c665c7dd5ea3d9103797e967550e0fb6268c767795686a7ef62e8cfe"
+  },
+  {
+    "file": "21-signal-received-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "a56c517a1613838b553ce98aaa892d27f863872ba8f3cf11e1cf943c3c5a0d86"
+  },
+  {
+    "file": "22-camp-preparing-for-rescue.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "a22b822925cb2f8584118335cb36b11c55db6151b207050f1ede64c56da0f3e5"
+  },
+  {
+    "file": "23-rescue-storm-dawn-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "9e2888de519b2b61db3a86977896585357a12e6071b8f6cb82816e7dcceaf602"
+  },
+  {
+    "file": "24-storm-rising-water.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "bac73b363a646b10181e1bed4d58492ec59c38cc9670ed200e6238c113d844ee"
+  },
+  {
+    "file": "25-storm-rising-water-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "9ec1d8ae0a231fef5b169e1739ce8d17e391d9e3af53d0b1102126a93dcc4d3c"
+  },
+  {
+    "file": "26-storm-falling-branches.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "914c240772914fb16b74333c3ee890acc450178f7f8102361ad50c991e98e892"
+  },
+  {
+    "file": "27-storm-falling-branches-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "24a7d95019ad042d9e26a71d1941f954241f5a93160e0fce0bc5119a10aa9b98"
+  },
+  {
+    "file": "28-storm-last-signal.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "7c8fb7b33f8004075bf43e027b81413455a2f1a41e300b1386ce5737f8705ba3"
+  },
+  {
+    "file": "29-storm-last-signal-outcome.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "a384da054297616eae20bb52d38c778374f76232be766dcb6ad803563de44b9a"
+  },
+  {
+    "file": "30-rescued-run-summary.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "11eea6fd230e5d06577ff5712eaa8e439156e42ffa45409c0613e8361b584ec2"
+  },
+  {
+    "file": "31-new-run-confirmation.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "627e59fcb274ed908bff69c412c1ceeeed85ca4b4040c88321a3a3302c67c2a6"
+  },
+  {
+    "file": "32-restored-rescued-summary.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "11eea6fd230e5d06577ff5712eaa8e439156e42ffa45409c0613e8361b584ec2"
+  }
+]

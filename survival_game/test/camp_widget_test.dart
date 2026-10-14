@@ -8,6 +8,7 @@ import 'package:survival_game/main.dart';
 import 'package:survival_game/ui/craft_screen.dart';
 import 'package:survival_game/ui/action_card.dart';
 import 'package:survival_game/ui/event_scene.dart';
+import 'package:survival_game/ui/inventory_dialog.dart';
 
 import 'expedition_widget_test.dart' show tapKey;
 import 'game/game_engine_test.dart' show FixedRandom;
@@ -32,7 +33,7 @@ Future<void> pumpApp(WidgetTester tester, RunStorage storage) async {
   addTearDown(tester.view.resetDevicePixelRatio);
   // Cached asset futures from an earlier test never resolve on this clock.
   rootBundle.clear();
-  await tester.pumpWidget(LostCanopyApp(storage: storage));
+  await tester.pumpWidget(LostCanopyApp(storage: storage, enableAudio: false));
   // Real asset and storage loading happens outside the fake clock.
   for (var i = 0; i < 200; i++) {
     await tester.runAsync(
@@ -45,6 +46,59 @@ Future<void> pumpApp(WidgetTester tester, RunStorage storage) async {
 }
 
 void main() {
+  testWidgets('four material cards keep the same size in the last row', (
+    tester,
+  ) async {
+    await showCamp(
+      tester,
+      testGame(
+        state: RunState(
+          resources: {'wood': 3, 'stone': 3, 'fiber': 6, 'bait': 2},
+        ),
+      ),
+    );
+    await tapKey(tester, 'open-inventory');
+    final sizes = [
+      for (final id in ['wood', 'stone', 'fiber', 'bait'])
+        tester.getSize(
+          find.descendant(
+            of: find.byKey(ValueKey('inventory-$id')),
+            matching: find.byType(Material),
+          ),
+        ),
+    ];
+    for (final size in sizes) {
+      expect(size.width, closeTo(sizes.first.width, .01));
+      expect(size.height, closeTo(sizes.first.height, .01));
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('items close stays visible while long contents scroll', (
+    tester,
+  ) async {
+    final game = testGame(state: stocked());
+    final before = game.state.toJson();
+    await showCamp(tester, game, size: const Size(320, 568));
+    await tapKey(tester, 'open-inventory');
+    final close = find.byKey(const ValueKey('close-dialog'));
+    final header = findUiText('Camp items');
+    final headerBounds = tester.getRect(header);
+    expect(tester.getSize(close).shortestSide, greaterThanOrEqualTo(48));
+    await tester.drag(
+      find.byKey(const ValueKey('dialog-content-scroll')),
+      const Offset(0, -500),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.getRect(header), headerBounds);
+    expect(close.hitTestable(), findsOneWidget);
+    await tester.tap(close);
+    await tester.pumpAndSettle();
+    expect(find.byType(InventoryDialog), findsNothing);
+    expect(game.state.toJson(), before);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('craft a tool in the workshop and see it in the inventory', (
     tester,
   ) async {
@@ -156,7 +210,8 @@ void main() {
         (w) =>
             w is Image &&
             w.image is AssetImage &&
-            (w.image as AssetImage).assetName == 'assets/art/camp_tier_2.png',
+            (w.image as AssetImage).assetName ==
+                'assets/art/camp_tier_2_empty_v1.jpg',
       ),
       findsWidgets,
     );

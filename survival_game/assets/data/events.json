@@ -60,6 +60,16 @@
           }
         },
         "result": "You cut starchy roots and bundle two healing herbs."
+      },
+      {
+        "id": "gather_plants",
+        "label": "Gather plants",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "foraging",
+        "icon": "food",
+        "requiresTools": [],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ]
   },
@@ -161,6 +171,18 @@
           }
         },
         "result": "The axe bites deep. You haul back a heavy load of wood."
+      },
+      {
+        "id": "chop_minigame",
+        "label": "Chop with timing",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "wood_chopping",
+        "icon": "wood",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ]
   },
@@ -665,6 +687,18 @@
           }
         },
         "result": "You eat a coconut and refill your flask, keeping the stone you used to crack the shell."
+      },
+      {
+        "id": "hunt_minigame",
+        "label": "Hunt the trail",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "hunting",
+        "icon": "spear",
+        "requiresTools": [
+          "stone_spear"
+        ],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ],
     "maxDepth": 0
@@ -757,7 +791,7 @@
   },
   {
     "id": "snake_thicket",
-    "background": "assets/art/snake_encounter_isometric_v2.png",
+    "background": "assets/art/snake_encounter_camp_style_v1.png",
     "trigger": "encounter",
     "locations": [
       "riverbank",
@@ -843,7 +877,7 @@
   },
   {
     "id": "boar_charge",
-    "background": "assets/art/boar_encounter_isometric_v2.png",
+    "background": "assets/art/boar_encounter_camp_style_v3.png",
     "trigger": "encounter",
     "locations": [
       "riverbank",
@@ -984,6 +1018,18 @@
           }
         },
         "result": "You gather dry wood and one good stone from the roots."
+      },
+      {
+        "id": "chop_minigame",
+        "label": "Chop with timing",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "wood_chopping",
+        "icon": "wood",
+        "requiresTools": [
+          "stone_axe"
+        ],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ]
   },
@@ -1043,6 +1089,18 @@
           }
         },
         "result": "For a few minutes the jungle is only a place."
+      },
+      {
+        "id": "forage_minigame",
+        "label": "Gather plants",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "foraging",
+        "icon": "herb",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ]
   },
@@ -1080,10 +1138,10 @@
             "food": 6
           },
           "resources": {
-            "small_fish": 2
+          "small_fish": 1
           }
         },
-        "result": "Two slippery fish, both kept, one nearly lost.",
+      "result": "You keep one slippery fish before the others scatter.",
         "failureEffect": {
           "stats": {
             "sanity": -4,
@@ -1318,6 +1376,16 @@
         },
         "result": "You retrace the path to camp before the grove grows darker.",
         "icon": "retreat"
+      },
+      {
+        "id": "forage_minigame",
+        "label": "Gather plants",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "foraging",
+        "icon": "food",
+        "requiresTools": [],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ]
   },
@@ -1380,6 +1448,18 @@
           }
         },
         "failureResult": "A hidden splinter catches your arm. You squeeze out with nothing new to carry."
+      },
+      {
+        "id": "hunt_minigame",
+        "label": "Hunt the trail",
+        "description": "Try a short skill challenge. Results are revealed afterward.",
+        "minigame": "hunting",
+        "icon": "spear",
+        "requiresTools": [
+          "stone_spear"
+        ],
+        "effect": {},
+        "result": "The gathering attempt is complete."
       }
     ],
     "minDepth": 1
@@ -1598,7 +1678,7 @@
       }
     ],
     "minDepth": 1,
-    "background": "assets/art/crocodile_encounter_isometric_v2.png"
+    "background": "assets/art/crocodile_encounter_camp_style_v1.png"
   },
   {
     "id": "hornet_nest",
@@ -1681,7 +1761,7 @@
       }
     ],
     "minDepth": 1,
-    "background": "assets/art/hornet_encounter_isometric_v3.png"
+    "background": "assets/art/hornet_encounter_camp_style_v1.png"
   },
   {
     "id": "monkey_raiders",
@@ -1772,6 +1852,496 @@
       }
     ],
     "minDepth": 1,
-    "background": "assets/art/monkey_encounter_isometric_v2.png"
+    "background": "assets/art/monkey_encounter_camp_style_v1.png"
+  },
+  {
+    "id": "wreck_battery",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "A sheltered power pack",
+    "description": "Behind a loose service hatch, an aircraft battery rests above the damp ground.",
+    "locations": [
+      "plane_wreck"
+    ],
+    "priority": 104,
+    "missingResource": "battery",
+    "choices": [
+      {
+        "id": "recover",
+        "label": "Lift the battery",
+        "description": "",
+        "effect": {
+          "resources": {
+            "battery": 1,
+            "metal_scrap": 1
+          },
+          "stats": {}
+        },
+        "result": "You carefully free the battery. It could become part of a rescue signal.",
+        "cardImage": "assets/art/card_battery_scene_v1.png"
+      },
+      {
+        "id": "search",
+        "label": "Search nearby",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "hardwood": 1
+          },
+          "stats": {}
+        },
+        "result": "You gather loose salvage beside the compartment.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true,
+          "dropLoot": false
+        },
+        "result": "You mark the compartment and take the safe trail home.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "wreck_wire",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "The torn wiring loom",
+    "description": "A coil of insulated wire hangs inside the split fuselage.",
+    "locations": [
+      "plane_wreck"
+    ],
+    "priority": 103,
+    "missingResource": "wire",
+    "choices": [
+      {
+        "id": "recover",
+        "label": "Uncoil the wire",
+        "description": "",
+        "effect": {
+          "resources": {
+            "wire": 1,
+            "metal_scrap": 1
+          },
+          "stats": {}
+        },
+        "result": "You carefully free the wire. It could become part of a rescue signal.",
+        "cardImage": "assets/art/card_wire_scene_v1.png"
+      },
+      {
+        "id": "search",
+        "label": "Search nearby",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "hardwood": 1
+          },
+          "stats": {}
+        },
+        "result": "You gather loose salvage beside the compartment.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true,
+          "dropLoot": false
+        },
+        "result": "You mark the compartment and take the safe trail home.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "wreck_metal_parts",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "The instrument mount",
+    "description": "Sturdy brackets and gears remain inside the broken instrument frame.",
+    "locations": [
+      "plane_wreck"
+    ],
+    "priority": 102,
+    "missingResource": "metal_parts",
+    "choices": [
+      {
+        "id": "recover",
+        "label": "Salvage the mount",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_parts": 1,
+            "metal_scrap": 1
+          },
+          "stats": {}
+        },
+        "result": "You carefully free the metal parts. It could become part of a rescue signal.",
+        "cardImage": "assets/art/card_metal_parts_scene_v1.png"
+      },
+      {
+        "id": "search",
+        "label": "Search nearby",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "hardwood": 1
+          },
+          "stats": {}
+        },
+        "result": "You gather loose salvage beside the compartment.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true,
+          "dropLoot": false
+        },
+        "result": "You mark the compartment and take the safe trail home.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "wreck_radio_module",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "A voice in the wreck",
+    "description": "The radio housing is cracked, but its protected module looks intact.",
+    "locations": [
+      "plane_wreck"
+    ],
+    "priority": 101,
+    "missingResource": "radio_module",
+    "choices": [
+      {
+        "id": "recover",
+        "label": "Recover the radio",
+        "description": "",
+        "effect": {
+          "resources": {
+            "radio_module": 1,
+            "metal_scrap": 1
+          },
+          "stats": {}
+        },
+        "result": "You carefully free the radio module. It could become part of a rescue signal.",
+        "cardImage": "assets/art/card_radio_module_scene_v1.png"
+      },
+      {
+        "id": "search",
+        "label": "Search nearby",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "hardwood": 1
+          },
+          "stats": {}
+        },
+        "result": "You gather loose salvage beside the compartment.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true,
+          "dropLoot": false
+        },
+        "result": "You mark the compartment and take the safe trail home.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "ruins_altar",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "The three stone discs",
+    "description": "A sun, a wave, a leaf: worn carvings mark a stone seal. Three discs turn beneath your hands. Match the carved sequence to open it.",
+    "locations": [
+      "ancient_ruins"
+    ],
+    "priority": 100,
+    "missingResource": "beacon_core",
+    "choices": [
+      {
+        "id": "align",
+        "label": "Examine the seal",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {}
+        },
+        "result": "You examine the rotating discs.",
+        "minigame": "ruins_symbols",
+        "cardImage": "assets/art/card_beacon_core_scene_v1.png"
+      },
+      {
+        "id": "search",
+        "label": "Search the stones",
+        "description": "",
+        "effect": {
+          "resources": {
+            "stone": 2,
+            "herb": 1
+          },
+          "stats": {}
+        },
+        "result": "You collect useful material among the fallen stones.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true
+        },
+        "result": "You leave the altar for another day.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "ruins_outer_court",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "The mossy courtyard",
+    "description": "The opened trail winds past broken pillars and a sheltered patch of medicinal plants.",
+    "locations": [
+      "ancient_ruins"
+    ],
+    "choices": [
+      {
+        "id": "gather",
+        "label": "Gather herbs",
+        "description": "",
+        "effect": {
+          "resources": {
+            "herb": 2,
+            "fiber": 2
+          },
+          "stats": {}
+        },
+        "result": "You find dry herbs tucked beneath a stone ledge.",
+        "icon": "herb"
+      },
+      {
+        "id": "salvage",
+        "label": "Search the old cache",
+        "description": "",
+        "effect": {
+          "resources": {
+            "metal_scrap": 2,
+            "hardwood": 1
+          },
+          "stats": {}
+        },
+        "result": "You gather fragments left by an old survey team.",
+        "icon": "stone"
+      },
+      {
+        "id": "return",
+        "label": "Head home",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {},
+          "endsExpedition": true
+        },
+        "result": "You follow your cut trail back to camp.",
+        "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "rescue_rising_water",
+    "trigger": "rescue",
+    "scene": "water",
+    "title": "Water around the beacon",
+    "description": "Rain floods the clearing. The signal lamp flickers near the rising water. Keep the power pack dry.",
+    "background": "assets/art/rescue_storm_camp_style_v1.png",
+    "choices": [
+      {
+        "id": "raise",
+        "label": "Raise the beacon",
+        "description": "",
+        "effect": {
+          "resources": {
+            "wood": -2
+          },
+          "stats": {}
+        },
+        "result": "You lash the power pack onto a high crate. The lamp steadies.",
+        "requires": {
+          "wood": 2
+        },
+        "icon": "wood"
+      },
+      {
+        "id": "cover",
+        "label": "Cover the cables",
+        "description": "",
+        "effect": {
+          "resources": {
+            "fiber": -2
+          },
+          "stats": {}
+        },
+        "result": "You wrap the connectors and shelter them from the rain.",
+        "requires": {
+          "fiber": 2
+        },
+        "icon": "fiber"
+      },
+      {
+        "id": "hold",
+        "label": "Hold it above water",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {
+            "health": -8,
+            "sanity": -5
+          }
+        },
+        "result": "You stand in the cold water and lift the pack until the clearing drains.",
+        "icon": "search",
+        "cardImage": "assets/art/card_emergency_beacon_scene_v1.png"
+      }
+    ]
+  },
+  {
+    "id": "rescue_falling_branches",
+    "trigger": "rescue",
+    "scene": "explore",
+    "title": "Branches across the aerial",
+    "description": "A falling branch tangles the aerial. Wind shakes the leaves above the refuge. Keep the transmission clear.",
+    "background": "assets/art/rescue_storm_camp_style_v1.png",
+    "choices": [
+      {
+        "id": "cut",
+        "label": "Cut the branch",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {}
+        },
+        "result": "Your machete clears the branch without disturbing the aerial.",
+        "requiresTools": [
+          "machete"
+        ],
+        "icon": "stone",
+        "cardImage": "assets/art/card_machete_scene_v1.png"
+      },
+      {
+        "id": "brace",
+        "label": "Brace the aerial",
+        "description": "",
+        "effect": {
+          "resources": {
+            "wood": -2
+          },
+          "stats": {}
+        },
+        "result": "You brace the mast with a dry length of timber.",
+        "requires": {
+          "wood": 2
+        },
+        "icon": "wood"
+      },
+      {
+        "id": "pull",
+        "label": "Pull it clear",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {
+            "health": -10,
+            "sanity": -4
+          }
+        },
+        "result": "You drag the branch free. A sharp limb catches your arm, but the signal stays on.",
+        "icon": "health"
+      }
+    ]
+  },
+  {
+    "id": "rescue_last_signal",
+    "trigger": "rescue",
+    "scene": "fire",
+    "title": "The last signal",
+    "description": "Rotor noise answers through the rain. Keep the light visible until the rescue team reaches the clearing.",
+    "background": "assets/art/rescue_storm_camp_style_v1.png",
+    "choices": [
+      {
+        "id": "torch",
+        "label": "Raise the torch",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {}
+        },
+        "result": "A warm flame guides the helicopter through the thinning rain. Help has arrived.",
+        "requiresTools": [
+          "torch"
+        ],
+        "icon": "torch"
+      },
+      {
+        "id": "feed",
+        "label": "Feed the signal fire",
+        "description": "",
+        "effect": {
+          "resources": {
+            "wood": -2
+          },
+          "stats": {}
+        },
+        "result": "You feed the fire and lift smoke above the canopy. The helicopter finds the clearing.",
+        "requires": {
+          "wood": 2
+        },
+        "icon": "wood"
+      },
+      {
+        "id": "wave",
+        "label": "Wave from the clearing",
+        "description": "",
+        "effect": {
+          "resources": {},
+          "stats": {
+            "health": -8,
+            "sanity": -3
+          }
+        },
+        "result": "You step into the wind and wave until the crew sees you. At last, help reaches the clearing.",
+        "icon": "retreat"
+      }
+    ]
   }
 ]

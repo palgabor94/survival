@@ -1,4 +1,6 @@
-enum RunPhase { day, night, gameOver }
+import 'rescue_progress.dart';
+
+enum RunPhase { day, night, gameOver, rescued }
 
 enum CampAction {
   forage('Forage', 1),
@@ -29,10 +31,17 @@ class RunState {
     this.weather = 'Sunny',
     this.locationId = 'camp',
     this.campTier = 0,
+    this.rescueStage = RescueStage.searching,
+    this.rescueStep = 0,
+    this.signalDay,
+    Set<String> foundComponents = const {},
     Set<String> tools = const {},
+    Map<String, int> durability = const {},
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
-  }) : tools = Set.unmodifiable(tools),
+  }) : foundComponents = Set.unmodifiable(foundComponents),
+       tools = Set.unmodifiable(tools),
+       durability = Map.unmodifiable(durability),
        stats = Map.unmodifiable(
          stats ??
              {
@@ -53,9 +62,21 @@ class RunState {
   final String weather;
   final String locationId;
   final int campTier;
+  final RescueStage rescueStage;
+  final int rescueStep;
+  final int? signalDay;
+  final Set<String> foundComponents;
+  bool get rescued => phase == RunPhase.rescued;
 
   /// Every crafted tool and camp item the survivor owns.
   final Set<String> tools;
+  static const toolDurability = {'stone_axe': 10, 'stone_spear': 10};
+  final Map<String, int> durability;
+  int toolCondition(String id) =>
+      tools.contains(id) ? (durability[id] ?? toolDurability[id] ?? 0) : 0;
+  bool toolUsable(String id) =>
+      tools.contains(id) &&
+      (!toolDurability.containsKey(id) || toolCondition(id) > 0);
   final Map<SurvivalStat, int> stats;
   final Map<String, int> resources;
   int value(SurvivalStat stat) => stats[stat] ?? 0;
@@ -76,7 +97,12 @@ class RunState {
     String? weather,
     String? locationId,
     int? campTier,
+    RescueStage? rescueStage,
+    int? rescueStep,
+    int? signalDay,
+    Set<String>? foundComponents,
     Set<String>? tools,
+    Map<String, int>? durability,
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
   }) => RunState(
@@ -86,7 +112,12 @@ class RunState {
     weather: weather ?? this.weather,
     locationId: locationId ?? this.locationId,
     campTier: campTier ?? this.campTier,
+    rescueStage: rescueStage ?? this.rescueStage,
+    rescueStep: rescueStep ?? this.rescueStep,
+    signalDay: signalDay ?? this.signalDay,
+    foundComponents: foundComponents ?? this.foundComponents,
     tools: tools ?? this.tools,
+    durability: durability ?? this.durability,
     stats: stats ?? this.stats,
     resources: resources ?? this.resources,
   );
@@ -98,7 +129,12 @@ class RunState {
     'weather': weather,
     'locationId': locationId,
     'campTier': campTier,
+    'rescueStage': rescueStage.name,
+    'rescueStep': rescueStep,
+    'signalDay': signalDay,
+    'foundComponents': foundComponents.toList()..sort(),
     'tools': tools.toList()..sort(),
+    'durability': durability,
     'stats': {for (final e in stats.entries) e.key.name: e.value},
     'resources': resources,
   };
@@ -110,7 +146,20 @@ class RunState {
     weather: j['weather'] as String,
     locationId: j['locationId'] as String,
     campTier: j['campTier'] as int? ?? 0,
+    rescueStage: RescueStage.values.byName(
+      j['rescueStage'] as String? ?? 'searching',
+    ),
+    rescueStep: (j['rescueStep'] as int? ?? 0).clamp(0, rescueEventIds.length),
+    signalDay: j['signalDay'] as int?,
+    foundComponents: Set<String>.from(j['foundComponents'] as List? ?? []),
     tools: Set<String>.from(j['tools'] as List),
+    durability: {
+      for (final e in Map<String, int>.from(
+        j['durability'] as Map? ?? {},
+      ).entries)
+        if (toolDurability.containsKey(e.key))
+          e.key: e.value.clamp(0, toolDurability[e.key]!),
+    },
     stats: {
       for (final stat in SurvivalStat.values)
         stat: ((j['stats'] as Map)[stat.name] as int).clamp(0, 100),

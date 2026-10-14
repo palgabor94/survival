@@ -1,0 +1,16 @@
+{
+  "generator": "built-in imagegen",
+  "references": [
+    "assets/art/camp_tier_1_fire_v2.png",
+    "design/references/explorer_character_master_v1.png"
+  ],
+  "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-76c1fe1f-9b6d-41db-a11b-05ed30f9e68b.png",
+  "preview_only": true,
+  "file": "jaguar_camp_style_v3.png",
+  "prompt": "PROMPT_V3.md",
+  "dimensions": [
+    941,
+    1672
+  ],
+  "sha256": "d91663482164fa790e9abc50e7ccc2eb5f87992f0c2ead5fc169776d55489230"
+}

@@ -1,0 +1,14 @@
+{
+  "renderer": "native Flutter engine",
+  "rendered_screens": 17,
+  "changed_screens": [
+    "09-bamboo_grove.png",
+    "10-bamboo-expedition.png",
+    "11-plane_wreck.png",
+    "12-riverbank.png"
+  ],
+  "unchanged_screens": 13,
+  "analyzer": "No issues found",
+  "fishing_hashes_unchanged": true,
+  "gameplay_test_suite": "221 passed in the previous validation; not rerun for this artwork-only camera revision"
+}

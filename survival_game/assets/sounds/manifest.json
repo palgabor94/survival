@@ -1,0 +1,346 @@
+{
+  "sources": {
+    "placidplace-nature-soundstropicaljunglebirds-108380.mp3": {
+      "path": "../../sounds/placidplace-nature-soundstropicaljunglebirds-108380.mp3",
+      "sha256": "0dac1d0a6055557d6a1736fbbcd0c2a2abd76a40e1a09ce15512204a7cca6838"
+    },
+    "freesound_community-night-ambience-17064.mp3": {
+      "path": "../../sounds/freesound_community-night-ambience-17064.mp3",
+      "sha256": "2c79c0edbf188318c5aa4faf743b526c504520a8dffbf043619f7e39a5e83b36"
+    },
+    "soundreality-campfire-crackling-sound-439573.mp3": {
+      "path": "../../sounds/soundreality-campfire-crackling-sound-439573.mp3",
+      "sha256": "24ba41bd1ae7744dce6a1aaa6a1e33ed6a9c6bdcaee95c675edea165cf332359"
+    },
+    "soundsforyou-small-forest-stream-river-brook-nature-loop-111169.mp3": {
+      "path": "../../sounds/soundsforyou-small-forest-stream-river-brook-nature-loop-111169.mp3",
+      "sha256": "56950f99f3d5e877616214899894b864d386e9e1f9d468b2e98d9f966cadfaba"
+    },
+    "nematoki-night-heavy-rain-in-forest-401222.mp3": {
+      "path": "../../sounds/nematoki-night-heavy-rain-in-forest-401222.mp3",
+      "sha256": "03220fafdaf6a9e2e6983c5af7330c034fc385e3bb95a82ec5fdbf24999d4f2a"
+    },
+    "freesound_community-chopping-logs-2-24471.mp3": {
+      "path": "../../sounds/freesound_community-chopping-logs-2-24471.mp3",
+      "sha256": "490e9e9831dd03da776e4760992065df042dbf23989b2ffb0aa1e7b733856112"
+    },
+    "freesound_community-footsteps-dirt-gravel-6823.mp3": {
+      "path": "../../sounds/freesound_community-footsteps-dirt-gravel-6823.mp3",
+      "sha256": "84013cd9baa14c8bb864c16ff8284a2585fe502b3921b94644faddc4f5fe2fcd"
+    }
+  },
+  "assets": [
+    {
+      "file": "jungle.mp3",
+      "source": "placidplace-nature-soundstropicaljunglebirds-108380.mp3",
+      "type": "loop",
+      "sourceRange": [
+        0,
+        45
+      ],
+      "filters": "[0:a]asplit=2[a][b];[a]atrim=0:1,asetpts=PTS-STARTPTS[head];[b]atrim=1:45,asetpts=PTS-STARTPTS[body];[body][head]acrossfade=d=1:c1=tri:c2=tri,loudnorm=I=-23:TP=-3:LRA=11[out]",
+      "sha256": "53987517ad1d528965c00c9113d878136da30a2ca3be32524d98f128fb1513fc",
+      "bytes": 705140,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "44.000000"
+        }
+      }
+    },
+    {
+      "file": "night.mp3",
+      "source": "freesound_community-night-ambience-17064.mp3",
+      "type": "loop",
+      "sourceRange": [
+        0,
+        45
+      ],
+      "filters": "[0:a]asplit=2[a][b];[a]atrim=0:1,asetpts=PTS-STARTPTS[head];[b]atrim=1:45,asetpts=PTS-STARTPTS[body];[body][head]acrossfade=d=1:c1=tri:c2=tri,loudnorm=I=-23:TP=-3:LRA=11[out]",
+      "sha256": "28170ba0995244869be93f425a670c6988a67131b2d2f6590a04abcdc14d2136",
+      "bytes": 705140,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "44.000000"
+        }
+      }
+    },
+    {
+      "file": "campfire.mp3",
+      "source": "soundreality-campfire-crackling-sound-439573.mp3",
+      "type": "loop",
+      "sourceRange": [
+        0,
+        45
+      ],
+      "filters": "[0:a]asplit=2[a][b];[a]atrim=0:1,asetpts=PTS-STARTPTS[head];[b]atrim=1:45,asetpts=PTS-STARTPTS[body];[body][head]acrossfade=d=1:c1=tri:c2=tri,loudnorm=I=-23:TP=-3:LRA=11[out]",
+      "sha256": "6bdffaf7ce50651f99b6784118c958a64d3192a3a04d05902dfbcfd623090020",
+      "bytes": 705140,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "44.000000"
+        }
+      }
+    },
+    {
+      "file": "river.mp3",
+      "source": "soundsforyou-small-forest-stream-river-brook-nature-loop-111169.mp3",
+      "type": "loop",
+      "sourceRange": [
+        0,
+        45
+      ],
+      "filters": "[0:a]asplit=2[a][b];[a]atrim=0:1,asetpts=PTS-STARTPTS[head];[b]atrim=1:45,asetpts=PTS-STARTPTS[body];[body][head]acrossfade=d=1:c1=tri:c2=tri,loudnorm=I=-23:TP=-3:LRA=11[out]",
+      "sha256": "3cdbd0de6ffc57bce254fee0231564a82e448197573db475313d9b086d563a0a",
+      "bytes": 705140,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "44.000000"
+        }
+      }
+    },
+    {
+      "file": "rain.mp3",
+      "source": "nematoki-night-heavy-rain-in-forest-401222.mp3",
+      "type": "loop",
+      "sourceRange": [
+        0,
+        45
+      ],
+      "filters": "[0:a]asplit=2[a][b];[a]atrim=0:1,asetpts=PTS-STARTPTS[head];[b]atrim=1:45,asetpts=PTS-STARTPTS[body];[body][head]acrossfade=d=1:c1=tri:c2=tri,loudnorm=I=-23:TP=-3:LRA=11[out]",
+      "sha256": "53369a4f8e92fbb609dc5511b7d1b743ca0e3383dc6d86f7c2ffc6bb2d90c040",
+      "bytes": 705140,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "44.000000"
+        }
+      }
+    },
+    {
+      "file": "wood_1.wav",
+      "source": "freesound_community-chopping-logs-2-24471.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        0.28,
+        0.93
+      ],
+      "filters": "volume=6.2431dB,afade=t=in:d=0.005,afade=t=out:st=0.615:d=0.035",
+      "sha256": "f1ad71710392409caa019675dd1b64d0220551a0e91a59f15b1af243b90ad6b4",
+      "bytes": 57408,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.650000"
+        }
+      }
+    },
+    {
+      "file": "wood_2.wav",
+      "source": "freesound_community-chopping-logs-2-24471.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        4.88,
+        5.53
+      ],
+      "filters": "volume=-3.2604dB,afade=t=in:d=0.005,afade=t=out:st=0.615:d=0.035",
+      "sha256": "b2c5ca0d475df04a39be4aa77d8accaede6da63c0e0982d0e7bc0db306285729",
+      "bytes": 57408,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.650000"
+        }
+      }
+    },
+    {
+      "file": "wood_3.wav",
+      "source": "freesound_community-chopping-logs-2-24471.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        6.92,
+        7.57
+      ],
+      "filters": "volume=6.1098dB,afade=t=in:d=0.005,afade=t=out:st=0.615:d=0.035",
+      "sha256": "a3d8e84e6c127ffdcb12c55d2bcc88c5a1f0ec487aedb85a6d1e32a939e58575",
+      "bytes": 57408,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.650000"
+        }
+      }
+    },
+    {
+      "file": "step_1.wav",
+      "source": "freesound_community-footsteps-dirt-gravel-6823.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        5.64,
+        6.0
+      ],
+      "filters": "volume=19.1204dB,afade=t=in:d=0.005,afade=t=out:st=0.32499999999999996:d=0.035",
+      "sha256": "e7de4eac036e166f996d7856f8aba3700352a5f74d08bae9ad2a46201c4ab400",
+      "bytes": 31830,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.360000"
+        }
+      }
+    },
+    {
+      "file": "step_2.wav",
+      "source": "freesound_community-footsteps-dirt-gravel-6823.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        7.42,
+        7.78
+      ],
+      "filters": "volume=16.5958dB,afade=t=in:d=0.005,afade=t=out:st=0.32499999999999996:d=0.035",
+      "sha256": "136883384d063acfdc623a82f80ca07552d43c871e7734ccd30686ed24765c4c",
+      "bytes": 31830,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.360000"
+        }
+      }
+    },
+    {
+      "file": "step_3.wav",
+      "source": "freesound_community-footsteps-dirt-gravel-6823.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        8.74,
+        9.1
+      ],
+      "filters": "volume=17.1567dB,afade=t=in:d=0.005,afade=t=out:st=0.32499999999999996:d=0.035",
+      "sha256": "c654fcb54d7fb6078c5602027ed4023cc28f7ce92b0173736e1c94c33cc9c15e",
+      "bytes": 31830,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.360000"
+        }
+      }
+    },
+    {
+      "file": "step_4.wav",
+      "source": "freesound_community-footsteps-dirt-gravel-6823.mp3",
+      "type": "one-shot",
+      "sourceRange": [
+        10.38,
+        10.74
+      ],
+      "filters": "volume=16.7594dB,afade=t=in:d=0.005,afade=t=out:st=0.32499999999999996:d=0.035",
+      "sha256": "d8dd96447ff0a4664b078860beb395fdb0e9dd2b8552bfd63b405759c2ee424b",
+      "bytes": 31830,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s16le",
+            "sample_rate": "44100",
+            "channels": 1
+          }
+        ],
+        "format": {
+          "duration": "0.360000"
+        }
+      }
+    }
+  ]
+}

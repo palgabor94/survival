@@ -1,0 +1,34 @@
+[
+  {
+    "file": "01-card-set.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "8decbc4d173a0b8cc060063c6d9a42351dac33f9392115a2265ea4fb9c6b287d"
+  },
+  {
+    "file": "02-card-set.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "148c7db3fe6c267bfdb282c783126a70c80ab6a5e1ba78d2e67bff08a6c05e67"
+  },
+  {
+    "file": "03-card-set.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "012d6bb6eb73ef1fb56218aa50d5c44aa056d40d03b87f5b74e4b3adbcc639d7"
+  },
+  {
+    "file": "04-card-set.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b9ab3d631e5548609537faf4e0f861b1ecfe9530d2daf54034c33db5a4b17bb4"
+  }
+]

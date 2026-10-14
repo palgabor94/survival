@@ -16,12 +16,14 @@ class WorldLocation {
     this.unlockTool,
     this.comingSoon,
     this.background,
+    this.requiresTool,
   });
   final String id, name, description, loot;
   final int timeCost, minDay, minCampTier;
   final double x, y;
   final String? unlockTool;
   final String? background;
+  final String? requiresTool;
 
   /// Shown once the camp requirement is met but the content is not built yet.
   final String? comingSoon;
@@ -31,6 +33,9 @@ class WorldLocation {
       return 'Requires Camp Tier $minCampTier. Upgrade your camp first.';
     }
     if (comingSoon != null) return comingSoon;
+    if (requiresTool != null && !state.tools.contains(requiresTool)) {
+      return 'Requires ${itemName(requiresTool!)}. Craft it in the workshop.';
+    }
     final toolUnlocks = unlockTool != null && state.tools.contains(unlockTool);
     if (state.day < minDay && !toolUnlocks) {
       return unlockTool == null
@@ -53,6 +58,7 @@ class WorldLocation {
     unlockTool: j['unlockTool'] as String?,
     comingSoon: j['comingSoon'] as String?,
     background: j['background'] as String?,
+    requiresTool: j['requiresTool'] as String?,
   );
 }
 
@@ -95,6 +101,13 @@ String itemName(String id) => switch (id) {
   'hardwood' => 'Hardwood',
   'metal_scrap' => 'Metal Scrap',
   'raw_meat' => 'Raw Meat',
+  'machete' => 'Machete',
+  'emergency_beacon' => 'Emergency Beacon',
+  'battery' => 'Battery',
+  'wire' => 'Wire',
+  'metal_parts' => 'Metal Parts',
+  'radio_module' => 'Radio Module',
+  'beacon_core' => 'Beacon Core',
   'wood' => 'Wood',
   'fiber' => 'Fiber',
   'stone' => 'Stone',

@@ -48,7 +48,7 @@ class _InventoryDialogState extends State<InventoryDialog> {
     final recipe = chosen == null ? null : game.recipes.find(chosen);
     final large = MediaQuery.textScalerOf(context).scale(14) > 19;
     return CanopyDialog(
-      title: 'Camp inventory',
+      title: 'Camp items',
       art: 'inventory',
       actions: [
         if (foodId != null)
@@ -72,14 +72,6 @@ class _InventoryDialogState extends State<InventoryDialog> {
             horizontal: true,
             onTap: () => Navigator.pop(context, 'workshop'),
           ),
-        ActionCard(
-          key: const ValueKey('close-inventory'),
-          title: 'Back to camp',
-          art: 'back',
-          tone: CardTone.river,
-          horizontal: true,
-          onTap: () => Navigator.pop(context),
-        ),
       ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

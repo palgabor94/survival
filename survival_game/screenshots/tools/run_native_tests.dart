@@ -31,6 +31,16 @@ import '../../test/game/fishing_session_test.dart' as fishing;
 import '../../test/game/game_engine_test.dart' as engine;
 import '../../test/game/trip_test.dart' as trip;
 import '../../test/game/content_expansion_test.dart' as expansion;
+import '../../test/game/rescue_test.dart' as rescue;
+import '../../test/rescue_widget_test.dart' as rescue_ui;
+import '../../test/camp_backdrop_test.dart' as camp_art;
+import '../../test/game/gathering_test.dart' as gathering;
+import '../../test/gathering_widget_test.dart' as gathering_ui;
+import '../../test/music_test.dart' as music;
+import '../../test/sounds_test.dart' as sounds;
+import '../../test/haptics_test.dart' as haptics;
+import '../../test/navigation_test.dart' as navigation;
+import '../../test/scene_background_test.dart' as scene_background;
 
 Future<void> main() async {
   final keepAlive = Timer.periodic(const Duration(milliseconds: 100), (_) {});
@@ -45,8 +55,18 @@ Future<void> main() async {
       'card_logic': card_logic.main,
       'expedition_logic': expedition_logic.main,
       'fishing': fishing.main,
+      'gathering': gathering.main,
+      'gathering_widgets': gathering_ui.main,
+      'music': music.main,
+      'sounds': sounds.main,
+      'haptics': haptics.main,
+      'navigation': navigation.main,
+      'scene_background': scene_background.main,
       'trip_logic': trip.main,
       'content_expansion': expansion.main,
+      'rescue': rescue.main,
+      'rescue_widgets': rescue_ui.main,
+      'camp_backdrop': camp_art.main,
       'illustrations': illustrations.main,
       'widgets': widgets.main,
       'camp_widgets': camp.main,

@@ -1,0 +1,209 @@
+{
+  "date": "2026-10-13",
+  "scope": "Five poses and night, four camp tiers, two phone sizes; inspected actual Flutter output",
+  "checks": [
+    "Head and torso proportional across poses; seated canvas scale corrected from .31 to .24/.25",
+    "Feet or hips registered to the decoded camp art",
+    "No sitting on top of stacked crates",
+    "Open ground and low seats avoid incorrect bush/prop overlaps",
+    "Night alpha preserved",
+    "Background stable between character poses",
+    "Tier 2 fire shifted right: both boots clear the front stump at both phone sizes and at night",
+    "Tier 3 wood moved back: boots clear the cooking tripod at both phone sizes",
+    "Only the six screenshots affected by these two positions changed; all other screenshots byte-identical"
+  ],
+  "screenshots": [
+    {
+      "file": "01-tier-0-fire-390x844.png",
+      "sha256": "250e04bf62248ec9c84f5aa3de026001e0f1c1c98748ec82cc71eb732593ebf1"
+    },
+    {
+      "file": "02-tier-0-wood-390x844.png",
+      "sha256": "94cc64738ee8cda098eeb902786ce1f164b5f04d996ecf12d13c0f822a12d94d"
+    },
+    {
+      "file": "03-tier-0-craft-390x844.png",
+      "sha256": "347561fb442e24d2eac7652489cae9c3c5f4a0a37a0b6292b25cd1f1b0cf9667"
+    },
+    {
+      "file": "04-tier-0-seated-390x844.png",
+      "sha256": "8d61ce2199e8fe2166153fb83854e3c5445f050bb217b0c0454af544ef643ce6"
+    },
+    {
+      "file": "05-tier-0-inspect-390x844.png",
+      "sha256": "e1e9a3ea8505f1fd9c1d5dbedf293963c64ba9fe566fed732eba596eb9e8e51c"
+    },
+    {
+      "file": "06-tier-0-night-390x844.png",
+      "sha256": "ea8a4ca44e91833ade47de29162b83c84a824606916a4a665f67008ff6f25578"
+    },
+    {
+      "file": "07-tier-1-fire-390x844.png",
+      "sha256": "120f7ef933c8553593ecd7f79e8f22693b60e0098f8724ff0f6932c26c2aa05b"
+    },
+    {
+      "file": "08-tier-1-wood-390x844.png",
+      "sha256": "e171e7d748b60817ef7e2cc64c000503a2a793f212d49821fcace15130a3db05"
+    },
+    {
+      "file": "09-tier-1-craft-390x844.png",
+      "sha256": "8749d22db3a1e416227fc443293447d8f89fd53b2763b1b9ec902e6f9c72ec66"
+    },
+    {
+      "file": "10-tier-1-seated-390x844.png",
+      "sha256": "a49989da34112e146476eff33b4c71129e39a33391c4a763b5bb173020df457e"
+    },
+    {
+      "file": "11-tier-1-inspect-390x844.png",
+      "sha256": "71ea766646168dc63ec84389fa208219dc8bc87cbb2116d048e7fc428030484c"
+    },
+    {
+      "file": "12-tier-1-night-390x844.png",
+      "sha256": "cd92fb142e66a0013d28651e1c6a1c7760903c770ca49e36be7ea1b2ca42e84a"
+    },
+    {
+      "file": "13-tier-2-fire-390x844.png",
+      "sha256": "1b09fec043109778e54e9fccb14e2561a34fb50d64bf0ad1e1a71664a633e20f"
+    },
+    {
+      "file": "14-tier-2-wood-390x844.png",
+      "sha256": "eb67992d7474886dfd2f8edc24e7b34b9036b8e793d024a99460d511aedaf539"
+    },
+    {
+      "file": "15-tier-2-craft-390x844.png",
+      "sha256": "929a81a2cf95289dd127ac10543f342f033df67e8c08965bd2bcdbdaa050c151"
+    },
+    {
+      "file": "16-tier-2-seated-390x844.png",
+      "sha256": "a97d573aa61fef9b20a573d9850fc61cc9740c779240156d9b61f9748a1e7f3b"
+    },
+    {
+      "file": "17-tier-2-inspect-390x844.png",
+      "sha256": "f10845569b5d98f31c684cb610db48d152984146d78d3e687923f199d683ed7c"
+    },
+    {
+      "file": "18-tier-2-night-390x844.png",
+      "sha256": "942da5a98e523baf417627b7687ef2605619449c2d9fb805fbaa87cc081967b8"
+    },
+    {
+      "file": "19-tier-3-fire-390x844.png",
+      "sha256": "dec33dee2e5bfb7d2e69d2004431495ef8867494f5ccc3f0500c5c65b19c6401"
+    },
+    {
+      "file": "20-tier-3-wood-390x844.png",
+      "sha256": "814d1dbd8df4682c740a5d2bdc5f937f2d43bb3912a6f53156f15943f5fb63a8"
+    },
+    {
+      "file": "21-tier-3-craft-390x844.png",
+      "sha256": "5a187267a34c0d86b6b789e1179f20e0747d31164c488aeee737449aa5d7abe3"
+    },
+    {
+      "file": "22-tier-3-seated-390x844.png",
+      "sha256": "8f8cd290b8435d91685383f64b931d4672bf4e2f8b941afc136db4ed933fff5b"
+    },
+    {
+      "file": "23-tier-3-inspect-390x844.png",
+      "sha256": "7433409c9ed12a0bb93db809e521ec6f51c3517163f80da6c2141a120546ca64"
+    },
+    {
+      "file": "24-tier-3-night-390x844.png",
+      "sha256": "5da5e0af809feb1f2545a94864bae0234ecde4b0b66c8c1c9f15e12d8e40c81f"
+    },
+    {
+      "file": "25-tier-0-fire-430x932.png",
+      "sha256": "7142b24356a904cb8b8eb6998cb0d6e4b1faddfc66b0f32bf6077a2ff28da00e"
+    },
+    {
+      "file": "26-tier-0-wood-430x932.png",
+      "sha256": "6228e13c242370364a4ea0459961df26369e793e83baad34c404badac4a2fc42"
+    },
+    {
+      "file": "27-tier-0-craft-430x932.png",
+      "sha256": "e1a133117f22865c33bd9d2f77d8c95e378d47044da08c357949b942c26f97bd"
+    },
+    {
+      "file": "28-tier-0-seated-430x932.png",
+      "sha256": "b66d11751bdcae7a83a2a1b5f070a8e2d2eb59c35d5d97400dbe513a58c20124"
+    },
+    {
+      "file": "29-tier-0-inspect-430x932.png",
+      "sha256": "fcdca7008b921e6ef9b3b61fc06588a1f6aa04861ee4e8ef91c984b0ac2c4664"
+    },
+    {
+      "file": "30-tier-0-night-430x932.png",
+      "sha256": "575f02ace059ef2ba3075d6e26c368fa49183a694bbad4c9dd3750fa32a83893"
+    },
+    {
+      "file": "31-tier-1-fire-430x932.png",
+      "sha256": "19f089e627e1270eb69ce48a52e77b53af2f55ac2886df6e38f6a79319ad99da"
+    },
+    {
+      "file": "32-tier-1-wood-430x932.png",
+      "sha256": "5c0262d6499c35a8ac6bec6afe94ef4633306478e379605c167e4dddb38a569a"
+    },
+    {
+      "file": "33-tier-1-craft-430x932.png",
+      "sha256": "c5e5230aec1fe32d08919713d8f5c31fdf0874c7761ce4e7132efec4786992ba"
+    },
+    {
+      "file": "34-tier-1-seated-430x932.png",
+      "sha256": "adab6f666969276a578c00bc1c105aaa9dfb4341bd70387dc6b0727f91c4ff9e"
+    },
+    {
+      "file": "35-tier-1-inspect-430x932.png",
+      "sha256": "e7ec4c28a28ba3214236ada99e9a4da80fbf1ac1f23b3617bfcd5fd87157ffe8"
+    },
+    {
+      "file": "36-tier-1-night-430x932.png",
+      "sha256": "9bd861587267c25edc5ee1347d55dbd1f5ceea050e7343e001971c1ade523546"
+    },
+    {
+      "file": "37-tier-2-fire-430x932.png",
+      "sha256": "17180dcdcebe920d58cbf559025d635770465610099872674c8fe1b1a1da2ffa"
+    },
+    {
+      "file": "38-tier-2-wood-430x932.png",
+      "sha256": "9efeae9db674d9ae2e706bd7fbd2c5f09d806e374844e2415bd844a9549ddbfc"
+    },
+    {
+      "file": "39-tier-2-craft-430x932.png",
+      "sha256": "85200e875a7eecdbae382220a7f56a1941a5002bab0fdd8bba5c0760f11362c1"
+    },
+    {
+      "file": "40-tier-2-seated-430x932.png",
+      "sha256": "2c374808981e2d79295a4c8e6da1869f37b3d8a486dc9c15368e7b1e8579d0c1"
+    },
+    {
+      "file": "41-tier-2-inspect-430x932.png",
+      "sha256": "db52de8c47f730b16010a078f00c14872d31aa001e6597afcbcf38c3a562a591"
+    },
+    {
+      "file": "42-tier-2-night-430x932.png",
+      "sha256": "7abe8b3dea9cfb51ae1fe9aba501621299358f465f83227c11c705ea52b32d30"
+    },
+    {
+      "file": "43-tier-3-fire-430x932.png",
+      "sha256": "bb04e61af35fbb641b8348c23f15b44f2ba0ebebb1c9a45d0a2444217c43a706"
+    },
+    {
+      "file": "44-tier-3-wood-430x932.png",
+      "sha256": "2ab4e24c5f535d85d2a8ccd1e939f6905ea371d073b101b3ec3b056f24cf1405"
+    },
+    {
+      "file": "45-tier-3-craft-430x932.png",
+      "sha256": "c49c7112207c0dca0146dd433d950e569797c0f8cd9ced660416f81ab011bafd"
+    },
+    {
+      "file": "46-tier-3-seated-430x932.png",
+      "sha256": "b8729cc8404b86df05e4df3626b2f6b89e98bed4dbd419a525c5809c4ea1a041"
+    },
+    {
+      "file": "47-tier-3-inspect-430x932.png",
+      "sha256": "4af9b245cf51c7577b790f61a811411837224983e51285b62c9f3dc562f9c7af"
+    },
+    {
+      "file": "48-tier-3-night-430x932.png",
+      "sha256": "9749db3d9324e64204ceeaa6f3a24434a6d4c05086b15b4624357fd7682507f6"
+    }
+  ]
+}

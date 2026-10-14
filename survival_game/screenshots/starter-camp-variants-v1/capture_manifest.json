@@ -1,0 +1,38 @@
+[
+  {
+    "file": "01-tier-0-fire.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "f0acba644848be6f0deb2c5e8c253ce0fa6537d4c84650cf04b7f91b6d479c16",
+    "background": "assets/art/camp_tier_0_fire_v1.png",
+    "campTier": 0,
+    "day": 1,
+    "runState": "fresh RunState(), explicit visual pose"
+  },
+  {
+    "file": "02-tier-0-bed.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "1722b4c5746860c3ba4e277320d20d91dc4c7231ffb7b255a87a9fe59e5c61cf",
+    "background": "assets/art/camp_tier_0_bed_v1.png",
+    "campTier": 0,
+    "day": 1,
+    "runState": "fresh RunState(), explicit visual pose"
+  },
+  {
+    "file": "03-tier-0-wood.png",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "c5c21b77a1bdc5d0b3aaf34ed705f4e8f2a87e07cd114fb18224ebe83506bfd2",
+    "background": "assets/art/camp_tier_0_wood_v2.png",
+    "campTier": 0,
+    "day": 1,
+    "runState": "fresh RunState(), explicit visual pose"
+  }
+]

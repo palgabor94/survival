@@ -14,10 +14,12 @@ class OutcomeDialog extends StatelessWidget {
     required this.nightNext,
     this.expeditionNext = false,
     this.runEnded = false,
+    this.runRescued = false,
   });
   final ActionReport report;
   final bool nightNext, expeditionNext;
   final bool runEnded;
+  final bool runRescued;
   @override
   Widget build(BuildContext context) => CanopyDialog(
     title: report.title,
@@ -26,7 +28,9 @@ class OutcomeDialog extends StatelessWidget {
     actions: [
       ActionCard(
         key: const ValueKey('continue-outcome'),
-        title: runEnded
+        title: runRescued
+            ? 'View run summary'
+            : runEnded
             ? 'Continue'
             : nightNext
             ? 'Night is falling'

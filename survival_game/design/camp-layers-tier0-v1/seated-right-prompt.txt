@@ -1,0 +1,6 @@
+Use case: stylized-concept. Asset: ONE isolated transparent seated explorer sprite, square canvas.
+Image 1: Tier 3 camp is only the low-poly painting, elevated camera and lighting reference. Image 2: canonical explorer identity.
+The camp's crates are at the LEFT of the clearing, so this character MUST sit facing diagonally to LOWER RIGHT / southeast of screen. Side/back three-quarter view as needed: torso, knees and boots project rightward toward the open clearing. Sit upright on the front edge of an imaginary crate at knee height, both hands resting on thighs, knees bent 90 degrees, both whole boots below and FORWARD to the RIGHT. Crate itself is NOT included. Complete body with clean underside silhouette of seated hips, no clipped boots.
+Keep canonical angular short dark-brown hair/beard, cream rolled-sleeve shirt, dark green cargo trousers, brown boots, brown diagonal shoulder strap and small satchel, no backpack.
+Match simple matte low-poly painted style, large clean color planes, muted warm palette, moderately elevated isometric camera with visible top of head/shoulders. Soft upper-left daylight.
+Centered one full character about 80% of square canvas height, with margin around hands and boots. Genuine transparent alpha; no seat, no crate, no ground patch, no shadow, no scenery, no text, no baked checkerboard.

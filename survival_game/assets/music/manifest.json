@@ -1,0 +1,71 @@
+{
+  "integrated": "2026-10-13",
+  "tracks": [
+    {
+      "file": "assets/music/main.mp3",
+      "source": "../music/main.mp3",
+      "sha256": "6b7f084cf92ecfc6bf9474e344c9ca6a402a1b824aabe82314bfbac5889c4c0f",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "48000",
+            "channels": 2
+          },
+          {
+            "codec_name": "mjpeg"
+          }
+        ],
+        "format": {
+          "duration": "208.613500"
+        }
+      }
+    },
+    {
+      "file": "assets/music/camp.mp3",
+      "source": "../music/camp.mp3",
+      "sha256": "d15d5645b902560a33478009a7d2e9f68aabe3c6d591d4da2689e8b8e52abbd2",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "48000",
+            "channels": 2
+          },
+          {
+            "codec_name": "mjpeg"
+          }
+        ],
+        "format": {
+          "duration": "188.453500"
+        }
+      }
+    },
+    {
+      "file": "assets/music/action.mp3",
+      "source": "../music/action.mp3",
+      "sha256": "0811522dd742498b000a73be69c4cc3b665298bd20789beded826927df99d78c",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "sample_rate": "48000",
+            "channels": 2
+          },
+          {
+            "codec_name": "mjpeg"
+          }
+        ],
+        "format": {
+          "duration": "97.213500"
+        }
+      }
+    }
+  ]
+}

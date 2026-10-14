@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-13",
+  "generator": "built-in imagegen",
+  "integrated": true,
+  "camera_reference": "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+  "character_reference": "design/references/explorer_character_master_v1.png",
+  "images": [
+    {
+      "slug": "jaguar",
+      "name": "Jaguár",
+      "path": "assets/art/jaguar_encounter_camp_style_v1.png",
+      "preview_path": "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "d91663482164fa790e9abc50e7ccc2eb5f87992f0c2ead5fc169776d55489230",
+      "prompt_file": "design/jaguar-camp-style-test/PROMPT_V3.md",
+      "references": [
+        "assets/art/camp_tier_1_fire_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source_manifest": "design/jaguar-camp-style-test/manifest-v3.json"
+    },
+    {
+      "id": "snake_thicket",
+      "slug": "snake",
+      "name": "Kígyó",
+      "environment": "Páfrányos sziklaszoros",
+      "scene": "NEW ENCOUNTER: one green-and-gold snake, a wrist-thick body curled into a clear loose coil, with a small angular raised head facing the explorer. A few broad color markings, no intricate scales, no cobra hood, no extra snakes. Its coil is about one third of explorer height, easy to see without making it a giant creature. Explorer has stopped cautiously, empty hands open, seen from behind/three-quarter at lower-left of the central scene.\nDISTINCT ENVIRONMENT: a narrow shaded hillside trail through a fern-lined rock gully. Low slate-gray ledges flank the path, a handful of broad simplified fern fronds and hanging vines arch above the snake, damp ochre soil with a few flat leaf shapes and one small puddle. Closed forest depth behind. A low mossy ledge behind the snake provides a contrasting backdrop. No large buttress-root trees, bamboo or open waterbank. Foliage has a different sparse fern silhouette from the jaguar grove; use a cool teal canopy with a small sun patch on the encounter.",
+      "file": "snake_encounter_camp_style_v1.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: full-screen opaque portrait 9:16 Lost Canopy encounter background, standalone art preview.\nInput image 1 is the CAMP art STYLE and elevated three-quarter/isometric-like CAMERA reference ONLY. Match its broad smooth polygon planes, matte colors, few-tone shading, simplified rocks and vegetation, warm ground and atmospheric teal-green jungle. Do not reproduce the camp's landscape or arrangement.\nInput image 2 is the canonical explorer CHARACTER MODEL SHEET. Match its angular dark brown hair, short full dark beard, head and simplified body proportions, cream collared rolled-sleeve shirt, dark green cargo trousers, chunky brown boots, skin tone, single brown diagonal satchel strap and small brown satchel. Use rear/three-quarter views from the sheet. Exactly ONE explorer, not a pose sheet or lineup. No redesigned character, crossed straps or extra backpack.\nDraw a NEW scene in a distinct jungle location specified below. Maintain the approved simple camp-art language throughout animals, plants and terrain: large clear shapes, broad faceted shading, a small number of details, no realistic fur/scales/bark textures, no tiny leaf clutter. The animals must be unmistakably recognizable by clear silhouettes and their defining anatomy.\nCamera: elevated three-quarter game view as in the CAMP, showing the ground plane and tops of heads and rocks, no frontal eye-level cinematic view. Explorer and encounter form a readable action area around the middle 35–70% of image height; full bodies visible and unclipped; explorer approximately 17–20% of image height. Leave upper ~15% atmosphere and lower ~20% mostly terrain/foliage for future HUD/cards. Same portrait composition and subject scale as other encounter scenes.\nOutput ONE complete portrait 9:16 illustration, not a collage. No text, HUD, icons, cards, border, logo or watermark. No camp shelter, bed, workbench, campfire, distant waterfall or copied camp foreground layout. No jaguar. Attachments are ONLY camp style and character sheet; do not use old encounter illustrations.\n\nNEW ENCOUNTER: one green-and-gold snake, a wrist-thick body curled into a clear loose coil, with a small angular raised head facing the explorer. A few broad color markings, no intricate scales, no cobra hood, no extra snakes. Its coil is about one third of explorer height, easy to see without making it a giant creature. Explorer has stopped cautiously, empty hands open, seen from behind/three-quarter at lower-left of the central scene.\nDISTINCT ENVIRONMENT: a narrow shaded hillside trail through a fern-lined rock gully. Low slate-gray ledges flank the path, a handful of broad simplified fern fronds and hanging vines arch above the snake, damp ochre soil with a few flat leaf shapes and one small puddle. Closed forest depth behind. A low mossy ledge behind the snake provides a contrasting backdrop. No large buttress-root trees, bamboo or open waterbank. Foliage has a different sparse fern silhouette from the jaguar grove; use a cool teal canopy with a small sun patch on the encounter.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-dc5bad11-1ad3-486e-b58f-b3738bc19acb.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "8941cca40dce87561b9b2fadb20e27c4e3b2a112061614dac3c7b6df2023246a",
+      "references": [
+        "assets/art/camp_tier_1_fire_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "path": "assets/art/snake_encounter_camp_style_v1.png",
+      "preview_path": "design/encounter-camp-style-v1/snake_encounter_camp_style_v1.png"
+    },
+    {
+      "id": "boar_charge",
+      "slug": "boar",
+      "name": "Vaddisznó",
+      "environment": "Napsütötte, agyagos bozóttisztás",
+      "scene": "NEW ENCOUNTER: one sturdy wild boar bursts from shrubs toward the explorer. A chunky dark reddish-brown body, wedge snout, two small ivory tusks, four short sturdy visible legs, pointed ears and a single little tail. Clear boar anatomy, no long fur strands, not a piglet or bear. Explorer braces with knees bent, empty hands held ready, facing it three-quarter from behind at lower-left of the central scene. Capture the charge without dust clouds or elaborate motion effects.\nDISTINCT ENVIRONMENT: a sunlit red-ochre clay trail widening into a low scrub clearing on a gentle jungle slope. Broad heart-shaped leaves, a few thick low shrubs, dry yellow-green reed/grass clusters and one weathered stump with a fallen branch. Two rounded/faceted ochre-gray stones provide terrain variation; taller foliage stays at the outer edges. Warm golden sunlight, open central ground, distant layered green tree crowns. No waterfall, stream, mangrove roots, bamboo, fern-gully or tall buttress-tree corridor. Use sparse large plant silhouettes and clean few-tone ground shapes.",
+      "file": "boar_encounter_camp_style_v3.png",
+      "prompt": "Use case: precise-object-edit / identity-preserve.\nAsset type: opaque portrait 9:16 Lost Canopy wild boar encounter background. ONE finished illustration.\nReference image 1 (NEW APPROVED JAGUAR illustration) is the AUTHORITATIVE CAMERA ANGLE, camera height, projection, character scale, framing, and simple art-style reference. Match this image's moderately elevated three-quarter isometric game view EXACTLY. Notice the visible side planes of the explorer, upright tree trunks and animal: look diagonally down and into the scene at the SAME elevation as this jaguar picture. DO NOT make a steep overhead/bird's-eye view. Do not lower it to eye level either. Copy the jaguar's camera geometry, not its animal or jungle environment.\nReference image 2 is the BOAR EDIT TARGET and subject/environment reference ONLY. Its camera is too high; replace that camera with the one in image 1. Preserve its distinct warm red-ochre jungle clearing, broad green scrub, sparse dry yellow-green grass clumps, few large faceted gray stones, broken stump and fallen branch. Re-render these from the jaguar's camera angle instead of steeply overhead. Allow upright trees and layered foliage in the upper background to give depth as in the jaguar reference; no sky or distant horizon. Keep this a DIFFERENT location from the jaguar's huge buttress-root tree corridor.\nReference image 3 is the canonical CHARACTER IDENTITY SHEET. Exactly one explorer, matching its angular brown hair, dark short full beard, cream collared rolled-sleeve shirt, green cargo trousers, chunky brown boots, single diagonal brown satchel strap and small brown satchel. No redesigned character, crossed harness or extra backpack.\nEncounter: exactly one recognizable sturdy wild boar with chunky dark reddish-brown body, pointed ears, wedge snout, two ivory tusks, four short sturdy legs and one short tail, confronting the explorer. Boar should be naturally sized, about waist-high to the explorer, not a gigantic monster. One braced explorer at lower-left of the middle action area facing the boar at middle-right, rear three-quarter pose. Both full bodies visible, side surfaces and height readable as in jaguar reference. Match the jaguar reference's character scale relative to the full frame. Leave similar upper background and lower foreground breathing room for the game UI.\nStyle: match reference 1's deliberately simple camp-style low-poly illustration, large smooth matte color planes, clean silhouettes, few-tone shading, broad simplified leaves and rocks. No photorealism, intricate bark/fur, tiny leaf clutter or dense ground texture. Red-ochre clearing distinguishes this location.\nPrimary correction is CAMERA ONLY, guided visually by image 1, never by the overhead view in image 2.\nNo jaguar, other animals, extra people, camp furniture, waterfall, text, HUD, cards, logo, border or watermark.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b207c4a1-632f-4eee-8555-8d8798d2b29f.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "b87f4770d14b63305068faccd78a965581dc14a8a356f1398530fe60f0ae1de6",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/encounter-camp-style-v1/boar_encounter_camp_style_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "previous_versions": [
+        {
+          "file": "boar_encounter_camp_style_v1.png",
+          "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-54a1cede-a5d0-49b3-a945-7c8fc721b2ba.png",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "sha256": "642f577ba8ef51714a08fc746f79877cecd2653633c15f14c9dcc5ed82dd3a24"
+        },
+        {
+          "id": "boar_charge",
+          "slug": "boar",
+          "name": "Vaddisznó",
+          "environment": "Napsütötte, agyagos bozóttisztás",
+          "scene": "NEW ENCOUNTER: one sturdy wild boar bursts from shrubs toward the explorer. A chunky dark reddish-brown body, wedge snout, two small ivory tusks, four short sturdy visible legs, pointed ears and a single little tail. Clear boar anatomy, no long fur strands, not a piglet or bear. Explorer braces with knees bent, empty hands held ready, facing it three-quarter from behind at lower-left of the central scene. Capture the charge without dust clouds or elaborate motion effects.\nDISTINCT ENVIRONMENT: a sunlit red-ochre clay trail widening into a low scrub clearing on a gentle jungle slope. Broad heart-shaped leaves, a few thick low shrubs, dry yellow-green reed/grass clusters and one weathered stump with a fallen branch. Two rounded/faceted ochre-gray stones provide terrain variation; taller foliage stays at the outer edges. Warm golden sunlight, open central ground, distant layered green tree crowns. No waterfall, stream, mangrove roots, bamboo, fern-gully or tall buttress-tree corridor. Use sparse large plant silhouettes and clean few-tone ground shapes.",
+          "file": "boar_encounter_camp_style_v2.png",
+          "prompt": "Use case: precise-object-edit.\nAsset type: portrait 9:16 Lost Canopy encounter illustration, preview revision.\nImage 1 is the EDIT TARGET: the existing boar encounter. Preserve its simple camp-style art, warm red-ochre clearing, dry yellow-green grass tufts, broad shrubs, faceted stones, broken stump/fallen branch, one boar and one explorer. Re-render the scene from a NEW HIGH CAMERA; do not retain the original low camera or its skyline.\nImage 2 is the CAMP illustration, STYLE ONLY. Match its broad matte color planes, simple faceted character/objects and low texture/detail density. Camera comes from the explicit instruction below, not this reference's horizon.\nImage 3 is the canonical explorer CHARACTER SHEET. Preserve the exact angular dark-brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo trousers, chunky brown boots, single brown diagonal shoulder strap and satchel, skin tone and body proportions. Render the same character seen steeply from above and behind. Exactly one explorer.\nPRIMARY CHANGE — CAMERA: a CLEARLY HIGH, TOP-DOWN OBLIQUE ISOMETRIC GAME VIEW, camera approximately 65–70 degrees DOWNWARD from horizontal, only 20–25 degrees away from vertical. Orthographic-like perspective, NO dramatic vanishing point. Look down INTO the clearing, not forward THROUGH the forest. The tops of the explorer's head/shoulders, the boar's entire broad back, rocks and stump must be strongly visible. Bodies are foreshortened vertically by this high camera angle. The boar's back/top silhouette should dominate over its front face; character face barely visible from rear above.\nCRITICAL: NO SKY, NO CLOUDS, NO HORIZON OR DISTANT PALM SKYLINE anywhere in the image. The top of the frame must show nearby GROUND, a continuation of the clearing/path and shrub crowns viewed from above, not a far-away vista. This must immediately read as a game map viewed from above, with the ground plane occupying the entire canvas.\nCONTENT AND COMPOSITION: a single chunky reddish-brown wild boar with wedge snout, two small ivory tusks, four short legs and one small tail, advancing diagonally across the clearing toward the explorer. Explorer is lower-left of central action, boar upper-right, separated by a few body lengths; both fully visible around the middle 40–68% of image height. Keep hero approximately 15–18% of frame height with naturally sized boar. Surround the action with sparse broad bushes, yellow-green grass and simple rocks, retain a broken stump at right and warm clay ground. Use a visibly diagonal path across the ground so the overhead perspective is readable.\nSTYLE: preserve the simple faceted camp look; large flat shapes and few-tone shading, no realistic fur, fine grass texture, dense miniature leaves or detailed anatomy. Warm stylized daylight, deep teal-green outer vegetation. No camera-induced change to character identity or animal species.\nOutput one opaque portrait 9:16 scene, no text, UI, panels, logo, border or watermark. Camera correction only in the existing environmental direction. The original low-angle artwork must not anchor the new camera.",
+          "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-2c9925ad-c50c-4d60-93a6-4ec6f6b5c191.png",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "sha256": "aceedf6a3213ef5f210e68fa3ccc2bd7295cfdee37f85765e169c110d1ef2a96",
+          "references": [
+            "design/encounter-camp-style-v1/boar_encounter_camp_style_v1.png",
+            "assets/art/camp_tier_1_fire_v2.png",
+            "design/references/explorer_character_master_v1.png"
+          ],
+          "prompt_file": "BOAR_CAMERA_V2_PROMPT.md",
+          "camera_revision": "High overhead oblique view; no sky or horizon"
+        }
+      ],
+      "prompt_file": "BOAR_CAMERA_V3_PROMPT.md",
+      "camera_revision": "Moderately elevated three-quarter view matching approved jaguar_camp_style_v3; v2 was too high.",
+      "path": "assets/art/boar_encounter_camp_style_v3.png",
+      "preview_path": "design/encounter-camp-style-v1/boar_encounter_camp_style_v3.png"
+    },
+    {
+      "id": "crocodile_shallows",
+      "slug": "crocodile",
+      "name": "Krokodil",
+      "environment": "Sekély mangroveág, homokos parttal",
+      "scene": "NEW ENCOUNTER: one olive-green crocodile crawls partly out of shallow turquoise water toward the dry bank where the explorer has halted. Render a long broad wedge-shaped snout, distinct low body, four clear short feet and one tapering tail curving into the frame. A few large dorsal plates, no many tiny scales. Whole animal visible and naturally proportioned, roughly comparable overall length to explorer height. Explorer cautiously steps backward on dry sand, empty hands open, seen rear three-quarter.\nDISTINCT ENVIRONMENT: a winding shallow mangrove channel crosses the clearing diagonally, pale sandy bank at left, clear blue-green shallows at right. A few large arching mangrove stilt roots emerge from the water, sparse rounded mangrove leaf crowns, one partly submerged gray rock, simple reed clusters and broad flat reflections. No waterfall or horizon. This scene's readable water-and-root shapes must be clearly different from inland forest trails. Keep a broad uncluttered dry encounter area in the middle-lower left, water in the middle-right, natural small animal-scale ripples only, soft dappled daylight.",
+      "file": "crocodile_encounter_camp_style_v1.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: full-screen opaque portrait 9:16 Lost Canopy encounter background, standalone art preview.\nInput image 1 is the CAMP art STYLE and elevated three-quarter/isometric-like CAMERA reference ONLY. Match its broad smooth polygon planes, matte colors, few-tone shading, simplified rocks and vegetation, warm ground and atmospheric teal-green jungle. Do not reproduce the camp's landscape or arrangement.\nInput image 2 is the canonical explorer CHARACTER MODEL SHEET. Match its angular dark brown hair, short full dark beard, head and simplified body proportions, cream collared rolled-sleeve shirt, dark green cargo trousers, chunky brown boots, skin tone, single brown diagonal satchel strap and small brown satchel. Use rear/three-quarter views from the sheet. Exactly ONE explorer, not a pose sheet or lineup. No redesigned character, crossed straps or extra backpack.\nDraw a NEW scene in a distinct jungle location specified below. Maintain the approved simple camp-art language throughout animals, plants and terrain: large clear shapes, broad faceted shading, a small number of details, no realistic fur/scales/bark textures, no tiny leaf clutter. The animals must be unmistakably recognizable by clear silhouettes and their defining anatomy.\nCamera: elevated three-quarter game view as in the CAMP, showing the ground plane and tops of heads and rocks, no frontal eye-level cinematic view. Explorer and encounter form a readable action area around the middle 35–70% of image height; full bodies visible and unclipped; explorer approximately 17–20% of image height. Leave upper ~15% atmosphere and lower ~20% mostly terrain/foliage for future HUD/cards. Same portrait composition and subject scale as other encounter scenes.\nOutput ONE complete portrait 9:16 illustration, not a collage. No text, HUD, icons, cards, border, logo or watermark. No camp shelter, bed, workbench, campfire, distant waterfall or copied camp foreground layout. No jaguar. Attachments are ONLY camp style and character sheet; do not use old encounter illustrations.\n\nNEW ENCOUNTER: one olive-green crocodile crawls partly out of shallow turquoise water toward the dry bank where the explorer has halted. Render a long broad wedge-shaped snout, distinct low body, four clear short feet and one tapering tail curving into the frame. A few large dorsal plates, no many tiny scales. Whole animal visible and naturally proportioned, roughly comparable overall length to explorer height. Explorer cautiously steps backward on dry sand, empty hands open, seen rear three-quarter.\nDISTINCT ENVIRONMENT: a winding shallow mangrove channel crosses the clearing diagonally, pale sandy bank at left, clear blue-green shallows at right. A few large arching mangrove stilt roots emerge from the water, sparse rounded mangrove leaf crowns, one partly submerged gray rock, simple reed clusters and broad flat reflections. No waterfall or horizon. This scene's readable water-and-root shapes must be clearly different from inland forest trails. Keep a broad uncluttered dry encounter area in the middle-lower left, water in the middle-right, natural small animal-scale ripples only, soft dappled daylight.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-61eca456-3d91-4242-be23-14d6d925e864.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "78afddb830805ef8e168b81532c1c0b0dcae522964470ab348cc0207bd768006",
+      "references": [
+        "assets/art/camp_tier_1_fire_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "path": "assets/art/crocodile_encounter_camp_style_v1.png",
+      "preview_path": "design/encounter-camp-style-v1/crocodile_encounter_camp_style_v1.png"
+    },
+    {
+      "id": "hornet_nest",
+      "slug": "hornet",
+      "name": "Darazsak",
+      "environment": "Bambuszliget, alacsony fészkes ággal",
+      "scene": "NEW ENCOUNTER: a hanging pale gray-brown papery hornet nest attached to ONE low woody side branch across the trail, and FOUR unmistakable hornets hovering near its entrance. Important insect anatomy: each hornet has a separate small dark head with two antennae, a compact dark thorax, a very narrow pinched waist, an elongated yellow-and-black banded abdomen with a tapered tip, paired thin translucent wings, and slim bent legs. Simple clean game-art shapes, but anatomically clearly WASPS/HORNETS: not round bees, butterflies, birds, orange blobs or winged balls. Approximately hand-sized at game illustration scale, clustered near nest rather than covering the whole canvas. Nest is an oval layered-paper shell with 4–5 broad bands and one dark lower entrance, NO exposed honeycomb. Explorer ducks slightly and raises a forearm protectively while looking toward the nest, rear three-quarter, empty hands, no torch yet (the action is still undecided).\nDISTINCT ENVIRONMENT: a bright narrow bamboo corridor with tall simple jointed yellow-green stems in uneven groups on both sides, long clean blade-leaf fans, a low woody tree branch carrying the nest from the right, a few broad pale stones and light honey-colored soil. Sparse broad foliage, green filtered sunlight and a shallow leafy slope behind; no creek, waterfall, massive buttress roots or camp equipment. Nest at middle-right near character-head height so insect silhouettes and explorer can be seen simultaneously in the central gameplay area. Keep foliage broad and uncluttered around the insects for clear recognition.",
+      "file": "hornet_encounter_camp_style_v1.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: full-screen opaque portrait 9:16 Lost Canopy encounter background, standalone art preview.\nInput image 1 is the CAMP art STYLE and elevated three-quarter/isometric-like CAMERA reference ONLY. Match its broad smooth polygon planes, matte colors, few-tone shading, simplified rocks and vegetation, warm ground and atmospheric teal-green jungle. Do not reproduce the camp's landscape or arrangement.\nInput image 2 is the canonical explorer CHARACTER MODEL SHEET. Match its angular dark brown hair, short full dark beard, head and simplified body proportions, cream collared rolled-sleeve shirt, dark green cargo trousers, chunky brown boots, skin tone, single brown diagonal satchel strap and small brown satchel. Use rear/three-quarter views from the sheet. Exactly ONE explorer, not a pose sheet or lineup. No redesigned character, crossed straps or extra backpack.\nDraw a NEW scene in a distinct jungle location specified below. Maintain the approved simple camp-art language throughout animals, plants and terrain: large clear shapes, broad faceted shading, a small number of details, no realistic fur/scales/bark textures, no tiny leaf clutter. The animals must be unmistakably recognizable by clear silhouettes and their defining anatomy.\nCamera: elevated three-quarter game view as in the CAMP, showing the ground plane and tops of heads and rocks, no frontal eye-level cinematic view. Explorer and encounter form a readable action area around the middle 35–70% of image height; full bodies visible and unclipped; explorer approximately 17–20% of image height. Leave upper ~15% atmosphere and lower ~20% mostly terrain/foliage for future HUD/cards. Same portrait composition and subject scale as other encounter scenes.\nOutput ONE complete portrait 9:16 illustration, not a collage. No text, HUD, icons, cards, border, logo or watermark. No camp shelter, bed, workbench, campfire, distant waterfall or copied camp foreground layout. No jaguar. Attachments are ONLY camp style and character sheet; do not use old encounter illustrations.\n\nNEW ENCOUNTER: a hanging pale gray-brown papery hornet nest attached to ONE low woody side branch across the trail, and FOUR unmistakable hornets hovering near its entrance. Important insect anatomy: each hornet has a separate small dark head with two antennae, a compact dark thorax, a very narrow pinched waist, an elongated yellow-and-black banded abdomen with a tapered tip, paired thin translucent wings, and slim bent legs. Simple clean game-art shapes, but anatomically clearly WASPS/HORNETS: not round bees, butterflies, birds, orange blobs or winged balls. Approximately hand-sized at game illustration scale, clustered near nest rather than covering the whole canvas. Nest is an oval layered-paper shell with 4–5 broad bands and one dark lower entrance, NO exposed honeycomb. Explorer ducks slightly and raises a forearm protectively while looking toward the nest, rear three-quarter, empty hands, no torch yet (the action is still undecided).\nDISTINCT ENVIRONMENT: a bright narrow bamboo corridor with tall simple jointed yellow-green stems in uneven groups on both sides, long clean blade-leaf fans, a low woody tree branch carrying the nest from the right, a few broad pale stones and light honey-colored soil. Sparse broad foliage, green filtered sunlight and a shallow leafy slope behind; no creek, waterfall, massive buttress roots or camp equipment. Nest at middle-right near character-head height so insect silhouettes and explorer can be seen simultaneously in the central gameplay area. Keep foliage broad and uncluttered around the insects for clear recognition.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-29666634-965b-4d2d-afec-ef466ea50956.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "e1fa62c37b05ef7e5f64ae238ec82efc44f956d4d22928da28122077909ea17d",
+      "references": [
+        "assets/art/camp_tier_1_fire_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "path": "assets/art/hornet_encounter_camp_style_v1.png",
+      "preview_path": "design/encounter-camp-style-v1/hornet_encounter_camp_style_v1.png"
+    },
+    {
+      "id": "monkey_raiders",
+      "slug": "monkey",
+      "name": "Majmok",
+      "environment": "Gyümölcsös liget, kidőlt fával",
+      "scene": "NEW ENCOUNTER: exactly TWO small brown long-tailed monkeys attempt to steal the explorer's single brown satchel. One monkey on the ground near center-right grips the loose satchel strap with its hands while the explorer holds the bag close with one arm and reaches to recover the strap. A second monkey crouches on a low fallen tree trunk just behind, watching for an opening. Each monkey has a clear rounded angular head, lighter tan face/muzzle, distinct hands/feet and one long curved tail; stylized few-plane anatomy, no fur texture, not apes or cats. There is only ONE bag; explorer does not wear an extra backpack. Keep the brown diagonal shoulder strap and satchel consistent with character sheet; the theft is ongoing, not resolved.\nDISTINCT ENVIRONMENT: a small tropical fruit-tree grove on the edge of a woodland terrace. Chunky low spreading trunks with rounded broad green crowns and just a few large muted yellow-orange fruits in upper clusters; a large fallen log with simple flat cut ends crosses middle-right. Low broad split leaves and two flat mossy stones frame the ochre path, with cool soft jungle depth behind. Dappled warm afternoon light. No watercourse, bamboo, fern-rock gully, large buttress-root corridor, camp furniture or copied jaguar background. The fruit grove, horizontal log and two monkeys define a distinct readable composition.",
+      "file": "monkey_encounter_camp_style_v1.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: full-screen opaque portrait 9:16 Lost Canopy encounter background, standalone art preview.\nInput image 1 is the CAMP art STYLE and elevated three-quarter/isometric-like CAMERA reference ONLY. Match its broad smooth polygon planes, matte colors, few-tone shading, simplified rocks and vegetation, warm ground and atmospheric teal-green jungle. Do not reproduce the camp's landscape or arrangement.\nInput image 2 is the canonical explorer CHARACTER MODEL SHEET. Match its angular dark brown hair, short full dark beard, head and simplified body proportions, cream collared rolled-sleeve shirt, dark green cargo trousers, chunky brown boots, skin tone, single brown diagonal satchel strap and small brown satchel. Use rear/three-quarter views from the sheet. Exactly ONE explorer, not a pose sheet or lineup. No redesigned character, crossed straps or extra backpack.\nDraw a NEW scene in a distinct jungle location specified below. Maintain the approved simple camp-art language throughout animals, plants and terrain: large clear shapes, broad faceted shading, a small number of details, no realistic fur/scales/bark textures, no tiny leaf clutter. The animals must be unmistakably recognizable by clear silhouettes and their defining anatomy.\nCamera: elevated three-quarter game view as in the CAMP, showing the ground plane and tops of heads and rocks, no frontal eye-level cinematic view. Explorer and encounter form a readable action area around the middle 35–70% of image height; full bodies visible and unclipped; explorer approximately 17–20% of image height. Leave upper ~15% atmosphere and lower ~20% mostly terrain/foliage for future HUD/cards. Same portrait composition and subject scale as other encounter scenes.\nOutput ONE complete portrait 9:16 illustration, not a collage. No text, HUD, icons, cards, border, logo or watermark. No camp shelter, bed, workbench, campfire, distant waterfall or copied camp foreground layout. No jaguar. Attachments are ONLY camp style and character sheet; do not use old encounter illustrations.\n\nNEW ENCOUNTER: exactly TWO small brown long-tailed monkeys attempt to steal the explorer's single brown satchel. One monkey on the ground near center-right grips the loose satchel strap with its hands while the explorer holds the bag close with one arm and reaches to recover the strap. A second monkey crouches on a low fallen tree trunk just behind, watching for an opening. Each monkey has a clear rounded angular head, lighter tan face/muzzle, distinct hands/feet and one long curved tail; stylized few-plane anatomy, no fur texture, not apes or cats. There is only ONE bag; explorer does not wear an extra backpack. Keep the brown diagonal shoulder strap and satchel consistent with character sheet; the theft is ongoing, not resolved.\nDISTINCT ENVIRONMENT: a small tropical fruit-tree grove on the edge of a woodland terrace. Chunky low spreading trunks with rounded broad green crowns and just a few large muted yellow-orange fruits in upper clusters; a large fallen log with simple flat cut ends crosses middle-right. Low broad split leaves and two flat mossy stones frame the ochre path, with cool soft jungle depth behind. Dappled warm afternoon light. No watercourse, bamboo, fern-rock gully, large buttress-root corridor, camp furniture or copied jaguar background. The fruit grove, horizontal log and two monkeys define a distinct readable composition.",
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-8420b151-fb0b-43c4-a397-e076beac4cda.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "5f4f5e6141db74fbd4f947d71a688c89b9af95ad97d64e49d0b4ac40479e68dd",
+      "references": [
+        "assets/art/camp_tier_1_fire_v2.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "path": "assets/art/monkey_encounter_camp_style_v1.png",
+      "preview_path": "design/encounter-camp-style-v1/monkey_encounter_camp_style_v1.png"
+    },
+    {
+      "slug": "ancient_ruins",
+      "name": "Ősi romok",
+      "scene": "A hidden jungle stone-seal altar on a quiet terraced clearing. Low broad stone platform with three steps, THREE clearly distinct carved round discs arranged left-to-right on its top: SUN with a central circle and broad triangular rays; WATER with three wavy parallel lines; LEAF with one simple leaf and stem. Exactly these three discs, no writing/runes or extra discs. Weathered chunky pale-gray blocks, three differently broken square pillars with a few thick vines, broad ferns and fan palms, cool shaded forest. A curved sandy approach and larger flat slate stones distinguish this location. Explorer stands lower-left with one hand resting on a block, inspecting the three discs, rear three-quarter. All altar and explorer readable around center. Simple geometry and carvings, no tiny masonry noise.",
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA hidden jungle stone-seal altar on a quiet terraced clearing. Low broad stone platform with three steps, THREE clearly distinct carved round discs arranged left-to-right on its top: SUN with a central circle and broad triangular rays; WATER with three wavy parallel lines; LEAF with one simple leaf and stem. Exactly these three discs, no writing/runes or extra discs. Weathered chunky pale-gray blocks, three differently broken square pillars with a few thick vines, broad ferns and fan palms, cool shaded forest. A curved sandy approach and larger flat slate stones distinguish this location. Explorer stands lower-left with one hand resting on a block, inspecting the three discs, rear three-quarter. All altar and explorer readable around center. Simple geometry and carvings, no tiny masonry noise.",
+      "file": "ancient_ruins_camp_style_v1.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-80bd8a0f-a015-41f0-8090-d65f2cb54308.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "cc9322e2bc9d5b6e6dcfa98b7a7dac420715e452f1acae9ec5f5670cb23c62ee",
+      "path": "assets/art/ancient_ruins_camp_style_v1.png",
+      "preview_path": "design/world-camp-style-v1/ancient_ruins_camp_style_v1.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ]
+    },
+    {
+      "slug": "bamboo_grove",
+      "name": "Bambuszliget",
+      "scene": "Preserve a distinct bamboo grove: jointed yellow-green canes, long blade-leaf fans, golden soil, pale gray stones, one hollow cut bamboo segment and two pointed new shoots. Explorer kneels beside the hollow stem examining it. Re-project the canes, hollow stem and explorer from ABOVE: clearly show tops of his hair/shoulders, the upper cylinder surface and stone tops. Frame large bamboo trunks/crowns only along the outer edges, with a broad open clearing/trail seen downwards through the middle. The path at the top stays broad in the overhead ground plane, not narrowing into a distant frontal bamboo corridor. No dark vertical wall of tall forest seen straight ahead.",
+      "prompt": "Use case: precise-object-edit.\nAsset type: ONE opaque portrait 9:16 Lost Canopy background.\nPRIMARY CORRECTION: restore the elevated TOP-DOWN OBLIQUE ISOMETRIC GAME CAMERA. The current target lost the top-down feeling and looks too much straight ahead.\nReference image 1 is the approved NEW JAGUAR illustration. Use it as CAMERA, explorer scale and simple low-poly STYLE reference. Match its down-looking angle on the explorer and terrain, top AND side surfaces visibly exposed.\nReference image 2 is the EDIT TARGET, CONTENT/ENVIRONMENT only. Its camera is WRONG. Do NOT retain its perspective or its distant frontal forest vista. Re-render the same subjects/environment from above.\nReference image 3 is the canonical CHARACTER SHEET. Match one explorer's hair, dark beard, cream rolled-sleeve shirt, green cargo pants, brown boots and single diagonal brown satchel strap/satchel, exact simplified proportions. Pose from target may be retained but must be viewed from above. No extra backpack.\nCamera instruction: camera ABOVE the scene, looking diagonally DOWN at roughly 50–55 degrees below horizontal, orthographic-like game projection. Ground plane fills the composition, with strongly readable tops of rocks, explorer head/shoulders and major props. This is a moderate high oblique camera matching the jaguar reference: NOT near-vertical 70-degree bird's-eye, and NOT low 25–35-degree frontal camera. Do not compensate for a low viewpoint by merely cropping the sky. Truly re-project the whole scene.\nImportant depth: no horizon, no sky, no vanishing-point forest corridor. Objects/terrain toward the top stay at similar scale rather than shrinking into the distance. Upper area can be cropped nearby foliage crowns and visible nearby ground. Preserve some visible side surfaces and full character body for readable isometric height.\nMatch the approved deliberately simple camp illustration: broad matte faceted planes, few-tone shading, chunky leaves and rocks, sparse small details. Preserve theme and palette of the edit target. Character about 17–20% image height, action in middle ~35–70% so usable with unchanged HUD and cards.\nNo text, UI, cards, logo, border, watermark, jaguar, extra people or unrequested animals.\n\nSCENE INVARIANTS:\nPreserve a distinct bamboo grove: jointed yellow-green canes, long blade-leaf fans, golden soil, pale gray stones, one hollow cut bamboo segment and two pointed new shoots. Explorer kneels beside the hollow stem examining it. Re-project the canes, hollow stem and explorer from ABOVE: clearly show tops of his hair/shoulders, the upper cylinder surface and stone tops. Frame large bamboo trunks/crowns only along the outer edges, with a broad open clearing/trail seen downwards through the middle. The path at the top stays broad in the overhead ground plane, not narrowing into a distant frontal bamboo corridor. No dark vertical wall of tall forest seen straight ahead.",
+      "file": "bamboo_grove_camp_style_v2.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/bamboo_grove_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-869da65a-9f8f-4571-9287-13f2cb53fcbe.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "1407f565d273548e3a38e3c31f046c59c856b84192f62c42cba7679f6cd8fba6",
+      "path": "assets/art/bamboo_grove_camp_style_v2.png",
+      "preview_path": "design/world-camp-style-v1/bamboo_grove_camp_style_v2.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/bamboo_grove_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "previous_versions": [
+        {
+          "slug": "bamboo_grove",
+          "name": "Bambuszliget",
+          "scene": "A bright bamboo grove on a gentle forest terrace. Tall yellow-green jointed canes grouped asymmetrically in the sides, long clean pointed blade-leaf fans; pale golden soil clearing and lightly shaded bend of trail into bamboo behind. A LARGE hollow freshly cut green bamboo segment and two young cone-shaped shoots beside it are central-right, recognizably hollow open end. A few broad pale stones, sparse fallen blade leaves. Explorer crouches slightly beside the cut stem, examining it with one hand, matching canonical proportions. Distinct bamboo silhouettes and green filtered sunlight, no giant buttress roots, river, waterfall or camp furniture.",
+          "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA bright bamboo grove on a gentle forest terrace. Tall yellow-green jointed canes grouped asymmetrically in the sides, long clean pointed blade-leaf fans; pale golden soil clearing and lightly shaded bend of trail into bamboo behind. A LARGE hollow freshly cut green bamboo segment and two young cone-shaped shoots beside it are central-right, recognizably hollow open end. A few broad pale stones, sparse fallen blade leaves. Explorer crouches slightly beside the cut stem, examining it with one hand, matching canonical proportions. Distinct bamboo silhouettes and green filtered sunlight, no giant buttress roots, river, waterfall or camp furniture.",
+          "file": "bamboo_grove_camp_style_v1.png",
+          "refs": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ],
+          "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-d08417de-e727-4530-8fed-527f006ebd5c.png",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "sha256": "64506d91ac29b17771418be2a9f45ea626b3b4b8503c1e18c13b1ac62de0bd9f",
+          "path": "assets/art/bamboo_grove_camp_style_v1.png",
+          "preview_path": "design/world-camp-style-v1/bamboo_grove_camp_style_v1.png",
+          "references": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ]
+        }
+      ],
+      "details": "Preserve a distinct bamboo grove: jointed yellow-green canes, long blade-leaf fans, golden soil, pale gray stones, one hollow cut bamboo segment and two pointed new shoots. Explorer kneels beside the hollow stem examining it. Re-project the canes, hollow stem and explorer from ABOVE: clearly show tops of his hair/shoulders, the upper cylinder surface and stone tops. Frame large bamboo trunks/crowns only along the outer edges, with a broad open clearing/trail seen downwards through the middle. The path at the top stays broad in the overhead ground plane, not narrowing into a distant frontal bamboo corridor. No dark vertical wall of tall forest seen straight ahead.",
+      "prompt_file": "design/world-camp-style-v1/CAMERA_FIX_V2_PROMPTS.md",
+      "camera_revision": "top-down oblique camera restored after feedback on screenshots 09–12"
+    },
+    {
+      "slug": "plane_wreck",
+      "name": "Repülőroncs",
+      "scene": "Preserve one small cream-and-rust-red propeller aircraft wreck, broken wing, nose propeller, tilted tail, vines and side service hatch with a simple salvage radio box. ONE explorer beside the hatch reaching inside. Re-project the COMPLETE aircraft from ABOVE: large visible TOP surfaces of both wings, fuselage roof, cockpit roof/glazing and tailplane, with side hatch still readable; do not show an oversized front nose facing eye-level camera. Put aircraft diagonally across a broad jungle clearing, background consists of the clearing floor and nearby low foliage viewed from above, no distant forest skyline or tall tree-wall vanishing point. Keep chunky simple art and original approximate aircraft/character scale.",
+      "prompt": "Use case: precise-object-edit.\nAsset type: ONE opaque portrait 9:16 Lost Canopy background.\nPRIMARY CORRECTION: restore the elevated TOP-DOWN OBLIQUE ISOMETRIC GAME CAMERA. The current target lost the top-down feeling and looks too much straight ahead.\nReference image 1 is the approved NEW JAGUAR illustration. Use it as CAMERA, explorer scale and simple low-poly STYLE reference. Match its down-looking angle on the explorer and terrain, top AND side surfaces visibly exposed.\nReference image 2 is the EDIT TARGET, CONTENT/ENVIRONMENT only. Its camera is WRONG. Do NOT retain its perspective or its distant frontal forest vista. Re-render the same subjects/environment from above.\nReference image 3 is the canonical CHARACTER SHEET. Match one explorer's hair, dark beard, cream rolled-sleeve shirt, green cargo pants, brown boots and single diagonal brown satchel strap/satchel, exact simplified proportions. Pose from target may be retained but must be viewed from above. No extra backpack.\nCamera instruction: camera ABOVE the scene, looking diagonally DOWN at roughly 50–55 degrees below horizontal, orthographic-like game projection. Ground plane fills the composition, with strongly readable tops of rocks, explorer head/shoulders and major props. This is a moderate high oblique camera matching the jaguar reference: NOT near-vertical 70-degree bird's-eye, and NOT low 25–35-degree frontal camera. Do not compensate for a low viewpoint by merely cropping the sky. Truly re-project the whole scene.\nImportant depth: no horizon, no sky, no vanishing-point forest corridor. Objects/terrain toward the top stay at similar scale rather than shrinking into the distance. Upper area can be cropped nearby foliage crowns and visible nearby ground. Preserve some visible side surfaces and full character body for readable isometric height.\nMatch the approved deliberately simple camp illustration: broad matte faceted planes, few-tone shading, chunky leaves and rocks, sparse small details. Preserve theme and palette of the edit target. Character about 17–20% image height, action in middle ~35–70% so usable with unchanged HUD and cards.\nNo text, UI, cards, logo, border, watermark, jaguar, extra people or unrequested animals.\n\nSCENE INVARIANTS:\nPreserve one small cream-and-rust-red propeller aircraft wreck, broken wing, nose propeller, tilted tail, vines and side service hatch with a simple salvage radio box. ONE explorer beside the hatch reaching inside. Re-project the COMPLETE aircraft from ABOVE: large visible TOP surfaces of both wings, fuselage roof, cockpit roof/glazing and tailplane, with side hatch still readable; do not show an oversized front nose facing eye-level camera. Put aircraft diagonally across a broad jungle clearing, background consists of the clearing floor and nearby low foliage viewed from above, no distant forest skyline or tall tree-wall vanishing point. Keep chunky simple art and original approximate aircraft/character scale.",
+      "file": "plane_wreck_camp_style_v2.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/plane_wreck_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-054627ae-4b96-4880-a83d-0b8896151b8a.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "72c550a566d223fab2ad76db8d7d3316c5101f0903ffdeb36d8933a4e1781b99",
+      "path": "assets/art/plane_wreck_camp_style_v2.png",
+      "preview_path": "design/world-camp-style-v1/plane_wreck_camp_style_v2.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/plane_wreck_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "previous_versions": [
+        {
+          "slug": "plane_wreck",
+          "name": "Repülőroncs",
+          "scene": "A crashed SMALL old single-propeller cream aircraft with a faded rust-red stripe, broken wing, damaged nose propeller and tilted tail, half caught among broad vines and a few large tree roots in an isolated jungle clearing. Aircraft at diagonal across middle of canvas with a wide OPEN SIDE SERVICE HATCH showing a simple dark green salvage radio/electrical box. ONE explorer stands beside hatch and reaches inside, rear three-quarter. Sparse broad split-leaf plants, one leaning slim tree, a broken branch and flat rocks, warm light through canopy. Readable distinct plane silhouette, not car/helicopter. Keep aircraft simple, few large pieces, no intricate wires or wreckage clutter. No river or waterfall.",
+          "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA crashed SMALL old single-propeller cream aircraft with a faded rust-red stripe, broken wing, damaged nose propeller and tilted tail, half caught among broad vines and a few large tree roots in an isolated jungle clearing. Aircraft at diagonal across middle of canvas with a wide OPEN SIDE SERVICE HATCH showing a simple dark green salvage radio/electrical box. ONE explorer stands beside hatch and reaches inside, rear three-quarter. Sparse broad split-leaf plants, one leaning slim tree, a broken branch and flat rocks, warm light through canopy. Readable distinct plane silhouette, not car/helicopter. Keep aircraft simple, few large pieces, no intricate wires or wreckage clutter. No river or waterfall.",
+          "file": "plane_wreck_camp_style_v1.png",
+          "refs": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ],
+          "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-6a5d7c32-e7f6-4a45-82d0-04452f13eac8.png",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "sha256": "ba63030c768698bb42f18e1eb610c13859f73dc50ea38d7491121924eb7e1354",
+          "path": "assets/art/plane_wreck_camp_style_v1.png",
+          "preview_path": "design/world-camp-style-v1/plane_wreck_camp_style_v1.png",
+          "references": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ]
+        }
+      ],
+      "details": "Preserve one small cream-and-rust-red propeller aircraft wreck, broken wing, nose propeller, tilted tail, vines and side service hatch with a simple salvage radio box. ONE explorer beside the hatch reaching inside. Re-project the COMPLETE aircraft from ABOVE: large visible TOP surfaces of both wings, fuselage roof, cockpit roof/glazing and tailplane, with side hatch still readable; do not show an oversized front nose facing eye-level camera. Put aircraft diagonally across a broad jungle clearing, background consists of the clearing floor and nearby low foliage viewed from above, no distant forest skyline or tall tree-wall vanishing point. Keep chunky simple art and original approximate aircraft/character scale.",
+      "prompt_file": "design/world-camp-style-v1/CAMERA_FIX_V2_PROMPTS.md",
+      "camera_revision": "top-down oblique camera restored after feedback on screenshots 09–12"
+    },
+    {
+      "slug": "rescue_arrival",
+      "name": "Mentés",
+      "scene": "A successful helicopter rescue in a wide jungle landing clearing beside a gently curving shallow turquoise river. ONE olive-green rescue helicopter hovers low above central ground, fully readable body, skids and single main rotor with broad restrained translucent rotation sweep, small tail rotor. Viewed from EXACT same elevated three-quarter game camera as image 1, clearly see top and sides, no low camera or sky. ONE canonical explorer below/left waves one arm toward helicopter. A small functional olive radio beacon with antenna and glowing amber lamp sits on a wooden crate at right of central clearing. Broad palms and mangrove-edge vegetation, a few flat dark stones and sparse leaves lifted by rotor give a DISTINCT landing-zone environment. Open center and deep green backdrop; no ruins, jaguar or camp shelter. Keep helicopter and terrain deliberately simple, clean broad polygon surfaces.",
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA successful helicopter rescue in a wide jungle landing clearing beside a gently curving shallow turquoise river. ONE olive-green rescue helicopter hovers low above central ground, fully readable body, skids and single main rotor with broad restrained translucent rotation sweep, small tail rotor. Viewed from EXACT same elevated three-quarter game camera as image 1, clearly see top and sides, no low camera or sky. ONE canonical explorer below/left waves one arm toward helicopter. A small functional olive radio beacon with antenna and glowing amber lamp sits on a wooden crate at right of central clearing. Broad palms and mangrove-edge vegetation, a few flat dark stones and sparse leaves lifted by rotor give a DISTINCT landing-zone environment. Open center and deep green backdrop; no ruins, jaguar or camp shelter. Keep helicopter and terrain deliberately simple, clean broad polygon surfaces.",
+      "file": "rescue_arrival_camp_style_v1.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-6bfe40cc-87d8-4831-8cb1-a5d4ed374ce2.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "073d1e6ac02c3c94e0aa2a9d802b1294bcd6dce9f3146bab44d0c563e056ae86",
+      "path": "assets/art/rescue_arrival_camp_style_v1.png",
+      "preview_path": "design/world-camp-style-v1/rescue_arrival_camp_style_v1.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ]
+    },
+    {
+      "slug": "rescue_storm_camp",
+      "name": "Viharos tábor",
+      "scene": "Image 3 is ONLY the established tier-3 CAMP STRUCTURE and prop-layout continuity reference, NOT the camera: render its shelter and props from image 1's approved camera and with image 1's simple style. Preserve advanced raised wooden shelter, broad green leaf roof, open bed with pillow/green cover, front steps/railing, water barrel on left stand, left workbench, right storage chest/logs, central low campfire with cooking pot suspended on three sticks. This SAME developed camp during final rescue storm: teal dim rain, broad puddles and runoff across ochre soil, a few loose broad leaves blowing, sparse diagonal rain streaks, warm lantern and protected small fire. On crate to right of fire is active OLIVE rescue radio beacon with antenna and glowing amber signal light. ONE canonical explorer crouches beside beacon checking its controls, clearly visible full body. Keep large camp shapes readable and low texture density; no dense storm effects, no character behind roof, no sky or cinematic viewpoint.",
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nImage 3 is ONLY the established tier-3 CAMP STRUCTURE and prop-layout continuity reference, NOT the camera: render its shelter and props from image 1's approved camera and with image 1's simple style. Preserve advanced raised wooden shelter, broad green leaf roof, open bed with pillow/green cover, front steps/railing, water barrel on left stand, left workbench, right storage chest/logs, central low campfire with cooking pot suspended on three sticks. This SAME developed camp during final rescue storm: teal dim rain, broad puddles and runoff across ochre soil, a few loose broad leaves blowing, sparse diagonal rain streaks, warm lantern and protected small fire. On crate to right of fire is active OLIVE rescue radio beacon with antenna and glowing amber signal light. ONE canonical explorer crouches beside beacon checking its controls, clearly visible full body. Keep large camp shapes readable and low texture density; no dense storm effects, no character behind roof, no sky or cinematic viewpoint.",
+      "file": "rescue_storm_camp_style_v1.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png",
+        "assets/art/camp_tier_3_fire_v2.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-8d96fbfc-725f-4882-a134-9ea488010545.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "56f2593e98c8acb1f5411d4267892df183b675e794cffcbf9fe1de3fe032f456",
+      "path": "assets/art/rescue_storm_camp_style_v1.png",
+      "preview_path": "design/world-camp-style-v1/rescue_storm_camp_style_v1.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png",
+        "assets/art/camp_tier_3_fire_v2.png"
+      ]
+    },
+    {
+      "slug": "riverbank",
+      "name": "Folyópart",
+      "scene": "Preserve the distinct riverbank: turquoise shallow stream along right, two modest low cascades over broad gray rocks, golden sandy left bank, reed clumps and broad palm/elephant-ear leaves. ONE explorer on dry bank looking at the water, single satchel. Re-project the river and its bank as a TOP-DOWN OBLIQUE GAME TERRAIN: broad visible water surface and rock tops, explorer hair/shoulder tops, a broad diagonal flow running through the ground plane rather than river receding to a distant horizon. The upper frame is nearby river/ground/low plant crowns seen FROM ABOVE, not a frontal vista of distant vertical trees. No fishing rod, line, tall waterfall, sky or mountain horizon.",
+      "prompt": "Use case: precise-object-edit.\nAsset type: ONE opaque portrait 9:16 Lost Canopy background.\nPRIMARY CORRECTION: restore the elevated TOP-DOWN OBLIQUE ISOMETRIC GAME CAMERA. The current target lost the top-down feeling and looks too much straight ahead.\nReference image 1 is the approved NEW JAGUAR illustration. Use it as CAMERA, explorer scale and simple low-poly STYLE reference. Match its down-looking angle on the explorer and terrain, top AND side surfaces visibly exposed.\nReference image 2 is the EDIT TARGET, CONTENT/ENVIRONMENT only. Its camera is WRONG. Do NOT retain its perspective or its distant frontal forest vista. Re-render the same subjects/environment from above.\nReference image 3 is the canonical CHARACTER SHEET. Match one explorer's hair, dark beard, cream rolled-sleeve shirt, green cargo pants, brown boots and single diagonal brown satchel strap/satchel, exact simplified proportions. Pose from target may be retained but must be viewed from above. No extra backpack.\nCamera instruction: camera ABOVE the scene, looking diagonally DOWN at roughly 50–55 degrees below horizontal, orthographic-like game projection. Ground plane fills the composition, with strongly readable tops of rocks, explorer head/shoulders and major props. This is a moderate high oblique camera matching the jaguar reference: NOT near-vertical 70-degree bird's-eye, and NOT low 25–35-degree frontal camera. Do not compensate for a low viewpoint by merely cropping the sky. Truly re-project the whole scene.\nImportant depth: no horizon, no sky, no vanishing-point forest corridor. Objects/terrain toward the top stay at similar scale rather than shrinking into the distance. Upper area can be cropped nearby foliage crowns and visible nearby ground. Preserve some visible side surfaces and full character body for readable isometric height.\nMatch the approved deliberately simple camp illustration: broad matte faceted planes, few-tone shading, chunky leaves and rocks, sparse small details. Preserve theme and palette of the edit target. Character about 17–20% image height, action in middle ~35–70% so usable with unchanged HUD and cards.\nNo text, UI, cards, logo, border, watermark, jaguar, extra people or unrequested animals.\n\nSCENE INVARIANTS:\nPreserve the distinct riverbank: turquoise shallow stream along right, two modest low cascades over broad gray rocks, golden sandy left bank, reed clumps and broad palm/elephant-ear leaves. ONE explorer on dry bank looking at the water, single satchel. Re-project the river and its bank as a TOP-DOWN OBLIQUE GAME TERRAIN: broad visible water surface and rock tops, explorer hair/shoulder tops, a broad diagonal flow running through the ground plane rather than river receding to a distant horizon. The upper frame is nearby river/ground/low plant crowns seen FROM ABOVE, not a frontal vista of distant vertical trees. No fishing rod, line, tall waterfall, sky or mountain horizon.",
+      "file": "riverbank_camp_style_v2.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/riverbank_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-d371d0d0-0a54-4deb-856e-6bb33af4fa4b.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "12b3e4d59f1a65936c436daf655c8aca7ddae48fdfbb21400024a46e6fbea4e4",
+      "path": "assets/art/riverbank_camp_style_v2.png",
+      "preview_path": "design/world-camp-style-v1/riverbank_camp_style_v2.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "assets/art/riverbank_camp_style_v1.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "previous_versions": [
+        {
+          "slug": "riverbank",
+          "name": "Folyópart",
+          "scene": "A fresh tropical riverbank location: broad shallow clear turquoise stream curves diagonally along RIGHT side, two modest low rock cascades, large flat gray boulders and pale sandy shelf on LEFT. Reed clusters and broad elephant-ear leaves near water, a few slim curved palms in background with cool teal forest, restrained white foam shapes. ONE explorer stands on dry bank near middle-left, slightly leaning to look into water with hand shading his eyes, satchel on shoulder. NO fishing rod or line: this is riverbank exploration, not the fishing minigame. Keep explorer same canonical scale as image 1. Clear contrasting water/ground, large simple color planes, uncluttered foliage; no dramatic tall waterfall, ruins, camp furniture or animals.",
+          "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA fresh tropical riverbank location: broad shallow clear turquoise stream curves diagonally along RIGHT side, two modest low rock cascades, large flat gray boulders and pale sandy shelf on LEFT. Reed clusters and broad elephant-ear leaves near water, a few slim curved palms in background with cool teal forest, restrained white foam shapes. ONE explorer stands on dry bank near middle-left, slightly leaning to look into water with hand shading his eyes, satchel on shoulder. NO fishing rod or line: this is riverbank exploration, not the fishing minigame. Keep explorer same canonical scale as image 1. Clear contrasting water/ground, large simple color planes, uncluttered foliage; no dramatic tall waterfall, ruins, camp furniture or animals.",
+          "file": "riverbank_camp_style_v1.png",
+          "refs": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ],
+          "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-18f9b683-02b7-436f-8609-588c86fffa7e.png",
+          "dimensions": [
+            941,
+            1672
+          ],
+          "sha256": "2233452994b1295c93be3e30568600b8aa01af68b27626870b85453b66f863ec",
+          "path": "assets/art/riverbank_camp_style_v1.png",
+          "preview_path": "design/world-camp-style-v1/riverbank_camp_style_v1.png",
+          "references": [
+            "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+            "design/references/explorer_character_master_v1.png"
+          ]
+        }
+      ],
+      "details": "Preserve the distinct riverbank: turquoise shallow stream along right, two modest low cascades over broad gray rocks, golden sandy left bank, reed clumps and broad palm/elephant-ear leaves. ONE explorer on dry bank looking at the water, single satchel. Re-project the river and its bank as a TOP-DOWN OBLIQUE GAME TERRAIN: broad visible water surface and rock tops, explorer hair/shoulder tops, a broad diagonal flow running through the ground plane rather than river receding to a distant horizon. The upper frame is nearby river/ground/low plant crowns seen FROM ABOVE, not a frontal vista of distant vertical trees. No fishing rod, line, tall waterfall, sky or mountain horizon.",
+      "prompt_file": "design/world-camp-style-v1/CAMERA_FIX_V2_PROMPTS.md",
+      "camera_revision": "top-down oblique camera restored after feedback on screenshots 09–12"
+    },
+    {
+      "slug": "workshop",
+      "name": "Műhely",
+      "scene": "A handmade outdoor camp WORKSHOP under leafy canopy, from EXACT moderately elevated three-quarter camera of image 1. Ground plane and workbench top visible, NO eye-level scene, sky or mountain vista. Central chunky wooden workbench with vertical tool rack holding ONE axe, short saw, knife and simple rope loop; small blank parchment diagram with line-drawn tool shape (no lettering). A few large gray stone blocks and wood pieces on table. ONE canonical explorer stands to lower-left/front of table actively shaping a small wood piece with simple hand tool, rear three-quarter. Barrel on left, one storage crate on right, low stump stool, a few stacked timber lengths. Broad palms and split leaves frame this DIFFERENT quiet sheltered workspace, deep teal woodland behind and warm sunlight on table. Keep furniture sturdy simple broad planes, few props, no shelter bed, no dense scratches or texture. Full scene composed centrally with foreground ground space for cards.",
+      "prompt": "Use case: stylized-concept.\nAsset type: ONE complete opaque portrait 9:16 Lost Canopy mobile game background, no UI.\nImage 1 is the approved NEW JAGUAR illustration: AUTHORITATIVE camera angle, camera height, projection, subject scale and simple art STYLE. Match its moderately elevated three-quarter isometric-like game view exactly: diagonally looking into the scene with ground and top/side planes visible. Neither steep overhead bird's-eye view nor eye-level cinema. Do not copy its location or jaguar. Character normally about 17–20% of full image height, in central gameplay area (35–70% height); retain upper background and lower foreground space for HUD/cards.\nImage 2 is the canonical explorer CHARACTER SHEET. Exactly ONE explorer with matching angular dark brown hair, full short dark beard, cream collared rolled-sleeve shirt, dark green cargo pants, brown chunky boots, skin tone, simplified body proportions, single brown diagonal satchel strap and small brown satchel. Identity same, pose appropriate to the scene. No generic redesign, crossed straps, extra backpack or character lineup.\nArt direction: deliberately simple camp-style polygon illustration as in image 1, large matte color planes, limited faceted shading, clean silhouettes, broad stylized leaves, chunky rocks and props, low small-detail density. No intricate realistic textures, densely scattered tiny leaves, busy fine bark, photorealism or cinematic depth of field. Varied silhouettes/vegetation/layout appropriate to EACH theme. Warm ochre earth and atmospheric green/teal forest unless weather calls for cool tones. Scene itself fully fills canvas.\nNo text, logo, UI, icons, cards, border, watermark, jaguar or other unrequested encounter animal. ONE illustration, not a collage.\n\nSCENE:\nA handmade outdoor camp WORKSHOP under leafy canopy, from EXACT moderately elevated three-quarter camera of image 1. Ground plane and workbench top visible, NO eye-level scene, sky or mountain vista. Central chunky wooden workbench with vertical tool rack holding ONE axe, short saw, knife and simple rope loop; small blank parchment diagram with line-drawn tool shape (no lettering). A few large gray stone blocks and wood pieces on table. ONE canonical explorer stands to lower-left/front of table actively shaping a small wood piece with simple hand tool, rear three-quarter. Barrel on left, one storage crate on right, low stump stool, a few stacked timber lengths. Broad palms and split leaves frame this DIFFERENT quiet sheltered workspace, deep teal woodland behind and warm sunlight on table. Keep furniture sturdy simple broad planes, few props, no shelter bed, no dense scratches or texture. Full scene composed centrally with foreground ground space for cards.",
+      "file": "workshop_camp_style_v1.png",
+      "refs": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ],
+      "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-1cccf8b8-4b64-40f5-96e7-f5c87d9c55de.png",
+      "dimensions": [
+        941,
+        1672
+      ],
+      "sha256": "ec81a49897c924b0ed19cf12ddbec5595eedc99d3d57472ce4d5d4533a4097fd",
+      "path": "assets/art/workshop_camp_style_v1.png",
+      "preview_path": "design/world-camp-style-v1/workshop_camp_style_v1.png",
+      "references": [
+        "design/jaguar-camp-style-test/jaguar_camp_style_v3.png",
+        "design/references/explorer_character_master_v1.png"
+      ]
+    }
+  ]
+}

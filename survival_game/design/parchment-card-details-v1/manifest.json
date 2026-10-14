@@ -1,0 +1,67 @@
+[
+  {
+    "id": "01-simple-and-complex-cards",
+    "title": "WORKSHOP",
+    "subtitle": "SAME CARDS \u00b7 COMPLETE DETAILS",
+    "kind": "popup",
+    "view": "details",
+    "headerArt": "craft",
+    "selected": 2,
+    "cards": [
+      [
+        "torch",
+        "TORCH",
+        "1 time",
+        "READY"
+      ],
+      [
+        "stone_axe",
+        "STONE AXE",
+        "1 time",
+        "READY"
+      ],
+      [
+        "emergency_beacon",
+        "EMERGENCY\nBEACON",
+        "2 time",
+        "MISSING"
+      ]
+    ],
+    "detail": "EMERGENCY BEACON",
+    "body": "Assemble the radio that can call for rescue.",
+    "rows": [
+      [
+        "metal_scrap",
+        "Metal Scrap",
+        "3 / 2"
+      ],
+      [
+        "battery",
+        "Battery",
+        "1 / 1"
+      ],
+      [
+        "wire",
+        "Wire",
+        "1 / 1"
+      ],
+      [
+        "metal_parts",
+        "Metal Parts",
+        "1 / 1"
+      ],
+      [
+        "radio_module",
+        "Radio Module",
+        "1 / 1"
+      ],
+      [
+        "beacon_core",
+        "Beacon Core",
+        "0 / 1"
+      ]
+    ],
+    "note": "Rescue Base required \u00b7 Built\nFind the missing core at the Ancient Ruins.",
+    "button": "BEACON CORE MISSING \u00b7 2 TIME"
+  }
+]

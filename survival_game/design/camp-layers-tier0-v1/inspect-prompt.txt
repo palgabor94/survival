@@ -1,0 +1,6 @@
+Use case: stylized-concept. Asset type: ONE transparent whole-body explorer sprite, square canvas, Lost Canopy.
+Image 1 is only camp painting style/camera/light reference. Image 2 is the canonical explorer identity. New isolated sprite, no scene.
+Pose: standing with BOTH HANDS ON HIPS, elbows outward, inspecting his shelter. Face diagonally AWAY from viewer toward upper-right/northeast; show the BACK of the cream shirt and the back of his dark brown head, only a tiny beard profile at right. Relaxed confident stance with both boots on ground. Torso, head and boots face upper-right. Do not show a frontal portrait.
+Identity: canonical angular dark-brown short hair and full beard, cream rolled-sleeve shirt, dark green cargo trousers, brown boots, brown shoulder strap diagonally across back with small satchel on hip. No backpack.
+Style: simple matte low-poly painted polygons, large clean flat color planes, restrained detail, muted warm palette; moderately elevated three-quarter isometric view identical to camp. Soft upper-left daylight.
+Full body centered, about 85% canvas height with margin. Genuine transparent alpha around character. No environment, no bed, no floor patch, no shadow, no objects, no text, no checkerboard.

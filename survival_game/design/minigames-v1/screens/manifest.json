@@ -1,0 +1,298 @@
+[
+  {
+    "file": "screens/01-chopping-ready.png",
+    "game": "chopping",
+    "state": "ready",
+    "label": "Indítás",
+    "number": "01",
+    "adaptive": false
+  },
+  {
+    "file": "screens/02-chopping-active.png",
+    "game": "chopping",
+    "state": "active",
+    "label": "Játék közben",
+    "number": "02",
+    "adaptive": false
+  },
+  {
+    "file": "screens/03-chopping-perfect.png",
+    "game": "chopping",
+    "state": "perfect",
+    "label": "Tökéletes időzítés",
+    "number": "03",
+    "adaptive": false
+  },
+  {
+    "file": "screens/04-chopping-miss.png",
+    "game": "chopping",
+    "state": "miss",
+    "label": "Elhibázott mozdulat",
+    "number": "04",
+    "adaptive": false
+  },
+  {
+    "file": "screens/05-chopping-result.png",
+    "game": "chopping",
+    "state": "result",
+    "label": "Sikeres eredmény",
+    "number": "05",
+    "adaptive": false
+  },
+  {
+    "file": "screens/06-chopping-failure-result.png",
+    "game": "chopping",
+    "state": "failure-result",
+    "label": "Sikertelen eredmény",
+    "number": "06",
+    "adaptive": false
+  },
+  {
+    "file": "screens/07-chopping-pause.png",
+    "game": "chopping",
+    "state": "pause",
+    "label": "Szünet",
+    "number": "07",
+    "adaptive": false
+  },
+  {
+    "file": "screens/08-chopping-leave.png",
+    "game": "chopping",
+    "state": "leave",
+    "label": "Kilépés megerősítése",
+    "number": "08",
+    "adaptive": false
+  },
+  {
+    "file": "screens/09-chopping-locked.png",
+    "game": "chopping",
+    "state": "locked",
+    "label": "Hiányzó eszköz",
+    "number": "09",
+    "adaptive": false
+  },
+  {
+    "file": "screens/10-foraging-ready.png",
+    "game": "foraging",
+    "state": "ready",
+    "label": "Indítás",
+    "number": "10",
+    "adaptive": false
+  },
+  {
+    "file": "screens/11-foraging-active.png",
+    "game": "foraging",
+    "state": "active",
+    "label": "Játék közben",
+    "number": "11",
+    "adaptive": false
+  },
+  {
+    "file": "screens/12-foraging-selected.png",
+    "game": "foraging",
+    "state": "selected",
+    "label": "Kiválasztott növény",
+    "number": "12",
+    "adaptive": false
+  },
+  {
+    "file": "screens/13-foraging-page-two.png",
+    "game": "foraging",
+    "state": "page-two",
+    "label": "További növények / eszközkapu",
+    "number": "13",
+    "adaptive": false
+  },
+  {
+    "file": "screens/14-foraging-result.png",
+    "game": "foraging",
+    "state": "result",
+    "label": "Sikeres eredmény",
+    "number": "14",
+    "adaptive": false
+  },
+  {
+    "file": "screens/15-foraging-risky-result.png",
+    "game": "foraging",
+    "state": "risky-result",
+    "label": "Kockázatos növény eredménye",
+    "number": "15",
+    "adaptive": false
+  },
+  {
+    "file": "screens/16-foraging-timeout.png",
+    "game": "foraging",
+    "state": "timeout",
+    "label": "Idő lejárt",
+    "number": "16",
+    "adaptive": false
+  },
+  {
+    "file": "screens/17-foraging-pause.png",
+    "game": "foraging",
+    "state": "pause",
+    "label": "Szünet",
+    "number": "17",
+    "adaptive": false
+  },
+  {
+    "file": "screens/18-foraging-leave.png",
+    "game": "foraging",
+    "state": "leave",
+    "label": "Kilépés megerősítése",
+    "number": "18",
+    "adaptive": false
+  },
+  {
+    "file": "screens/19-foraging-locked.png",
+    "game": "foraging",
+    "state": "locked",
+    "label": "Hiányzó eszköz",
+    "number": "19",
+    "adaptive": false
+  },
+  {
+    "file": "screens/20-hunting-ready.png",
+    "game": "hunting",
+    "state": "ready",
+    "label": "Indítás",
+    "number": "20",
+    "adaptive": false
+  },
+  {
+    "file": "screens/21-hunting-active.png",
+    "game": "hunting",
+    "state": "active",
+    "label": "Játék közben",
+    "number": "21",
+    "adaptive": false
+  },
+  {
+    "file": "screens/22-hunting-perfect.png",
+    "game": "hunting",
+    "state": "perfect",
+    "label": "Tökéletes időzítés",
+    "number": "22",
+    "adaptive": false
+  },
+  {
+    "file": "screens/23-hunting-miss.png",
+    "game": "hunting",
+    "state": "miss",
+    "label": "Elhibázott mozdulat",
+    "number": "23",
+    "adaptive": false
+  },
+  {
+    "file": "screens/24-hunting-result.png",
+    "game": "hunting",
+    "state": "result",
+    "label": "Sikeres eredmény",
+    "number": "24",
+    "adaptive": false
+  },
+  {
+    "file": "screens/25-hunting-failure-result.png",
+    "game": "hunting",
+    "state": "failure-result",
+    "label": "Sikertelen eredmény",
+    "number": "25",
+    "adaptive": false
+  },
+  {
+    "file": "screens/26-hunting-pause.png",
+    "game": "hunting",
+    "state": "pause",
+    "label": "Szünet",
+    "number": "26",
+    "adaptive": false
+  },
+  {
+    "file": "screens/27-hunting-leave.png",
+    "game": "hunting",
+    "state": "leave",
+    "label": "Kilépés megerősítése",
+    "number": "27",
+    "adaptive": false
+  },
+  {
+    "file": "screens/28-hunting-locked.png",
+    "game": "hunting",
+    "state": "locked",
+    "label": "Hiányzó eszköz",
+    "number": "28",
+    "adaptive": false
+  },
+  {
+    "file": "screens/29-chopping-small-phone.png",
+    "game": "chopping",
+    "state": "small-phone",
+    "label": "Kisebb mobil · 375 × 812",
+    "number": "29",
+    "adaptive": true
+  },
+  {
+    "file": "screens/30-chopping-landscape.png",
+    "game": "chopping",
+    "state": "landscape",
+    "label": "Fekvő nézet · 844 × 390",
+    "number": "30",
+    "adaptive": true
+  },
+  {
+    "file": "screens/31-chopping-large-text.png",
+    "game": "chopping",
+    "state": "large-text",
+    "label": "Nagy betűk · 150%",
+    "number": "31",
+    "adaptive": true
+  },
+  {
+    "file": "screens/32-foraging-small-phone.png",
+    "game": "foraging",
+    "state": "small-phone",
+    "label": "Kisebb mobil · 375 × 812",
+    "number": "32",
+    "adaptive": true
+  },
+  {
+    "file": "screens/33-foraging-landscape.png",
+    "game": "foraging",
+    "state": "landscape",
+    "label": "Fekvő nézet · 844 × 390",
+    "number": "33",
+    "adaptive": true
+  },
+  {
+    "file": "screens/34-foraging-large-text.png",
+    "game": "foraging",
+    "state": "large-text",
+    "label": "Nagy betűk · 150%",
+    "number": "34",
+    "adaptive": true
+  },
+  {
+    "file": "screens/35-hunting-small-phone.png",
+    "game": "hunting",
+    "state": "small-phone",
+    "label": "Kisebb mobil · 375 × 812",
+    "number": "35",
+    "adaptive": true
+  },
+  {
+    "file": "screens/36-hunting-landscape.png",
+    "game": "hunting",
+    "state": "landscape",
+    "label": "Fekvő nézet · 844 × 390",
+    "number": "36",
+    "adaptive": true
+  },
+  {
+    "file": "screens/37-hunting-large-text.png",
+    "game": "hunting",
+    "state": "large-text",
+    "label": "Nagy betűk · 150%",
+    "number": "37",
+    "adaptive": true
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-13",
+  "scope": "design-only, no gameplay implementation",
+  "native_preview_render": "passed",
+  "phone_state_previews": 28,
+  "adaptive_previews": 9,
+  "total_screens": 37,
+  "selected_generated_assets": 6,
+  "mobile_logical_size": [
+    390,
+    844
+  ],
+  "small_phone_logical_size": [
+    375,
+    812
+  ],
+  "landscape_logical_size": [
+    844,
+    390
+  ],
+  "large_text_scale": 1.5,
+  "reduced_motion_rendering": true,
+  "safe_area_top": 24,
+  "safe_area_bottom": 20,
+  "card_illustration_aspect_ratio": "3:2",
+  "portrait_card_width_cap": 160,
+  "equal_card_row_height": true,
+  "render_overflows": 0,
+  "dart_preview_analyzer": "No issues found",
+  "gallery_local_links": "passed",
+  "gallery_javascript_syntax": "passed",
+  "asset_hashes": "passed",
+  "sprite_rgba_alpha": [
+    0,
+    254
+  ],
+  "gameplay_tests_run": false,
+  "production_minigames_integrated": false,
+  "fishing_changed": false
+}

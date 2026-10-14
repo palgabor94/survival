@@ -17,18 +17,23 @@ class SceneLayout extends StatelessWidget {
     this.beforeCards,
     this.backgroundAlignment = const Alignment(0, .1),
     this.dark = false,
+    this.backgroundTint,
     this.backgroundTop = 0,
     this.cardCarousel = false,
+    this.foregroundBuilder,
   });
   final RunState state;
   final String background;
   final Alignment backgroundAlignment;
   final bool dark;
+  final Color? backgroundTint;
   final double backgroundTop;
   final Widget panel;
   final List<Widget> cards;
   final Widget? beforeCards;
   final bool cardCarousel;
+  final Widget Function(BuildContext context, Rect artworkRect)?
+  foregroundBuilder;
 
   @override
   Widget build(BuildContext context) => PopScope(
@@ -37,8 +42,10 @@ class SceneLayout extends StatelessWidget {
       body: CanopyBackdrop(
         background: background,
         dark: dark,
+        tint: backgroundTint,
         alignment: backgroundAlignment,
         imageTop: backgroundTop,
+        foregroundBuilder: foregroundBuilder,
         child: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -194,17 +201,6 @@ class SituationPanel extends StatelessWidget {
                     title: title,
                     art: sceneArt == 3 ? 'torch' : 'map',
                     subtitle: eyebrow,
-                    actions: [
-                      ActionCard(
-                        key: const ValueKey('close-scene-details'),
-                        title: 'Back to the scene',
-                        art: 'back',
-                        tone: CardTone.river,
-                        horizontal: true,
-                        compact: true,
-                        onTap: () => Navigator.pop(dialogContext),
-                      ),
-                    ],
                     child: Text(
                       description,
                       style: const TextStyle(fontSize: 14, height: 1.4),

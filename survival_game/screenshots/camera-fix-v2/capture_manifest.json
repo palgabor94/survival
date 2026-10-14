@@ -1,0 +1,38 @@
+[
+  {
+    "file": "09-bamboo_grove.png",
+    "label": "Bambuszliget · esemény",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "343dd9b7a1154eb5ff06ae4c339fa48fc2f69d029956e0925d101e20357a4b90"
+  },
+  {
+    "file": "10-bamboo-expedition.png",
+    "label": "Bambuszliget · expedíció",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "4af2f5c9e3a5471a964d50cee6076cce2d2f28897eeaf944dca183f232533cc9"
+  },
+  {
+    "file": "11-plane_wreck.png",
+    "label": "Repülőroncs",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "590d5cbea9b77a43705c59ddc251eb99cdfb43a16a3f44e393ae25af3ab685b9"
+  },
+  {
+    "file": "12-riverbank.png",
+    "label": "Folyópart",
+    "dimensions": [
+      780,
+      1688
+    ],
+    "sha256": "b7db22e898540e37e217f82201ee5762cf23f2ff4dd4103217da6f9bb9306c60"
+  }
+]

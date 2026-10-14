@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'gathering_test.dart' show resolveGatheringForSimulation;
 import 'dart:io';
 import 'dart:math';
 
@@ -158,10 +159,21 @@ void main() {
             expect(game.pendingEvent, isNull);
             expect(game.choose(choice.id), isFalse);
             expect(game.state.timeLeft, before.timeLeft);
+            final result = fail ? choice.failureResult! : choice.result;
+            final wornTools = choice.requiresTools
+                .where(RunState.toolDurability.containsKey)
+                .toList();
             expect(
               game.report!.body,
-              fail ? choice.failureResult : choice.result,
+              wornTools.isEmpty ? equals(result) : startsWith(result),
             );
+            for (final tool in wornTools) {
+              expect(
+                game.state.toolCondition(tool),
+                before.toolCondition(tool) - 1,
+              );
+              expect(game.report!.body, contains('durability:'));
+            }
             final effect = fail ? choice.failureEffect! : choice.effect;
             if (effect.endsExpedition) expect(game.expedition, isNull);
             for (final e in effect.resources.entries.where(
@@ -293,6 +305,8 @@ void main() {
           }
           if (game.report != null) {
             expect(game.continueFromReport(), isTrue);
+          } else if (game.gathering != null) {
+            resolveGatheringForSimulation(game);
           } else if (game.pendingEvent != null) {
             visited.add(game.pendingEvent!.id);
             final choices = game.visibleChoices.where(game.canChoose).toList();

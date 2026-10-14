@@ -1,0 +1,36 @@
+{
+  "integrated": "2026-10-13",
+  "design": "design/minigames-v1",
+  "assets": [
+    {
+      "asset": "assets/art/wood_chopping_background_v1.png",
+      "source": "design/minigames-v1/assets/wood_chopping_background_v1.png",
+      "sha256": "7af2a60bf4661ac20d1c73cc75b286d71d25b2a956ac6b9f4ba2b37039c03315"
+    },
+    {
+      "asset": "assets/art/foraging_background_v1.png",
+      "source": "design/minigames-v1/assets/foraging_background_v1.png",
+      "sha256": "a36fc6b5dbdca3a3f5048b080cc2b377150a5e9e72ffc195b3496a6663ac1f94"
+    },
+    {
+      "asset": "assets/art/hunting_background_v1.png",
+      "source": "design/minigames-v1/assets/hunting_background_v1.png",
+      "sha256": "114afbea884b91e45f2c23be501c5e3c4c2a15d7f767b7638bbd0bd860085de1"
+    },
+    {
+      "asset": "assets/art/mushroom_card_scene_v1.png",
+      "source": "design/minigames-v1/assets/mushroom_card_scene_v1.png",
+      "sha256": "fe0d9ba96a12db8786c345534f5240a6321d73ef65ea4ff8d91ca421c4f003b6"
+    },
+    {
+      "asset": "assets/art/unknown_plant_card_scene_v1.png",
+      "source": "design/minigames-v1/assets/unknown_plant_card_scene_v1.png",
+      "sha256": "eca2ecfc253191e788dfcf4f9d9235d7830dd02fcf09498e54bef7cd36bc5205"
+    },
+    {
+      "asset": "assets/art/hunting_boar_sprite_v2.png",
+      "source": "design/minigames-v1/assets/hunting_boar_sprite_v2.png",
+      "sha256": "409dd1b17df2d6b44bf9d6a511bea5ed2d204fe0590318790b13d5d237cf6935"
+    }
+  ]
+}

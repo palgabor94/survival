@@ -1,0 +1,119 @@
+[
+  {
+    "tier": 1,
+    "pose": "fire",
+    "file": "camp_tier_1_fire_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_1.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 1 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand immediately beside the campfire, slightly to its left, facing the flames in a natural relaxed three-quarter pose, warming both hands. Keep him safely outside the stone fire ring. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b3539b3b-741d-49ad-9823-85b27dc4c354.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "5112af90841527c9e183ee07862f653f5afe7365d434aecd2c283d02996360ec"
+  },
+  {
+    "tier": 1,
+    "pose": "bed",
+    "file": "camp_tier_1_bed_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_1.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 1 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to SIT naturally on the FRONT EDGE of the existing bed beneath the shelter, feet hanging down onto the ground or platform, hands resting on thighs, quietly resting. Do not lie down, stand on the bed, or add another bed. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-8d8a3dec-cd27-4a1a-98a8-c191c8a473d1.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "077a0f210f99cad6f099ffc02a32c712ff331e6248b8516c90e3a0daede76190"
+  },
+  {
+    "tier": 1,
+    "pose": "workbench",
+    "file": "camp_tier_1_workbench_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_1.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 1 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand at the EXISTING wooden workbench on the left, in a side/back three-quarter pose, looking down and using both hands to repair a small tool or lash a handle on the tabletop. Keep his whole body visible as much as natural occlusion permits; no added table. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-42c334af-6e5f-4ea0-b5e0-04305cf00246.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "b6c559dd019a34d825ab090bfbe7d44d3ce6b523c08a82185532c3e4bde6f64a"
+  },
+  {
+    "tier": 2,
+    "pose": "fire",
+    "file": "camp_tier_2_fire_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_2.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 2 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand immediately beside the campfire, slightly to its left, facing the flames in a natural relaxed three-quarter pose, warming both hands. Keep him safely outside the stone fire ring. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-09b9b876-0050-4e30-b5c2-83b400e28893.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "e44957c248ea43b5cb0f7edfb2d42443a01d3f88669864463b26a414f3b1a135"
+  },
+  {
+    "tier": 2,
+    "pose": "bed",
+    "file": "camp_tier_2_bed_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_2.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 2 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to SIT naturally on the FRONT EDGE of the existing bed beneath the shelter, feet hanging down onto the ground or platform, hands resting on thighs, quietly resting. Do not lie down, stand on the bed, or add another bed. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-dc276831-9bac-4f01-84b9-a4ef5c03800c.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "37fe47f4671da006bcfc8864bad0de910a5d9502f0fed6cc8a8d4872fe970122"
+  },
+  {
+    "tier": 2,
+    "pose": "workbench",
+    "file": "camp_tier_2_workbench_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_2.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 2 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand at the EXISTING wooden workbench on the left, in a side/back three-quarter pose, looking down and using both hands to repair a small tool or lash a handle on the tabletop. Keep his whole body visible as much as natural occlusion permits; no added table. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-c7a43701-79cc-466d-b80c-6c0b65a0ad15.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "11efd47182f418d36668763f92dda067f114e466977fe008a91efa8a849a9d05"
+  },
+  {
+    "tier": 3,
+    "pose": "fire",
+    "file": "camp_tier_3_fire_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_3.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 3 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand immediately beside the campfire, slightly to its left, facing the flames in a natural relaxed three-quarter pose, warming both hands. Keep him safely outside the stone fire ring. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-cbbdac61-27ca-4907-a432-4ace2ddfef9b.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "8a1cfbd0bfebd3cf94134e9882f55fed20f0208b8c490586a4b198cfa87d57c2"
+  },
+  {
+    "tier": 3,
+    "pose": "bed",
+    "file": "camp_tier_3_bed_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_3.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 3 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to SIT naturally on the FRONT EDGE of the existing bed beneath the shelter, feet hanging down onto the ground or platform, hands resting on thighs, quietly resting. Do not lie down, stand on the bed, or add another bed. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-b2e15ea0-ca07-4d72-ab7c-b2318f9c16da.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "bbbdf386b5f99a8c615032d3ddd5d0eb91b7cc27bf7ca295facc52ef8f07b6af"
+  },
+  {
+    "tier": 3,
+    "pose": "workbench",
+    "file": "camp_tier_3_workbench_v2.png",
+    "ref": "/Users/palgabor/Documents/flutter/survival/survival_game/assets/art/camp_tier_3.png",
+    "prompt": "Use case: character-reposition, strict preservation edit. This attached image is the exact accepted Lost Canopy shelter tier 3 background. Create one full portrait 9:16 opaque mobile game background variant. PRESERVE the existing camera angle, framing, perspective, resolution aspect, simple faceted painted low-poly art style, colors, light, shelter construction, canopy roof, bed, campfire, table, crates, barrel, forest, distant waterfall and all environment geometry. Do not redesign or shift the camp or zoom the camera. Change ONLY the ONE male explorer's location and pose: remove his original standing figure cleanly, restoring the ground behind it, and place that SAME brown-haired bearded explorer, cream rolled-sleeve shirt, green trousers, brown boots and shoulder strap, at a DIFFERENT location doing this activity: Move the sole explorer to stand at the EXISTING wooden workbench on the left, in a side/back three-quarter pose, looking down and using both hands to repair a small tool or lash a handle on the tabletop. Keep his whole body visible as much as natural occlusion permits; no added table. Maintain his believable existing size relative to the bed/table. Exactly ONE explorer in the complete image, no duplicate original character, extra people, ghost figures, limb defects or enlarged foreground portrait. Natural readable contact shadows, simple angular forms, full frame without crop changes. No UI, text, logo, cards, border or watermark.",
+    "source": "/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-18db0652-b10a-480c-8e1a-c6b35ad3cdc5.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "sha256": "238eaeddfccc3c940bc20536cdb4a9584d2b7514d7730cdc61978ebe9f9a1ee3"
+  }
+]

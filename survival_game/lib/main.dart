@@ -1,4 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'audio/music_controller.dart';
+import 'audio/music_scope.dart';
+import 'audio/sounds_controller.dart';
+import 'audio/sounds_scope.dart';
+import 'feedback/haptics_controller.dart';
+import 'feedback/haptics_scope.dart';
 import 'package:flutter/services.dart';
 
 import 'game/crafting.dart';
@@ -26,8 +34,22 @@ void main() {
 }
 
 class LostCanopyApp extends StatefulWidget {
-  const LostCanopyApp({super.key, this.engine, this.storage});
+  const LostCanopyApp({
+    super.key,
+    this.engine,
+    this.storage,
+    this.music,
+    this.sounds,
+    this.haptics,
+    this.enableAudio = true,
+    this.enableHaptics = true,
+  });
   final GameEngine? engine;
+  final MusicController? music;
+  final SoundsController? sounds;
+  final HapticsController? haptics;
+  final bool enableAudio;
+  final bool enableHaptics;
 
   /// Where the run is autosaved. Defaults to device storage unless an
   /// [engine] is injected (tests), which then runs without saving.
@@ -37,7 +59,58 @@ class LostCanopyApp extends StatefulWidget {
 }
 
 class _LostCanopyAppState extends State<LostCanopyApp> {
+  late final MusicController? _music =
+      widget.music ??
+      (widget.engine == null && widget.enableAudio
+          ? MusicController.device()
+          : null);
+  late final SoundsController? _sounds =
+      widget.sounds ??
+      (widget.engine == null && widget.enableAudio
+          ? SoundsController.device()
+          : null);
+  late final _musicNavigation = MusicNavigationObserver(
+    _music,
+    onMapOpen: (value) => _sounds?.setMapOpen(value),
+  );
+  late final HapticsController? _haptics =
+      widget.haptics ??
+      (widget.engine == null && widget.enableHaptics
+          ? HapticsController.device()
+          : null);
+  AppLifecycleListener? _lifecycle;
   late Future<GameEngine> _engine = _load();
+
+  @override
+  void initState() {
+    super.initState();
+    if (_music != null || _sounds != null || _haptics != null) {
+      final lifecycle = WidgetsBinding.instance.lifecycleState;
+      void foreground(bool value) {
+        _music?.setForeground(value);
+        _sounds?.setForeground(value);
+        _haptics?.setForeground(value);
+      }
+
+      foreground(lifecycle == null || lifecycle == AppLifecycleState.resumed);
+      _lifecycle = AppLifecycleListener(
+        onStateChange: (state) =>
+            foreground(state == AppLifecycleState.resumed),
+      );
+      if (_music != null) unawaited(_music.initialize());
+      if (_sounds != null) unawaited(_sounds.initialize());
+      if (_haptics != null) unawaited(_haptics.initialize());
+    }
+  }
+
+  @override
+  void dispose() {
+    _lifecycle?.dispose();
+    if (widget.music == null) _music?.dispose();
+    if (widget.sounds == null) _sounds?.dispose();
+    if (widget.haptics == null) _haptics?.dispose();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(LostCanopyApp oldWidget) {
@@ -70,6 +143,11 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
       if (saved != null) engine.restore(saved);
       engine.onChanged = () => storage.save(engine.toJson());
     }
+    if (mounted) {
+      _music?.attach(engine);
+      _sounds?.attach(engine);
+      _haptics?.attach(engine);
+    }
     return engine;
   }
 
@@ -78,6 +156,14 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
     title: 'Lost Canopy',
     debugShowCheckedModeBanner: false,
     theme: canopyTheme,
+    navigatorObservers: [_musicNavigation],
+    builder: (context, child) => MusicScope(
+      controller: _music,
+      child: SoundsScope(
+        controller: _sounds,
+        child: HapticsScope(controller: _haptics, child: child!),
+      ),
+    ),
     home: FutureBuilder<GameEngine>(
       future: _engine,
       builder: (context, snapshot) {
@@ -99,7 +185,7 @@ class RunLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: CanopyBackdrop(
-      background: 'assets/art/starter_camp.png',
+      background: campArt(0),
       dark: true,
       child: SafeArea(
         child: Center(

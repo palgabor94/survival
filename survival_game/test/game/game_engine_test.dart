@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'gathering_test.dart' show resolveGatheringForSimulation;
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -44,7 +45,7 @@ void main() {
   );
 
   test('all shipped events are valid and have an affordable fallback', () {
-    expect(catalog.events, hasLength(28));
+    expect(catalog.events, hasLength(37));
     for (final event in catalog.events) {
       expect(event.choices.any((c) => c.requires.isEmpty), isTrue);
     }
@@ -203,7 +204,9 @@ void main() {
     for (var seed = 0; seed < 20; seed++) {
       final game = GameEngine(catalog, random: Random(seed));
       for (var step = 0; step < 300 && game.state.isAlive; step++) {
-        if (game.pendingEvent != null) {
+        if (game.gathering != null) {
+          resolveGatheringForSimulation(game);
+        } else if (game.pendingEvent != null) {
           final choices = game.pendingEvent!.choices
               .where(game.canChoose)
               .toList();

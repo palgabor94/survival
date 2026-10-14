@@ -10,7 +10,9 @@ import 'package:survival_game/game/crafting.dart';
 import 'package:survival_game/game/event_catalog.dart';
 import 'package:survival_game/game/fishing_session.dart';
 import 'package:survival_game/game/game_engine.dart';
+import 'package:survival_game/game/gathering_session.dart';
 import 'package:survival_game/game/run_state.dart';
+import 'package:survival_game/game/rescue_progress.dart';
 import 'package:survival_game/game/world_catalog.dart';
 import 'package:survival_game/main.dart';
 import 'package:survival_game/ui/canopy_theme.dart';
@@ -22,6 +24,10 @@ import 'package:survival_game/ui/event_scene.dart';
 import 'package:survival_game/ui/expedition_scene.dart';
 import 'package:survival_game/ui/explore_map_screen.dart';
 import 'package:survival_game/ui/fishing_screen.dart';
+import 'package:survival_game/ui/gathering_screen.dart';
+import 'package:survival_game/ui/camp_screen.dart';
+import 'package:survival_game/ui/camp_widgets.dart';
+import 'package:survival_game/ui/camp_character.dart';
 
 import 'capture_fonts.dart';
 
@@ -50,8 +56,47 @@ Future<void> main() async {
       Platform.environment['LOST_CANOPY_CAPTURE_EXPANSION'] == '1';
   final encounterStyle =
       Platform.environment['LOST_CANOPY_CAPTURE_ENCOUNTER_STYLE'] == '1';
+  final styleRefresh =
+      Platform.environment['LOST_CANOPY_CAPTURE_STYLE_REFRESH'] == '1';
+  final rescue = Platform.environment['LOST_CANOPY_CAPTURE_RESCUE'] == '1';
+  final campVariants =
+      Platform.environment['LOST_CANOPY_CAPTURE_CAMP_VARIANTS'] == '1';
+  final starterVariants =
+      Platform.environment['LOST_CANOPY_CAPTURE_STARTER_VARIANTS'] == '1';
+  final minigames =
+      Platform.environment['LOST_CANOPY_CAPTURE_MINIGAMES'] == '1';
+  final fishingTutorial =
+      Platform.environment['LOST_CANOPY_CAPTURE_FISHING_TUTORIAL'] == '1';
+  final allCampLayers =
+      Platform.environment['LOST_CANOPY_CAPTURE_ALL_CAMP_LAYERS'] == '1';
+  final campLayers =
+      Platform.environment['LOST_CANOPY_CAPTURE_CAMP_LAYERS'] == '1';
+  final sceneWidth =
+      Platform.environment['LOST_CANOPY_CAPTURE_SCENE_WIDTH'] == '1';
+  final itemsRefresh =
+      Platform.environment['LOST_CANOPY_CAPTURE_ITEMS_REFRESH'] == '1';
   final directory = Directory(
-    encounterStyle
+    itemsRefresh
+        ? 'screenshots/items-popup-v2'
+        : allCampLayers
+        ? 'screenshots/camp-layers-all-tiers-v1'
+        : campLayers
+        ? 'screenshots/camp-layers-tier0-v1'
+        : sceneWidth
+        ? 'screenshots/scene-width-v1'
+        : fishingTutorial
+        ? 'screenshots/fishing-tutorial-v1'
+        : minigames
+        ? 'screenshots/minigames-v1'
+        : starterVariants
+        ? 'screenshots/starter-camp-variants-v1'
+        : styleRefresh
+        ? 'screenshots/camp-style-refresh-v1'
+        : campVariants
+        ? 'screenshots/camp-variants-v2'
+        : rescue
+        ? 'screenshots/rescue-milestone-v1'
+        : encounterStyle
         ? 'screenshots/encounter-style-v2'
         : expansion
         ? 'screenshots/expansion-v1'
@@ -137,11 +182,44 @@ Future<void> main() async {
       await tester.pump();
       await tester.runAsync(() async {
         final context = tester.element(find.byType(Scaffold).first);
-        for (final file in Directory(
-          'assets/art',
-        ).listSync().whereType<File>()) {
-          if (!file.path.endsWith('.png') || !context.mounted) continue;
-          await precacheImage(AssetImage(file.path), context);
+        if (campLayers || allCampLayers || itemsRefresh) {
+          // Foreground sprites enter the widget tree after the background
+          // decodes, so they may be absent from the initial Image traversal.
+          for (final asset in {...starterCampSprites, campSeatedRight}) {
+            await precacheImage(AssetImage(asset), context);
+          }
+        }
+        if (minigames ||
+            fishingTutorial ||
+            sceneWidth ||
+            itemsRefresh ||
+            campLayers ||
+            allCampLayers) {
+          // Cache the rendered screen only: loading every unrelated scene can
+          // consume a live attempt's entire timer before the first screenshot.
+          final pictures = find
+              .byType(Image)
+              .evaluate()
+              .map((e) => (e.widget as Image).image)
+              .toSet();
+          for (final picture in pictures) {
+            if (context.mounted) await precacheImage(picture, context);
+          }
+          for (final file in [
+            'mushroom_card_scene_v1',
+            'unknown_plant_card_scene_v1',
+          ]) {
+            if (context.mounted) {
+              await precacheImage(AssetImage('assets/art/$file.png'), context);
+            }
+          }
+        } else {
+          for (final file in Directory(
+            'assets/art',
+          ).listSync().whereType<File>()) {
+            if (!file.path.endsWith('.png') || !context.mounted) continue;
+            await precacheImage(AssetImage(file.path), context);
+          }
         }
       });
       if (settle) {
@@ -184,7 +262,525 @@ Future<void> main() async {
       await tester.pumpAndSettle();
     }
 
-    if (encounterStyle) {
+    if (itemsRefresh) {
+      for (final size in [const Size(390, 844), const Size(430, 932)]) {
+        await binding.setSurfaceSize(size);
+        tester.view.physicalSize = size;
+        await mount(
+          CampScreen(
+            engine: game(
+              state: RunState(
+                resources: {'wood': 3, 'stone': 3, 'fiber': 6, 'bait': 2},
+              ),
+            ),
+          ),
+        );
+        await tap('open-inventory');
+        await shot(
+          'items-materials-${size.width.toInt()}x${size.height.toInt()}',
+        );
+        await tap('close-dialog');
+        await tap('camp-menu');
+        await shot('menu-${size.width.toInt()}x${size.height.toInt()}');
+      }
+      await binding.setSurfaceSize(const Size(320, 568));
+      tester.view.physicalSize = const Size(320, 568);
+      await mount(CampScreen(engine: game()));
+      await tap('open-inventory');
+      await shot('items-materials-320x568');
+      await tester.drag(
+        find.byKey(const ValueKey('dialog-content-scroll')),
+        const Offset(0, -600),
+      );
+      await tester.pumpAndSettle();
+      await shot('items-scrolled-320x568');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (allCampLayers) {
+      for (final size in [const Size(390, 844), const Size(430, 932)]) {
+        await binding.setSurfaceSize(size);
+        tester.view.physicalSize = size;
+        for (var tier = 0; tier <= 3; tier++) {
+          for (var variant = 0; variant < campActivities.length; variant++) {
+            await mount(
+              CampScreen(
+                engine: game(state: RunState(campTier: tier)),
+                initialCampVariant: variant,
+              ),
+            );
+            final number = (files.length + 1).toString().padLeft(2, '0');
+            await shot(
+              '$number-tier-$tier-${campActivities[variant]}-${size.width.toInt()}x${size.height.toInt()}',
+            );
+          }
+          await mount(
+            CampScreen(
+              engine: game(
+                state: RunState(
+                  campTier: tier,
+                  phase: RunPhase.night,
+                  timeLeft: 0,
+                ),
+              ),
+              initialCampVariant: 0,
+            ),
+          );
+          final number = (files.length + 1).toString().padLeft(2, '0');
+          await shot(
+            '$number-tier-$tier-night-${size.width.toInt()}x${size.height.toInt()}',
+          );
+        }
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (campLayers) {
+      for (final size in [const Size(390, 844), const Size(430, 932)]) {
+        await binding.setSurfaceSize(size);
+        tester.view.physicalSize = size;
+        for (var variant = 0; variant < 3; variant++) {
+          await mount(
+            CampScreen(
+              engine: game(state: RunState()),
+              initialCampVariant: variant,
+            ),
+          );
+          final number = (files.length + 1).toString().padLeft(2, '0');
+          await shot(
+            '$number-tier-0-${starterCampActivities[variant]}-${size.width.toInt()}x${size.height.toInt()}',
+          );
+        }
+      }
+      await binding.setSurfaceSize(const Size(390, 844));
+      tester.view.physicalSize = const Size(390, 844);
+      await mount(
+        CampScreen(
+          engine: game(state: RunState(phase: RunPhase.night, timeLeft: 0)),
+          initialCampVariant: 0,
+        ),
+      );
+      await shot('07-tier-0-night');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (sceneWidth) {
+      for (final tier in [0, 2]) {
+        final camp = game(state: RunState(campTier: tier));
+        await mount(CampScreen(engine: camp));
+        await shot('0${tier == 0 ? 1 : 2}-camp-tier-$tier-390x844');
+      }
+      await binding.setSurfaceSize(const Size(430, 932));
+      tester.view.physicalSize = const Size(430, 932);
+      await mount(CampScreen(engine: game(state: RunState(campTier: 3))));
+      await shot('03-camp-tier-3-430x932');
+      await binding.setSurfaceSize(const Size(390, 844));
+      tester.view.physicalSize = const Size(390, 844);
+      final river = game()..travelTo('riverbank');
+      await mount(EventScene(game: river));
+      await shot('04-riverbank-390x844');
+      final pond = game()..travelTo('fishing_pond');
+      await mount(FishingScreen(game: pond));
+      await shot('05-fishing-390x844');
+      final hunt = game(
+        state: RunState(
+          tools: {'stone_spear'},
+          resources: {'wood': 20, 'fiber': 20},
+        ),
+      );
+      hunt.openGathering(GatheringKind.hunting);
+      await mount(GatheringScreen(game: hunt));
+      await tester.tap(find.byKey(const ValueKey('gathering-start')));
+      await tester.pump();
+      await shot('06-hunting-390x844');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (fishingTutorial) {
+      final pond = game()..travelTo('fishing_pond');
+      await mount(FishingScreen(game: pond));
+      await shot('01-ready-instructions');
+      await tap('fishing-practice');
+      await shot('02-how-to-fish');
+      await tap('practice-cast');
+      for (
+        var i = 0;
+        i < 100 &&
+            find.byKey(const ValueKey('practice-hook')).evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await shot('03-practice-bite');
+      await tester.tap(find.byKey(const ValueKey('practice-hook')));
+      await tester.pump();
+      await shot('04-practice-reeling');
+      await tap('close-dialog');
+      await tester.tap(find.byKey(const ValueKey('cast-line')));
+      await tester.pump();
+      for (
+        var i = 0;
+        i < 100 && pond.fishing!.stage == FishingStage.waiting;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await shot('05-real-bite');
+      await tester.tap(find.byKey(const ValueKey('hook-fish')));
+      await tester.pump();
+      await shot('06-real-reeling');
+      TestGesture? finger;
+      for (var i = 0; i < 220 && !pond.fishing!.complete; i++) {
+        final session = pond.fishing!;
+        if (session.cursor < session.target && finger == null) {
+          finger = await tester.startGesture(
+            tester.getCenter(find.byKey(const ValueKey('reel-control'))),
+          );
+        } else if (session.cursor >= session.target && finger != null) {
+          await finger.up();
+          finger = null;
+        }
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await finger?.up();
+      await tester.pump();
+      if (pond.fishing!.stage != FishingStage.caught) {
+        throw StateError('Capture touch fishing failed');
+      }
+      await shot('07-caught-with-touch');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (minigames) {
+      GameEngine attempt(
+        GatheringKind kind, {
+        bool active = false,
+        RunState? state,
+      }) {
+        final engine = game(
+          state:
+              state ??
+              RunState(
+                day: 4,
+                campTier: 1,
+                tools: {'stone_axe', 'stone_spear', 'stone_knife', 'machete'},
+                resources: {'wood': 20, 'stone': 8, 'fiber': 20},
+                stats: {
+                  SurvivalStat.health: 100,
+                  SurvivalStat.water: 72,
+                  SurvivalStat.food: 69,
+                  SurvivalStat.sanity: 80,
+                },
+              ),
+        );
+        engine.openGathering(kind);
+        if (active) engine.beginGathering();
+        return engine;
+      }
+
+      Future<void> capture(
+        String name,
+        GameEngine engine, {
+        bool settle = false,
+      }) async {
+        if (engine.gathering != null) {
+          await mount(GatheringScreen(game: engine), settle: settle);
+        } else {
+          await mount(LostCanopyApp(engine: engine), app: true, settle: settle);
+        }
+        await shot(name);
+      }
+
+      final camp = game();
+      await mount(LostCanopyApp(engine: camp), app: true);
+      await tap('camp-menu');
+      await tap('menu-gather');
+      await shot('01-camp-gather-menu');
+      for (final kind in GatheringKind.values) {
+        final prefix = kind.name;
+        final start = kind == GatheringKind.chopping
+            ? 2
+            : kind == GatheringKind.foraging
+            ? 6
+            : 12;
+        String name(int offset, String suffix) =>
+            '${(start + offset).toString().padLeft(2, '0')}-$prefix-$suffix';
+        await capture(name(0, 'ready'), attempt(kind), settle: true);
+        final playing = attempt(kind, active: true);
+        playing.tickGathering(kind == GatheringKind.hunting ? .45 : .4);
+        await capture(name(1, 'active'), playing);
+        if (kind == GatheringKind.foraging) {
+          playing.pickGatheringPlant('berries');
+          playing.pickGatheringPlant('fiber');
+          await tester.pump();
+          await shot(name(2, 'selected'));
+          final scroll = find.byKey(const ValueKey('plants-next'));
+          await tester.tap(scroll);
+          await tester.pump(const Duration(milliseconds: 250));
+          await shot(name(3, 'more-plants'));
+          final paused = attempt(kind, active: true);
+          paused.pickGatheringPlant('fiber');
+          paused.pauseGathering(true);
+          await capture(name(4, 'paused'), paused, settle: true);
+        } else {
+          final hit = attempt(kind);
+          await mount(GatheringScreen(game: hit));
+          await tester.tap(find.byKey(const ValueKey('gathering-start')));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 100));
+          final period = kind == GatheringKind.hunting ? 1.8 : 1.6;
+          hit.tickGathering(
+            (period * .25 - hit.gathering!.elapsed) % (period * .5),
+          );
+          await tester.tap(find.byKey(const ValueKey('gathering-strike')));
+          await tester.pump();
+          await shot(name(2, 'perfect'));
+        }
+        final result = attempt(kind, active: true);
+        if (kind == GatheringKind.foraging) {
+          for (final plant in ['berries', 'fiber', 'herb']) {
+            result.pickGatheringPlant(plant);
+          }
+        } else {
+          for (var i = 0; i < (kind == GatheringKind.chopping ? 3 : 1); i++) {
+            result.tickGathering(
+              i == 0 ? (kind == GatheringKind.hunting ? .45 : .4) : .8,
+            );
+            result.strikeGathering();
+          }
+        }
+        result.finishGathering();
+        await capture(
+          name(kind == GatheringKind.foraging ? 5 : 3, 'outcome'),
+          result,
+          settle: true,
+        );
+      }
+      await capture(
+        '16-chopping-tool-required',
+        attempt(GatheringKind.chopping, state: RunState(day: 4)),
+        settle: true,
+      );
+      final repair = game(
+        state: RunState(
+          day: 4,
+          tools: {'stone_axe'},
+          durability: {'stone_axe': 0},
+          resources: {'wood': 20, 'stone': 8, 'fiber': 20},
+        ),
+      );
+      await mount(CraftScreen(game: repair));
+      await tap('recipe-stone_axe');
+      await tester.drag(
+        find.byType(SingleChildScrollView).first,
+        const Offset(0, 500),
+      );
+      await tester.pumpAndSettle();
+      await shot('17-workshop-repair-axe');
+      for (final kind in GatheringKind.values) {
+        await binding.setSurfaceSize(const Size(844, 390));
+        tester.view.physicalSize = const Size(844, 390);
+        await capture('18-${kind.name}-landscape', attempt(kind, active: true));
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (campVariants || starterVariants) {
+      for (
+        var tier = starterVariants ? 0 : 1;
+        tier <= (starterVariants ? 0 : 3);
+        tier++
+      ) {
+        final activities = tier == 0 ? starterCampActivities : campActivities;
+        for (var variant = 0; variant < campActivities.length; variant++) {
+          final engine = game(
+            state: starterVariants
+                ? RunState()
+                : RunState(
+                    day: 3 + tier,
+                    campTier: tier,
+                    tools: {'stone_knife', 'basic_rod'},
+                    resources: {'wood': 11, 'stone': 4, 'fiber': 8},
+                  ),
+          );
+          await mount(CampScreen(engine: engine, initialCampVariant: variant));
+          final number = (files.length + 1).toString().padLeft(2, '0');
+          await shot('$number-tier-$tier-${activities[variant]}');
+          await tester.pumpWidget(const SizedBox.shrink());
+        }
+      }
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
+    }
+
+    if (rescue) {
+      final survivor = game(
+        state: RunState(
+          day: 8,
+          campTier: 3,
+          tools: {'machete', 'torch', 'stone_knife', 'stone_axe'},
+          resources: {'wood': 24, 'fiber': 24, 'metal_scrap': 8, 'herb': 4},
+          stats: {for (final stat in SurvivalStat.values) stat: 100},
+        ),
+      );
+      await mount(LostCanopyApp(engine: survivor), app: true);
+      await tap('camp-objective');
+      await shot('01-beacon-missing-components');
+      await tap('beacon-back');
+      final workshop = game(
+        state: survivor.state.copyWith(
+          tools: {'torch', 'stone_knife', 'stone_axe'},
+        ),
+      );
+      await mount(CraftScreen(game: workshop));
+      await tap('recipe-machete');
+      await shot('02-machete-workshop');
+      await mount(ExploreMapScreen(game: survivor));
+      await tester.tap(find.text('Ancient Ruins'));
+      await tester.pumpAndSettle();
+      await shot('03-ancient-ruins-map');
+      survivor.travelTo('plane_wreck');
+      await mount(LostCanopyApp(engine: survivor), app: true);
+      const parts = ['battery', 'wire', 'metal_parts', 'radio_module'];
+      for (var i = 0; i < parts.length; i++) {
+        final number = 4 + i * 2;
+        await shot('${number.toString().padLeft(2, '0')}-wreck-${parts[i]}');
+        await tap('choice-recover');
+        await shot(
+          '${(number + 1).toString().padLeft(2, '0')}-${parts[i]}-outcome',
+        );
+        await tap('continue-outcome');
+        if (i < parts.length - 1) await tap('expedition-deeper');
+      }
+      Future<void> sleepAndContinue() async {
+        await tap(
+          'choice-${survivor.visibleChoices.firstWhere(survivor.canChoose).id}',
+        );
+        await tap('continue-outcome');
+        await tap('action-rest');
+        await tap('continue-outcome');
+      }
+
+      await sleepAndContinue();
+      survivor.travelTo('ancient_ruins');
+      await mount(LostCanopyApp(engine: survivor), app: true);
+      await shot('12-ruins-sealed-altar');
+      await tap('choice-align');
+      await shot('13-ruins-stone-puzzle');
+      final puzzle = survivor.ruinsPuzzle!;
+      for (var i = 0; i < 3; i++) {
+        while (puzzle.tiles[i] != puzzle.pattern[i]) {
+          await tap('ruins-disc-$i');
+        }
+      }
+      await shot('14-ruins-aligned-discs');
+      await tap('ruins-submit');
+      await shot('15-beacon-core-outcome');
+      await tap('continue-outcome');
+      await shot('16-core-in-expedition-pack');
+      await tap('expedition-return');
+      await shot('17-core-returned-to-camp');
+      await tap('continue-outcome');
+      await tap('camp-objective');
+      await shot('18-beacon-complete-components');
+      await tap('beacon-primary');
+      await shot('19-beacon-crafted-outcome');
+      await tap('continue-outcome');
+      await sleepAndContinue();
+      await tap('camp-objective');
+      await shot('20-beacon-ready-to-send');
+      await tap('beacon-primary');
+      await shot('21-signal-received-outcome');
+      await tap('continue-outcome');
+      await shot('22-camp-preparing-for-rescue');
+      // Decisions advance the same engine. Refill supplies before the storm.
+      while (survivor.state.phase == RunPhase.day &&
+          survivor.state.timeLeft > 0) {
+        await tap('action-forage');
+        final best = survivor.visibleChoices.where(survivor.canChoose).toList()
+          ..sort((a, b) {
+            num score(choice) =>
+                (choice.isRisky ? -100 : 0) +
+                (choice.effect.stats[SurvivalStat.water] ?? 0) *
+                    (survivor.state.value(SurvivalStat.water) < 65 ? 2 : 1) +
+                (choice.effect.stats[SurvivalStat.food] ?? 0) *
+                    (survivor.state.value(SurvivalStat.food) < 65 ? 2 : 1);
+            return score(b).compareTo(score(a));
+          });
+        await tap('choice-${best.first.id}');
+        await tap('continue-outcome');
+      }
+      await tap(
+        'choice-${survivor.visibleChoices.firstWhere(survivor.canChoose).id}',
+      );
+      await tap('continue-outcome');
+      await tap('action-rest');
+      await shot('23-rescue-storm-dawn-outcome');
+      await tap('continue-outcome');
+      const choices = ['raise', 'cut', 'torch'];
+      const storms = ['rising-water', 'falling-branches', 'last-signal'];
+      for (var i = 0; i < choices.length; i++) {
+        final number = 24 + i * 2;
+        await shot('${number.toString().padLeft(2, '0')}-storm-${storms[i]}');
+        await tap('choice-${choices[i]}');
+        await shot(
+          '${(number + 1).toString().padLeft(2, '0')}-storm-${storms[i]}-outcome',
+        );
+        await tap('continue-outcome');
+      }
+      if (!survivor.state.rescued) {
+        throw StateError('Capture did not reach rescue');
+      }
+      await shot('30-rescued-run-summary');
+      await tap('rescue-new-run');
+      await shot('31-new-run-confirmation');
+      await tester.tap(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is Text && widget.data?.toLowerCase() == 'keep summary',
+        ),
+      );
+      await tester.pumpAndSettle();
+      final restored = game();
+      if (!restored.restore(survivor.toJson())) {
+        throw StateError('Rescue restore failed');
+      }
+      await mount(LostCanopyApp(engine: restored), app: true);
+      await shot('32-restored-rescued-summary');
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      await tester.pumpWidget(const SizedBox.shrink());
+      return;
+    }
+
+    if (encounterStyle || styleRefresh) {
       const encounters = [
         'jaguar_trail',
         'snake_thicket',
@@ -236,6 +832,68 @@ Future<void> main() async {
         }
         await mount(LostCanopyApp(engine: explorer), app: true);
         await shot('${(i + 1).toString().padLeft(2, '0')}-$id');
+      }
+      if (styleRefresh) {
+        final prepared = stockedState.copyWith(
+          day: 8,
+          campTier: 3,
+          tools: {...stockedState.tools, 'machete'},
+        );
+        for (final route in [
+          'ancient_ruins',
+          'bamboo_grove',
+          'plane_wreck',
+          'riverbank',
+        ]) {
+          final explorer = game(state: prepared)..travelTo(route);
+          await mount(LostCanopyApp(engine: explorer), app: true);
+          final number = (files.length + 1).toString().padLeft(2, '0');
+          await shot('$number-$route');
+          if (route == 'ancient_ruins') {
+            await tap('choice-align');
+            await shot('08-ruins-puzzle');
+          }
+          if (route == 'bamboo_grove') {
+            await tap(
+              'choice-${explorer.visibleChoices.firstWhere(explorer.canChoose).id}',
+            );
+            await tap('continue-outcome');
+            await shot('10-bamboo-expedition');
+          }
+        }
+        await mount(CraftScreen(game: game(state: prepared)));
+        await shot('13-workshop');
+        final storm = game(
+          state: prepared.copyWith(
+            weather: 'Storm',
+            tools: {...prepared.tools, 'emergency_beacon'},
+            rescueStage: RescueStage.storm,
+            signalDay: 7,
+            foundComponents: beaconComponents.keys.toSet(),
+          ),
+        );
+        await mount(CampScreen(engine: storm));
+        await shot('14-storm-camp');
+        if (!storm.restore(storm.toJson())) {
+          throw StateError('Could not restore the storm capture');
+        }
+        await mount(LostCanopyApp(engine: storm), app: true);
+        await shot('15-storm-event');
+        final rescued = game(
+          state: prepared.copyWith(
+            phase: RunPhase.rescued,
+            tools: {...prepared.tools, 'emergency_beacon'},
+            rescueStage: RescueStage.storm,
+            rescueStep: 3,
+            signalDay: 7,
+            foundComponents: beaconComponents.keys.toSet(),
+          ),
+        );
+        await mount(LostCanopyApp(engine: rescued), app: true);
+        await shot('16-rescue-arrival');
+        final angler = game(state: prepared)..travelTo('fishing_pond');
+        await mount(FishingScreen(game: angler), settle: false);
+        await shot('17-fishing-unchanged');
       }
       File(
         '${directory.path}/manifest.txt',
@@ -351,7 +1009,7 @@ Future<void> main() async {
                   children: [
                     const SizedBox(height: 14),
                     Text(
-                      'Kártyaillusztrációk · ${start ~/ 12 + 1}/3',
+                      'Kártyaillusztrációk · ${start ~/ 12 + 1}/${(cardIllustrationSubjects.length / 12).ceil()}',
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
@@ -372,6 +1030,9 @@ Future<void> main() async {
         );
         await shot('0${start ~/ 12 + 1}-card-set');
       }
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
       await tester.pumpWidget(const SizedBox.shrink());
       return;
     }
@@ -760,7 +1421,7 @@ Future<void> main() async {
       await tester.pumpAndSettle();
       await tap('scene-details');
       await shot('05-encounter-details');
-      await tap('close-scene-details');
+      await tap('close-dialog');
       await tap('encounter-next');
       await tester.drag(
         find.byKey(const ValueKey('encounter-card-rail')),
@@ -784,7 +1445,7 @@ Future<void> main() async {
     await shot('03-inventory-food');
     await tap('inventory-tab-2');
     await shot('04-inventory-gear');
-    await tap('close-inventory');
+    await tap('close-dialog');
     await mount(ExploreMapScreen(game: camp));
     await shot('05-explore-map');
     await tester.tap(find.text('Ancient Ruins'));
@@ -875,11 +1536,11 @@ Future<void> main() async {
     await shot('24-camp-menu');
     await tap('menu-journal');
     await shot('25-journal');
-    await tap('close-journal');
+    await tap('close-dialog');
     await tap('camp-menu');
     await tap('menu-guide');
     await shot('26-guide');
-    await tap('close-guide');
+    await tap('close-dialog');
     await tap('camp-menu');
     await tap('menu-new-run');
     await shot('27-restart-confirmation');

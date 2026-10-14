@@ -6,6 +6,10 @@ import 'expedition.dart';
 import 'run_state.dart';
 import 'world_catalog.dart';
 import 'fishing_session.dart';
+import 'rescue_progress.dart';
+import 'ruins_puzzle.dart';
+import 'gathering_session.dart';
+import 'game_sound.dart';
 
 /// Synchronous transactions: a decision can only resolve once, and no time
 /// passes while a player is reading an event or its outcome.
@@ -26,10 +30,32 @@ class GameEngine {
 
   /// Called after every completed transaction, e.g. to autosave the run.
   void Function()? onChanged;
+  final _listeners = <void Function()>[];
+  void addListener(void Function() listener) => _listeners.add(listener);
+  void removeListener(void Function() listener) => _listeners.remove(listener);
+  final _soundListeners = <void Function(GameSound)>[];
+  void addSoundListener(void Function(GameSound) listener) =>
+      _soundListeners.add(listener);
+  void removeSoundListener(void Function(GameSound) listener) =>
+      _soundListeners.remove(listener);
+  void _sound(GameSound sound) {
+    for (final listener in List<void Function(GameSound)>.of(_soundListeners)) {
+      listener(sound);
+    }
+  }
+
   FishingSession? _fishing;
   FishingSession? get fishing => _fishing;
   RunState? _fishingBefore;
   bool _castSpent = false;
+  RuinsPuzzle? _ruinsPuzzle;
+  RuinsPuzzle? get ruinsPuzzle => _ruinsPuzzle;
+  RunState? _puzzleBefore;
+  GatheringSession? _gathering;
+  GatheringSession? get gathering => _gathering;
+  RunState? _gatheringBefore;
+  GameEvent? _gatheringSource;
+  int _gatheringCost = 1;
   final Random _random;
   RunState _state;
   RunState get state => _state;
@@ -63,6 +89,8 @@ class GameEngine {
       _pendingEvent != null ||
       _report != null ||
       _fishing != null ||
+      _ruinsPuzzle != null ||
+      _gathering != null ||
       _decisionPending;
   bool get canSleep =>
       state.phase == RunPhase.night && !isBusy && _nightResolved;
@@ -70,6 +98,7 @@ class GameEngine {
   bool canAct(CampAction action) =>
       state.isAlive &&
       state.phase == RunPhase.day &&
+      state.rescueStage != RescueStage.storm &&
       !isBusy &&
       state.timeLeft >= action.cost;
 
@@ -106,10 +135,16 @@ class GameEngine {
       return 'Finish your current activity first.';
     }
     if (state.phase != RunPhase.day) return 'Travel resumes at dawn.';
+    if (state.rescueStage == RescueStage.storm) {
+      return 'Keep the rescue signal alive. The storm must pass first.';
+    }
     final lock = location.lockReason(state);
     if (lock != null) return lock;
     if (state.timeLeft < location.timeCost) {
       return 'Need ${location.timeCost} daylight. Rest until tomorrow.';
+    }
+    if (id == 'ancient_ruins' && state.timeLeft < location.timeCost + 1) {
+      return 'Need ${location.timeCost + 1} daylight for the journey and altar.';
     }
     if (id == 'fishing_pond') {
       if (!state.tools.contains('basic_rod')) {
@@ -133,6 +168,7 @@ class GameEngine {
       _pendingCost = location.timeCost;
       _pendingEvent = _pick('explore', locationId: id);
       _changed();
+      _sound(GameSound.travel);
       return true;
     }
     if (id == 'fishing_pond') {
@@ -150,6 +186,7 @@ class GameEngine {
         _castSpent = false;
         _fishing = FishingSession(random: _random);
         _changed();
+        _sound(GameSound.travel);
       }
       return true;
     }
@@ -201,16 +238,259 @@ class GameEngine {
     return true;
   }
 
+  bool canRepairTool(String id) =>
+      state.tools.contains(id) &&
+      RunState.toolDurability.containsKey(id) &&
+      state.toolCondition(id) < RunState.toolDurability[id]!;
+
+  String? gatheringBlockReason(GatheringKind kind) {
+    if (!state.isAlive || state.phase != RunPhase.day) {
+      return 'Gather in daylight.';
+    }
+    if (state.rescueStage == RescueStage.storm) {
+      return 'Keep the rescue signal alive.';
+    }
+    final cost = _gathering?.kind == kind ? _gatheringCost : 1;
+    if (state.timeLeft < cost) return 'Need $cost daylight.';
+    if (kind != GatheringKind.foraging && !state.toolUsable(kind.art)) {
+      return state.tools.contains(kind.art)
+          ? 'Repair your ${itemName(kind.art).toLowerCase()} in the workshop.'
+          : 'Craft a ${itemName(kind.art).toLowerCase()} in the workshop.';
+    }
+    return null;
+  }
+
+  int get gatheringCost => _gatheringCost;
+
+  /// The ready screen reserves an activity; START spends its time once.
+  bool openGathering(GatheringKind kind) {
+    if (!canAct(CampAction.forage) || state.locationId != 'camp') return false;
+    _gathering = GatheringSession(kind, random: _random);
+    _gatheringBefore = state;
+    _gatheringSource = null;
+    _gatheringCost = 1;
+    _changed();
+    return true;
+  }
+
+  bool beginGathering() {
+    final session = _gathering;
+    if (session == null ||
+        session.stage != GatheringStage.ready ||
+        gatheringBlockReason(session.kind) != null) {
+      return false;
+    }
+    session.start();
+    _spendTime(_gatheringCost);
+    _pendingCost = 0;
+    if (!state.isAlive) {
+      session.finish(leave: true);
+      finishGathering();
+    } else {
+      _changed();
+    }
+    return true;
+  }
+
+  void tickGathering(double seconds) => _gathering?.update(seconds);
+  void saveGatheringProgress() {
+    if (_gathering != null) _changed();
+  }
+
+  void pauseGathering(bool paused) {
+    final session = _gathering;
+    if (session == null ||
+        session.stage != GatheringStage.active ||
+        session.paused == paused) {
+      return;
+    }
+    session.paused = paused;
+    _changed();
+  }
+
+  bool strikeGathering() {
+    if (!(_gathering?.strike() ?? false)) return false;
+    _changed();
+    if (_gathering!.kind == GatheringKind.chopping &&
+        _gathering!.lastQuality != TimingQuality.miss) {
+      _sound(GameSound.woodChop);
+    }
+    return true;
+  }
+
+  bool pickGatheringPlant(String id) {
+    if (!(_gathering?.pick(id, state.tools) ?? false)) return false;
+    _changed();
+    return true;
+  }
+
+  bool cancelGathering() {
+    if (_gathering?.stage != GatheringStage.ready) return false;
+    _pendingEvent = _gatheringSource;
+    _pendingAction = switch (_gatheringSource?.trigger) {
+      'forage' => CampAction.forage,
+      'explore' => CampAction.explore,
+      _ => null,
+    };
+    _gathering = null;
+    _gatheringBefore = null;
+    _gatheringSource = null;
+    _changed();
+    return true;
+  }
+
+  bool finishGathering({bool leave = false}) {
+    final session = _gathering;
+    if (session == null ||
+        _gatheringBefore == null ||
+        session.stage == GatheringStage.ready) {
+      return false;
+    }
+    if (!session.complete && !session.finish(leave: leave)) return false;
+    final before = _gatheringBefore!;
+    final resources = <String, int>{};
+    final stats = <SurvivalStat, int>{};
+    final notes = <String>[];
+    if (state.isAlive) {
+      switch (session.kind) {
+        case GatheringKind.chopping:
+          final wood = session.hits.fold(
+            0,
+            (total, hit) =>
+                total +
+                switch (hit) {
+                  TimingQuality.miss => 0,
+                  TimingQuality.good => 2,
+                  TimingQuality.perfect => 3,
+                },
+          );
+          if (wood > 0) resources['wood'] = wood;
+          final perfectHits = session.hits
+              .where((h) => h == TimingQuality.perfect)
+              .length;
+          if (perfectHits >= 2) {
+            resources['hardwood'] = perfectHits == 3 ? 2 : 1;
+          }
+          notes.add(
+            wood > 0
+                ? 'You gathered wood from ${session.hits.length} swings.'
+                : 'The axe missed. You recovered no wood.',
+          );
+        case GatheringKind.hunting:
+          final quality = session.hits.isEmpty
+              ? TimingQuality.miss
+              : session.hits.single;
+          if (quality != TimingQuality.miss) {
+            resources['raw_meat'] = quality == TimingQuality.perfect ? 3 : 2;
+          }
+          notes.add(
+            quality == TimingQuality.miss
+                ? 'The boar escaped. You brought back no meat.'
+                : 'Your spear landed cleanly. You recovered fresh meat.',
+          );
+        case GatheringKind.foraging:
+          for (final plant in session.picked) {
+            switch (plant) {
+              case 'berries':
+                stats[SurvivalStat.food] = (stats[SurvivalStat.food] ?? 0) + 7;
+              case 'fiber':
+                resources['fiber'] = 2;
+              case 'herb':
+                resources['herb'] = (resources['herb'] ?? 0) + 1;
+              case 'mushroom':
+                if (session.mushroomSafe) {
+                  stats[SurvivalStat.food] =
+                      (stats[SurvivalStat.food] ?? 0) + 9;
+                  notes.add('The mushrooms were edible.');
+                } else {
+                  stats[SurvivalStat.health] =
+                      (stats[SurvivalStat.health] ?? 0) - 6;
+                  notes.add('The mushrooms made you ill.');
+                }
+              case 'unknown_plant':
+                if (session.unknownSafe) {
+                  resources['herb'] = (resources['herb'] ?? 0) + 2;
+                  notes.add('The unfamiliar plant yielded useful herbs.');
+                } else {
+                  stats[SurvivalStat.health] =
+                      (stats[SurvivalStat.health] ?? 0) - 8;
+                  notes.add('The unfamiliar berries irritated your skin.');
+                }
+            }
+          }
+          notes.insert(
+            0,
+            session.picked.isEmpty
+                ? 'You left the plants untouched.'
+                : 'You gathered ${session.picked.length} different plants.',
+          );
+      }
+      _apply(EventEffect(resources: resources, stats: stats));
+      for (final entry in resources.entries) {
+        _expedition?.loot.update(
+          entry.key,
+          (v) => v + entry.value,
+          ifAbsent: () => entry.value,
+        );
+      }
+      if (session.kind != GatheringKind.foraging) {
+        final tool = session.kind.art;
+        final wear = max(
+          1,
+          session.hits.where((h) => h == TimingQuality.miss).length + 1,
+        );
+        notes.add(_wearTool(tool, wear));
+      }
+    } else {
+      notes.add('Your supplies ran out before you could gather anything.');
+    }
+    if (session.timedOut) {
+      notes.add('Time ran out; your completed progress was kept.');
+    }
+    if (session.abandoned) {
+      notes.add(
+        'You ended the attempt early. The daylight already spent is not returned.',
+      );
+    }
+    final title = switch (session.kind) {
+      GatheringKind.chopping =>
+        resources.isEmpty ? 'A rough cut' : 'Wood from the clearing',
+      GatheringKind.foraging =>
+        (stats[SurvivalStat.health] ?? 0) < 0
+            ? 'A bitter discovery'
+            : 'Gathered from the grove',
+      GatheringKind.hunting =>
+        resources.isEmpty ? 'The boar escaped' : 'A well-timed throw',
+    };
+    _gathering = null;
+    _gatheringBefore = null;
+    _gatheringSource = null;
+    _pendingAction = null;
+    _pendingCost = 0;
+    _finish(title, notes.join(' '), before);
+    return true;
+  }
+
+  /// Accepted tool use wears equipment even when the attempt fails.
+  /// Minigames call this only when resolving, never when opening a card.
+  String _wearTool(String tool, int wear) {
+    final condition = state.toolCondition(tool);
+    final remaining = max(0, condition - wear);
+    _state = state.copyWith(durability: {...state.durability, tool: remaining});
+    return '${itemName(tool)} durability: $condition → $remaining.${remaining == 0 ? ' Repair it in the workshop.' : ''}';
+  }
+
   String? craftBlockReason(String id) {
     final recipe = recipes.find(id);
     if (recipe == null) return 'Unknown recipe';
-    if (recipe.isOwnedBy(state)) {
+    if (recipe.isOwnedBy(state) && !canRepairTool(id)) {
       return recipe.kind == RecipeKind.campTier ? 'Built' : 'Already crafted';
     }
     if (!state.isAlive || isBusy || state.locationId != 'camp') {
       return 'Return to camp first';
     }
     if (state.phase != RunPhase.day) return 'Build in daylight';
+    if (state.rescueStage == RescueStage.storm) return 'Keep the signal alive';
     if (recipe.kind == RecipeKind.campTier &&
         recipe.tier != state.campTier + 1) {
       return 'Build ${campTierName(recipes, recipe.tier! - 1)} first';
@@ -239,6 +519,7 @@ class GameEngine {
     if (craftBlockReason(id) != null) return false;
     final recipe = recipes.find(id)!;
     final before = state;
+    final repairing = canRepairTool(id);
     _apply(
       EventEffect(
         resources: {for (final e in recipe.costs.entries) e.key: -e.value},
@@ -250,13 +531,23 @@ class GameEngine {
       _state = upgrade
           ? state.copyWith(campTier: recipe.tier)
           : state.copyWith(tools: {...state.tools, recipe.id});
+      if (RunState.toolDurability.containsKey(id)) {
+        _state = state.copyWith(
+          durability: {...state.durability, id: RunState.toolDurability[id]!},
+        );
+      }
+      if (id == 'emergency_beacon') {
+        _state = state.copyWith(
+          foundComponents: {...state.foundComponents, ...beaconComponents.keys},
+        );
+      }
     }
     _finish(
       !state.isAlive
           ? 'An unfinished ${recipe.name}'
           : upgrade
           ? 'Camp upgraded: ${recipe.name}'
-          : 'Crafted: ${recipe.name}',
+          : '${repairing ? 'Repaired' : 'Crafted'}: ${recipe.name}',
       state.isAlive
           ? '${recipe.description} ${recipe.effect}'
           : 'Your supplies ran out before you could finish the ${recipe.name}.',
@@ -287,6 +578,7 @@ class GameEngine {
   bool canConsume(String id) {
     if (!consumables.contains(id) ||
         !state.isAlive ||
+        state.rescued ||
         isBusy ||
         state.locationId != 'camp' ||
         state.resource(id) < 1) {
@@ -325,7 +617,11 @@ class GameEngine {
       (_pendingEvent?.choices.contains(choice) ?? false) &&
       choice.isVisible(state) &&
       choice.requires.entries.every((r) => state.resource(r.key) >= r.value) &&
-      choice.requiresTools.every(state.tools.contains) &&
+      choice.requiresTools.every(state.toolUsable) &&
+      (choice.minigame != 'ruins_symbols' ||
+          state.timeLeft >= _pendingCost + 1) &&
+      (GatheringKind.fromId(choice.minigame) == null ||
+          state.timeLeft >= max(1, _pendingCost)) &&
       choice.requiresStats.entries.every((r) => state.value(r.key) >= r.value);
 
   /// The cards on screen for the pending event, given stats and gear.
@@ -340,10 +636,43 @@ class GameEngine {
     if (matches.isEmpty || !canChoose(matches.first)) return false;
     final choice = matches.first;
     final before = state;
+    final gatheringKind = GatheringKind.fromId(choice.minigame);
+    if (gatheringKind != null) {
+      _gatheringSource = _pendingEvent;
+      _gatheringBefore = before;
+      _gatheringCost = max(1, _pendingCost);
+      _gathering = GatheringSession(gatheringKind, random: _random);
+      _pendingEvent = null;
+      _changed();
+      return true;
+    }
+    if (choice.minigame == 'ruins_symbols') {
+      _spendTime(_pendingCost);
+      _pendingCost = 0;
+      _pendingEvent = null;
+      _pendingAction = null;
+      if (state.isAlive) {
+        _ruinsPuzzle = RuinsPuzzle(random: _random);
+        _puzzleBefore = before;
+        _changed();
+      } else {
+        _finish(
+          'The sealed altar',
+          'Your supplies ran out before you reached the altar.',
+          before,
+        );
+      }
+      return true;
+    }
+    final rescueTrial = _pendingEvent!.trigger == 'rescue';
     final success = !choice.isRisky || _random.nextDouble() < chanceFor(choice);
     final eventTitle = _pendingEvent!.title;
     final effect = success ? choice.effect : choice.failureEffect!;
     _apply(effect);
+    final wearNotes = [
+      for (final tool in choice.requiresTools)
+        if (RunState.toolDurability.containsKey(tool)) _wearTool(tool, 1),
+    ];
     final trip = _expedition;
     if (trip != null) {
       for (final e in effect.resources.entries) {
@@ -380,21 +709,41 @@ class GameEngine {
       }
     }
     if (_pendingCost > 0) _spendTime(_pendingCost);
+    if (rescueTrial && state.isAlive) {
+      _state = state.copyWith(rescueStep: state.rescueStep + 1);
+      if (state.rescueStep == rescueEventIds.length) {
+        _state = state.copyWith(phase: RunPhase.rescued, locationId: 'camp');
+      }
+    }
     _pendingCost = 0;
     if (state.phase == RunPhase.night) _nightResolved = true;
     _pendingEvent = null;
     _pendingAction = null;
     _finish(
       eventTitle,
-      success ? choice.result : choice.failureResult!,
+      [success ? choice.result : choice.failureResult!, ...wearNotes].join(' '),
       before,
     );
+    if (choice.requiresTools.contains('stone_axe') &&
+        (effect.resources['wood'] ?? 0) > 0) {
+      _sound(GameSound.woodChop);
+    }
     return true;
   }
 
   bool continueFromReport() {
     if (_report == null) return false;
     _report = null;
+    if (state.rescued || !state.isAlive) {
+      _state = state.copyWith(locationId: 'camp');
+      _changed();
+      return true;
+    }
+    if (state.rescueStage == RescueStage.storm) {
+      _queueRescueEvent();
+      _changed();
+      return true;
+    }
     final trip = _expedition;
     if (trip != null && state.isAlive) {
       final daylight = state.phase == RunPhase.day && state.timeLeft >= 1;
@@ -447,6 +796,10 @@ class GameEngine {
 
   bool get canGoDeeper =>
       _decisionPending &&
+      _gathering == null &&
+      _ruinsPuzzle == null &&
+      _pendingEvent == null &&
+      _report == null &&
       state.isAlive &&
       state.phase == RunPhase.day &&
       state.timeLeft >= 1;
@@ -477,6 +830,7 @@ class GameEngine {
       );
     }
     _changed();
+    _sound(GameSound.travel);
     return true;
   }
 
@@ -503,6 +857,7 @@ class GameEngine {
     );
     if (_journal.length > 30) _journal.removeLast();
     _changed();
+    _sound(GameSound.travel);
     return true;
   }
 
@@ -544,7 +899,14 @@ class GameEngine {
         phase: RunPhase.day,
         weather: _random.nextBool() ? 'Sunny' : 'Light rain',
       );
-      // Rain fills the collector overnight, so the new weather decides it.
+      if (state.rescueStage == RescueStage.signalSent) {
+        _state = state.copyWith(
+          rescueStage: RescueStage.storm,
+          rescueStep: 0,
+          weather: 'Storm',
+        );
+      }
+      // The final storm fills a rain collector just like other rainy dawns.
       final dawnWater =
           recipes.bonus(state, CampBonus.dawnWater) +
           (state.weather == 'Sunny'
@@ -554,8 +916,97 @@ class GameEngine {
     }
     _nightResolved = false;
     _finish(
-      'A new dawn',
-      'You survived the night. A new day unfolds beneath the canopy.',
+      state.rescueStage == RescueStage.storm
+          ? 'The rescue storm'
+          : 'A new dawn',
+      state.rescueStage == RescueStage.storm
+          ? 'A rescue team has your signal. Keep the beacon alive through the storm until they reach the clearing.'
+          : 'You survived the night. A new day unfolds beneath the canopy.',
+      before,
+    );
+    return true;
+  }
+
+  int get heldBeaconComponents =>
+      beaconComponents.keys.where((id) => state.resource(id) > 0).length;
+
+  String? get activateBeaconBlockReason {
+    if (!state.tools.contains('emergency_beacon')) {
+      return 'Assemble the Emergency Beacon first';
+    }
+    if (state.rescueStage != RescueStage.searching || state.rescued) {
+      return 'Signal already sent';
+    }
+    if (!state.isAlive || isBusy || state.locationId != 'camp') {
+      return 'Return to camp first';
+    }
+    if (state.phase != RunPhase.day) return 'Send the signal in daylight';
+    if (state.timeLeft < 1) return 'Need 1 daylight';
+    return null;
+  }
+
+  bool activateBeacon() {
+    if (activateBeaconBlockReason != null) return false;
+    final before = state;
+    _spendTime(1);
+    if (state.isAlive) {
+      _state = state.copyWith(
+        rescueStage: RescueStage.signalSent,
+        signalDay: state.day,
+      );
+    }
+    _finish(
+      state.isAlive ? 'Signal received' : 'An unfinished signal',
+      state.isAlive
+          ? 'A distant voice answers. Rescue is coming tomorrow. Prepare food, water and shelter before you sleep.'
+          : 'Your supplies ran out before you could send the signal.',
+      before,
+    );
+    return true;
+  }
+
+  void _queueRescueEvent() {
+    if (state.rescueStep >= rescueEventIds.length) return;
+    _pendingEvent = catalog.events.firstWhere(
+      (e) => e.id == rescueEventIds[state.rescueStep],
+    );
+    _pendingAction = null;
+    _pendingCost = 2;
+  }
+
+  bool turnRuinsTile(int index) {
+    if (_ruinsPuzzle == null || !_ruinsPuzzle!.rotate(index)) return false;
+    _changed();
+    return true;
+  }
+
+  bool finishRuinsPuzzle({bool leave = false}) {
+    final puzzle = _ruinsPuzzle;
+    if (puzzle == null ||
+        _puzzleBefore == null ||
+        (!leave && state.timeLeft < 1)) {
+      return false;
+    }
+    final before = _puzzleBefore!;
+    final solved = !leave && puzzle.solved;
+    if (!leave) _spendTime(1);
+    if (solved && state.isAlive && state.resource('beacon_core') == 0) {
+      _apply(EventEffect(resources: {'beacon_core': 1}));
+      _expedition?.loot.update('beacon_core', (v) => v + 1, ifAbsent: () => 1);
+    } else if (!leave && state.isAlive) {
+      _apply(EventEffect(stats: {SurvivalStat.sanity: -3}));
+    }
+    _ruinsPuzzle = null;
+    _puzzleBefore = null;
+    _finish(
+      solved && state.isAlive ? 'The altar opens' : 'The sealed altar',
+      !state.isAlive
+          ? 'The jungle takes its toll before the stone seal opens.'
+          : solved
+          ? 'The carved discs settle into place. Inside the old survey cache lies a working Beacon Core. Carry it safely home.'
+          : leave
+          ? 'You leave the stone seal undisturbed. You can return to try again.'
+          : 'The discs grind, but the seal stays shut. Look at the carved sequence and try again on another stop.',
       before,
     );
     return true;
@@ -566,6 +1017,12 @@ class GameEngine {
     _fishing = null;
     _fishingBefore = null;
     _castSpent = false;
+    _ruinsPuzzle = null;
+    _puzzleBefore = null;
+    _gathering = null;
+    _gatheringBefore = null;
+    _gatheringSource = null;
+    _gatheringCost = 1;
     _pendingEvent = null;
     _pendingAction = null;
     _pendingCost = 0;
@@ -602,8 +1059,10 @@ class GameEngine {
               .where((e) => e.locations.isEmpty)
               .toList()
         : _expeditionPool(locationId, depth, trigger: trigger);
-    final fresh = pool.where((e) => e.id != _lastEvent[trigger]).toList();
-    final candidates = fresh.isEmpty ? pool : fresh;
+    final priority = pool.fold<int>(0, (p, e) => max(p, e.priority));
+    final preferred = pool.where((e) => e.priority == priority).toList();
+    final fresh = preferred.where((e) => e.id != _lastEvent[trigger]).toList();
+    final candidates = fresh.isEmpty ? preferred : fresh;
     final event = candidates[_random.nextInt(candidates.length)];
     _lastEvent[trigger] = event.id;
     return event;
@@ -638,7 +1097,16 @@ class GameEngine {
     for (final entry in effect.resources.entries) {
       resources[entry.key] = max(0, state.resource(entry.key) + entry.value);
     }
-    _state = state.copyWith(stats: stats, resources: resources);
+    _state = state.copyWith(
+      stats: stats,
+      resources: resources,
+      foundComponents: {
+        ...state.foundComponents,
+        for (final entry in effect.resources.entries)
+          if (entry.value > 0 && beaconComponents.containsKey(entry.key))
+            entry.key,
+      },
+    );
   }
 
   void _finish(String title, String body, RunState before) {
@@ -660,7 +1128,12 @@ class GameEngine {
     _changed();
   }
 
-  void _changed() => onChanged?.call();
+  void _changed() {
+    onChanged?.call();
+    for (final listener in List<void Function()>.of(_listeners)) {
+      listener();
+    }
+  }
 
   static const saveVersion = 1;
 
@@ -679,6 +1152,18 @@ class GameEngine {
     'journal': _journal,
     if (_fishing != null)
       'fishing': {'before': _fishingBefore!.toJson(), 'castSpent': _castSpent},
+    if (_ruinsPuzzle != null)
+      'ruinsPuzzle': {
+        'session': _ruinsPuzzle!.toJson(),
+        'before': _puzzleBefore!.toJson(),
+      },
+    if (_gathering != null)
+      'gathering': {
+        'session': _gathering!.toJson(),
+        'before': _gatheringBefore!.toJson(),
+        'source': _gatheringSource?.id,
+        'cost': _gatheringCost,
+      },
   };
 
   /// Continues a saved run. Returns false and keeps the current run when the
@@ -692,6 +1177,8 @@ class GameEngine {
       final actionName = json['pendingAction'] as String?;
       final reportJson = json['report'] as Map<String, dynamic>?;
       final fishing = json['fishing'] as Map<String, dynamic>?;
+      final puzzle = json['ruinsPuzzle'] as Map<String, dynamic>?;
+      final gathering = json['gathering'] as Map<String, dynamic>?;
       final journal = List<String>.from(json['journal'] as List);
 
       _state = restored;
@@ -716,6 +1203,8 @@ class GameEngine {
         _followUp = false;
       } else if (_pendingEvent == null &&
           _report == null &&
+          puzzle == null &&
+          gathering == null &&
           !_decisionPending) {
         // A trip never rests between steps without a decision to make.
         _decisionPending = true;
@@ -733,6 +1222,25 @@ class GameEngine {
       _fishing = null;
       _fishingBefore = null;
       _castSpent = false;
+      _ruinsPuzzle = puzzle == null
+          ? null
+          : RuinsPuzzle.fromJson(puzzle['session'] as Map<String, dynamic>);
+      _puzzleBefore = puzzle == null
+          ? null
+          : RunState.fromJson(puzzle['before'] as Map<String, dynamic>);
+      _gathering = gathering == null
+          ? null
+          : GatheringSession.fromJson(
+              gathering['session'] as Map<String, dynamic>,
+            );
+      _gatheringBefore = gathering == null
+          ? null
+          : RunState.fromJson(gathering['before'] as Map<String, dynamic>);
+      final sources = catalog.events.where((e) => e.id == gathering?['source']);
+      _gatheringSource = sources.isEmpty ? null : sources.first;
+      _gatheringCost = gathering == null
+          ? 1
+          : (gathering['cost'] as int).clamp(1, RunState.dayLength);
       if (fishing != null) {
         _fishingBefore = RunState.fromJson(
           fishing['before'] as Map<String, dynamic>,
@@ -745,8 +1253,18 @@ class GameEngine {
       if (_pendingEvent == null &&
           _report == null &&
           _fishing == null &&
+          _ruinsPuzzle == null &&
+          _gathering == null &&
           _expedition == null) {
         _state = state.copyWith(locationId: 'camp');
+      }
+      if (state.rescueStage == RescueStage.storm &&
+          !state.rescued &&
+          state.isAlive &&
+          _pendingEvent == null &&
+          _report == null) {
+        if (_gathering != null) return true;
+        _queueRescueEvent();
       }
       return true;
     } catch (_) {

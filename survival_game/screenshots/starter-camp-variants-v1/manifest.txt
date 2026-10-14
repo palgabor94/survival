@@ -1,0 +1,3 @@
+01-tier-0-fire.png
+02-tier-0-bed.png
+03-tier-0-wood.png

@@ -268,10 +268,18 @@ class CampActionCard extends StatelessWidget {
   );
 }
 
-/// Background art for each camp tier; tier 0 is the accepted starter master.
-String campArt(int tier) => tier == 0
-    ? 'assets/art/starter_camp.png'
-    : 'assets/art/camp_tier_$tier.png';
+/// All camps share five separate poses on the supplied empty backgrounds.
+const campActivities = ['fire', 'wood', 'craft', 'seated', 'inspect'];
+const starterCampActivities = campActivities;
+const starterCampBackground = 'assets/art/camp_tier_0_empty_v1.jpg';
+const campNightTint = Color(0xFF4A5F8E);
+
+String campArt(int tier, {int variant = 0}) =>
+    'assets/art/camp_tier_${tier}_empty_v1.jpg';
+
+/// Higher tiers have their hearth lower in the painting. Lift their art so
+/// the foreground and character remain visible above the action cards.
+Alignment campAlignment(int tier) => Alignment(0, tier >= 2 ? -.7 : .18);
 
 /// Shared painted material and consumable illustrations.
 class ResourceIcon extends StatelessWidget {

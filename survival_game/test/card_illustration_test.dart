@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,8 +8,105 @@ import 'package:survival_game/ui/action_card.dart';
 import 'package:survival_game/ui/canopy_theme.dart';
 import 'package:survival_game/ui/card_art.dart';
 import 'package:survival_game/ui/card_illustration.dart';
+import 'package:survival_game/ui/item_icon.dart';
 
 void main() {
+  test(
+    'rescue item icons contain real transparency and visible objects',
+    () async {
+      for (final id in itemIconSubjects) {
+        final codec = await ui.instantiateImageCodec(
+          File(itemIconFor(id)!).readAsBytesSync(),
+        );
+        final frame = await codec.getNextFrame();
+        final image = frame.image;
+        try {
+          final pixels = (await image.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          ))!;
+          final count = image.width * image.height;
+          var transparent = 0;
+          var opaque = 0;
+          for (var pixel = 0; pixel < count; pixel++) {
+            final alpha = pixels.getUint8(pixel * 4 + 3);
+            if (alpha == 0) transparent++;
+            if (alpha >= 240) opaque++;
+          }
+          for (final corner in [
+            0,
+            image.width - 1,
+            (image.height - 1) * image.width,
+            count - 1,
+          ]) {
+            expect(
+              pixels.getUint8(corner * 4 + 3),
+              lessThanOrEqualTo(2),
+              reason: '$id background corner',
+            );
+          }
+          expect(
+            transparent,
+            greaterThan(count * .1),
+            reason: '$id alpha background',
+          );
+          expect(
+            opaque,
+            greaterThan(count * .05),
+            reason: '$id visible object',
+          );
+        } finally {
+          image.dispose();
+          codec.dispose();
+        }
+      }
+    },
+  );
+
+  testWidgets(
+    'small rescue item art uses alpha icons while action cards retain scenes',
+    (tester) async {
+      for (final id in itemIconSubjects) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: canopyTheme,
+            home: Scaffold(
+              body: Column(
+                children: [
+                  CardArt(id, key: const ValueKey('small-item'), size: 28),
+                  ActionCard(title: id, art: id, onTap: () {}),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final small = tester.widget<Image>(
+          find.descendant(
+            of: find.byKey(const ValueKey('small-item')),
+            matching: find.byType(Image),
+          ),
+        );
+        String assetName(Image widget) {
+          final provider = widget.image is ResizeImage
+              ? (widget.image as ResizeImage).imageProvider
+              : widget.image;
+          return (provider as AssetImage).assetName;
+        }
+
+        expect(assetName(small), itemIconFor(id));
+        final scene = find.descendant(
+          of: find.byType(ActionCard),
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Image && assetName(widget) == cardIllustrationFor(id),
+          ),
+        );
+        expect(scene, findsOneWidget);
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
+
   for (final carousel in [false, true]) {
     for (final (size, scale) in [
       (const Size(375, 667), 1.0),

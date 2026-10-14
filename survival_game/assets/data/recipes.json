@@ -63,6 +63,20 @@
     "timeCost": 1
   },
   {
+    "id": "machete",
+    "name": "Machete",
+    "kind": "tool",
+    "description": "A broad salvage-steel blade with a hardwood grip.",
+    "effect": "Opens the dense trail to the Ancient Ruins.",
+    "costs": {
+      "metal_scrap": 3,
+      "wood": 2,
+      "fiber": 2
+    },
+    "timeCost": 1,
+    "minCampTier": 1
+  },
+  {
     "id": "leaf_bed",
     "name": "Leaf Bed",
     "kind": "camp_item",
@@ -126,6 +140,23 @@
     "bonuses": {
       "fishFood": 10
     }
+  },
+  {
+    "id": "emergency_beacon",
+    "name": "Emergency Beacon",
+    "kind": "camp_item",
+    "description": "A rescued radio powered by the old survey core.",
+    "effect": "Send a signal, then keep it alive through the final rescue storm.",
+    "costs": {
+      "battery": 1,
+      "wire": 1,
+      "metal_parts": 1,
+      "radio_module": 1,
+      "beacon_core": 1,
+      "metal_scrap": 2
+    },
+    "timeCost": 2,
+    "minCampTier": 3
   },
   {
     "id": "camp_tier_1",

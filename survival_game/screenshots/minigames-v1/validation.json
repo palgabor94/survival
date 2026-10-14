@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-13",
+  "screenshots": 20,
+  "galleryLinks": "passed",
+  "pngDimensions": "passed",
+  "nativeTests": {
+    "passed": 253,
+    "failed": 0,
+    "skipped": 0,
+    "failures": [],
+    "runner": "native Flutter engine, test_api LiveTest"
+  },
+  "analyzer": "No issues found",
+  "deviceBuild": "not run"
+}

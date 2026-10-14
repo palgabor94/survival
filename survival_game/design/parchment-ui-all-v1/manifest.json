@@ -1,0 +1,1172 @@
+[
+  {
+    "id": "camp-tier-0",
+    "title": "DAY 7 · CAMP 0",
+    "kind": "camp",
+    "tier": 0,
+    "objective": "Build Basic Refuge",
+    "progress": "Wood 5/8 · Fiber 5/6",
+    "headerArt": "journal"
+  },
+  {
+    "id": "camp-tier-1",
+    "title": "DAY 7 · CAMP 1",
+    "kind": "camp",
+    "tier": 1,
+    "objective": "Build Established Camp",
+    "progress": "Wood 10/12 · Hardwood 4/4",
+    "headerArt": "journal"
+  },
+  {
+    "id": "camp-tier-2",
+    "title": "DAY 7 · CAMP 2",
+    "kind": "camp",
+    "tier": 2,
+    "objective": "Build Rescue Base",
+    "progress": "Hardwood 4/8 · Metal Scrap 3/5",
+    "headerArt": "journal"
+  },
+  {
+    "id": "camp-tier-3",
+    "title": "DAY 7 · CAMP 3",
+    "kind": "camp",
+    "tier": 3,
+    "objective": "Assemble the rescue beacon",
+    "progress": "4/5 rescue components",
+    "headerArt": "journal"
+  },
+  {
+    "id": "camp-night",
+    "title": "NIGHTFALL",
+    "kind": "camp",
+    "tier": 2,
+    "night": true,
+    "objective": "Build Rescue Base",
+    "progress": "Hardwood 4/8 · Metal Scrap 3/5",
+    "headerArt": "journal"
+  },
+  {
+    "id": "items-materials",
+    "title": "CAMP ITEMS",
+    "kind": "popup",
+    "view": "items",
+    "tab": "MATERIALS",
+    "cards": [
+      [
+        "firewood",
+        "WOOD",
+        "",
+        "12"
+      ],
+      [
+        "stone",
+        "STONE",
+        "",
+        "4"
+      ],
+      [
+        "fiber",
+        "FIBER",
+        "",
+        "8"
+      ],
+      [
+        "bait",
+        "BAIT",
+        "",
+        "2"
+      ]
+    ],
+    "detail": "WOOD",
+    "body": "Stored materials for crafting and repairs.",
+    "headerArt": "inventory"
+  },
+  {
+    "id": "items-food",
+    "title": "CAMP ITEMS",
+    "kind": "popup",
+    "view": "items",
+    "tab": "FOOD",
+    "cards": [
+      [
+        "small_fish",
+        "SMALL FISH",
+        "",
+        "2"
+      ],
+      [
+        "raw_meat",
+        "RAW MEAT",
+        "",
+        "1"
+      ],
+      [
+        "herb",
+        "HERBS",
+        "",
+        "3"
+      ]
+    ],
+    "detail": "SMALL FISH",
+    "body": "Cook and eat fish to restore food.",
+    "button": "COOK & EAT",
+    "headerArt": "inventory"
+  },
+  {
+    "id": "items-gear",
+    "title": "CAMP ITEMS",
+    "kind": "popup",
+    "view": "items",
+    "tab": "GEAR",
+    "cards": [
+      [
+        "stone_axe",
+        "STONE AXE",
+        "",
+        "75%"
+      ],
+      [
+        "basic_rod",
+        "BASIC ROD",
+        "",
+        "OWNED"
+      ],
+      [
+        "torch",
+        "TORCH",
+        "",
+        "2"
+      ]
+    ],
+    "detail": "STONE AXE",
+    "body": "A working axe for chopping fallen timber.",
+    "rows": [
+      [
+        "stone_axe",
+        "Durability",
+        "75%"
+      ]
+    ],
+    "button": "VIEW IN WORKSHOP",
+    "headerArt": "inventory"
+  },
+  {
+    "id": "craft",
+    "title": "WORKSHOP",
+    "kind": "popup",
+    "view": "craft",
+    "tab": "CRAFT",
+    "cards": [
+      [
+        "torch",
+        "TORCH",
+        "",
+        "READY"
+      ],
+      [
+        "stone_axe",
+        "STONE AXE",
+        "",
+        "READY"
+      ],
+      [
+        "basic_rod",
+        "BASIC ROD",
+        "",
+        "READY"
+      ],
+      [
+        "stone_knife",
+        "STONE KNIFE",
+        "",
+        "OWNED"
+      ],
+      [
+        "stone_spear",
+        "STONE SPEAR",
+        "",
+        "READY"
+      ],
+      [
+        "machete",
+        "MACHETE",
+        "",
+        "MISSING"
+      ]
+    ],
+    "selected": 1,
+    "detail": "STONE AXE",
+    "body": "Chop fallen trees for extra wood.",
+    "rows": [
+      [
+        "wood",
+        "Wood",
+        "3 / 2"
+      ],
+      [
+        "stone",
+        "Stone",
+        "1 / 1"
+      ],
+      [
+        "fiber",
+        "Fiber",
+        "3 / 2"
+      ]
+    ],
+    "button": "CRAFT STONE AXE · 1 TIME",
+    "headerArt": "craft"
+  },
+  {
+    "id": "camp-upgrade",
+    "title": "WORKSHOP",
+    "kind": "popup",
+    "view": "craft",
+    "tab": "CAMP",
+    "cards": [
+      [
+        "camp_tier_1",
+        "BASIC REFUGE",
+        "",
+        "CURRENT"
+      ],
+      [
+        "camp_tier_2",
+        "ESTABLISHED\nCAMP",
+        "",
+        "UPGRADE"
+      ],
+      [
+        "camp_tier_3",
+        "RESCUE BASE",
+        "",
+        "LOCKED"
+      ]
+    ],
+    "selected": 1,
+    "detail": "ESTABLISHED CAMP",
+    "body": "+6 water each dawn · Better sleep\nOpens the way to the Ancient Ruins.",
+    "rows": [
+      [
+        "wood",
+        "Wood",
+        "10 / 12"
+      ],
+      [
+        "hardwood",
+        "Hardwood",
+        "4 / 4"
+      ],
+      [
+        "fiber",
+        "Fiber",
+        "8 / 8"
+      ]
+    ],
+    "button": "NEED 2 MORE WOOD · 2 TIME",
+    "headerArt": "shelter"
+  },
+  {
+    "id": "menu",
+    "title": "CAMP MENU",
+    "kind": "popup",
+    "rows": [
+      [
+        "forage",
+        "Gather around camp",
+        "›"
+      ],
+      [
+        "journal",
+        "Survival journal",
+        "›"
+      ],
+      [
+        "map",
+        "How to survive",
+        "›"
+      ],
+      [
+        "emergency_beacon",
+        "Rescue signal",
+        "›"
+      ]
+    ],
+    "settings": true,
+    "button": "START A NEW RUN",
+    "body": "Progress saves automatically.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "journal",
+    "title": "SURVIVAL JOURNAL",
+    "kind": "popup",
+    "subtitle": "DAY 4 · BASIC REFUGE",
+    "detail": "Build Established Camp",
+    "body": "Wood 10/12 · Hardwood 4/4 · Fiber 8/8",
+    "rows": [
+      [
+        "shelter",
+        "Basic Refuge built",
+        "DONE"
+      ],
+      [
+        "craft",
+        "Upgrade your camp",
+        "CURRENT"
+      ],
+      [
+        "emergency_beacon",
+        "Recover rescue parts",
+        "LATER"
+      ],
+      [
+        "forage",
+        "Familiar berries gathered",
+        "DAY 4"
+      ],
+      [
+        "firewood",
+        "Fallen timber collected",
+        "DAY 3"
+      ]
+    ],
+    "button": "VIEW CAMP UPGRADES",
+    "headerArt": "journal"
+  },
+  {
+    "id": "guide",
+    "title": "HOW TO SURVIVE",
+    "kind": "popup",
+    "body": "Time moves when you decide. Your run saves automatically.",
+    "rows": [
+      [
+        "sun",
+        "6 time each day",
+        ""
+      ],
+      [
+        "water",
+        "Each time: 4 water, 3 food",
+        ""
+      ],
+      [
+        "craft",
+        "Build tools and shelter",
+        "›"
+      ],
+      [
+        "moon",
+        "Prepare for nightfall",
+        ""
+      ],
+      [
+        "basic_rod",
+        "Fishing tutorial",
+        "›"
+      ],
+      [
+        "stone_axe",
+        "Wood chopping tutorial",
+        "›"
+      ],
+      [
+        "herb",
+        "Plant gathering tutorial",
+        "›"
+      ],
+      [
+        "stone_spear",
+        "Hunting tutorial",
+        "›"
+      ],
+      [
+        "stone",
+        "Stone seal tutorial",
+        "›"
+      ]
+    ],
+    "headerArt": "journal"
+  },
+  {
+    "id": "gather-menu",
+    "title": "GATHER AROUND CAMP",
+    "kind": "popup",
+    "body": "Choose a short skill challenge. Requirements appear before starting.",
+    "rows": [
+      [
+        "stone_axe",
+        "Wood chopping",
+        "›"
+      ],
+      [
+        "herb",
+        "Plant gathering",
+        "›"
+      ],
+      [
+        "stone_spear",
+        "Hunting",
+        "›"
+      ]
+    ],
+    "headerArt": "forage"
+  },
+  {
+    "id": "outcome",
+    "title": "FORAGING COMPLETE",
+    "kind": "popup",
+    "subtitle": "WHAT HAPPENED",
+    "body": "You found familiar berries and gathered useful fibers.",
+    "rows": [
+      [
+        "food",
+        "Food · 75 → 92",
+        "+17"
+      ],
+      [
+        "fiber",
+        "Fiber · 6 → 7",
+        "+1"
+      ],
+      [
+        "water",
+        "Water · 80 → 76",
+        "−4"
+      ],
+      [
+        "sun",
+        "Daylight remaining",
+        "5 / 6"
+      ]
+    ],
+    "button": "CONTINUE",
+    "headerArt": "journal"
+  },
+  {
+    "id": "craft-outcome",
+    "title": "STONE AXE CRAFTED",
+    "kind": "popup",
+    "subtitle": "WHAT HAPPENED",
+    "body": "You shaped a stone head and bound it to a sturdy handle.",
+    "rows": [
+      [
+        "wood",
+        "Wood",
+        "−2"
+      ],
+      [
+        "stone",
+        "Stone",
+        "−1"
+      ],
+      [
+        "fiber",
+        "Fiber",
+        "−2"
+      ],
+      [
+        "water",
+        "Water",
+        "−4"
+      ],
+      [
+        "food",
+        "Food",
+        "−3"
+      ]
+    ],
+    "button": "CONTINUE",
+    "headerArt": "journal"
+  },
+  {
+    "id": "night-summary",
+    "title": "A NEW DAWN",
+    "kind": "popup",
+    "body": "You made it through the night. Your shelter kept you safe.",
+    "rows": [
+      [
+        "water",
+        "Water · 58 → 48",
+        "−10"
+      ],
+      [
+        "food",
+        "Food · 64 → 56",
+        "−8"
+      ],
+      [
+        "health",
+        "Health · 82 → 92",
+        "+10"
+      ],
+      [
+        "sanity",
+        "Sanity · 74 → 71",
+        "−3"
+      ]
+    ],
+    "button": "BEGIN DAY 5 · 6/6 TIME",
+    "headerArt": "journal"
+  },
+  {
+    "id": "new-run-confirm",
+    "title": "START A NEW RUN?",
+    "kind": "popup",
+    "body": "Your camp, equipment and saved journey will be replaced. This cannot be undone.",
+    "button": "KEEP PLAYING",
+    "secondary": "START NEW RUN",
+    "headerArt": "journal"
+  },
+  {
+    "id": "pause",
+    "title": "PAUSED",
+    "kind": "popup",
+    "body": "The timer and marker are stopped. Take your time.",
+    "button": "RESUME",
+    "secondary": "LEAVE ATTEMPT",
+    "headerArt": "journal"
+  },
+  {
+    "id": "leave-attempt",
+    "title": "LEAVE THIS ATTEMPT?",
+    "kind": "popup",
+    "body": "Leaving ends this attempt. Time already spent is not refunded.",
+    "button": "RESUME ATTEMPT",
+    "secondary": "LEAVE ATTEMPT",
+    "headerArt": "journal"
+  },
+  {
+    "id": "leave-fishing",
+    "title": "RETURN TO CAMP?",
+    "kind": "popup",
+    "body": "End your fishing trip and return with your current catch.",
+    "button": "KEEP FISHING",
+    "secondary": "RETURN TO CAMP",
+    "headerArt": "journal"
+  },
+  {
+    "id": "scene-info",
+    "title": "BAMBOO GROVE",
+    "kind": "popup",
+    "body": "A dense stand of bamboo. Prepare supplies before pushing deeper.",
+    "rows": [
+      [
+        "sun",
+        "Travel cost",
+        "2 TIME"
+      ],
+      [
+        "stone_axe",
+        "Useful equipment",
+        "AXE"
+      ],
+      [
+        "health",
+        "Danger rises deeper in",
+        ""
+      ]
+    ],
+    "detail": "Your expedition choices",
+    "note": "Return to secure carried loot, or continue with enough daylight. Consequences appear after choosing.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "defeat",
+    "title": "YOUR JOURNEY ENDS",
+    "kind": "popup",
+    "subtitle": "DAY 7 · RUN ENDED",
+    "body": "You ran out of water. Your remaining health could not carry you through.",
+    "rows": [
+      [
+        "sun",
+        "Days survived",
+        "7"
+      ],
+      [
+        "shelter",
+        "Camp reached",
+        "BASIC REFUGE"
+      ],
+      [
+        "emergency_beacon",
+        "Rescue parts",
+        "1 / 5"
+      ]
+    ],
+    "note": "Next time, keep enough water for travel and the night.",
+    "button": "START A NEW RUN",
+    "headerArt": "journal"
+  },
+  {
+    "id": "tutorial-fishing",
+    "title": "HOW TO FISH",
+    "kind": "popup",
+    "view": "tutorial",
+    "tutorial": "fishing",
+    "steps": [
+      "Cast with 1 bait. Tap HOOK when the fish bites.",
+      "HOLD moves right. RELEASE drifts left.",
+      "Stay in the green zone until the catch bar fills."
+    ],
+    "button": "TRY THE CONTROLS",
+    "note": "Free practice · No bait or time used",
+    "headerArt": "basic_rod"
+  },
+  {
+    "id": "tutorial-chopping",
+    "title": "WOOD CHOPPING",
+    "kind": "popup",
+    "view": "tutorial",
+    "tutorial": "chopping",
+    "steps": [
+      "Bring a working axe.",
+      "Tap CHOP as the marker reaches the center.",
+      "Complete 3 strikes within 12 seconds."
+    ],
+    "button": "GOT IT",
+    "note": "Results are shown after the attempt.",
+    "headerArt": "stone_axe"
+  },
+  {
+    "id": "tutorial-plants",
+    "title": "PLANT GATHERING",
+    "kind": "popup",
+    "view": "tutorial",
+    "tutorial": "plants",
+    "steps": [
+      "Choose up to 3 different plants in 8 seconds.",
+      "Herbs and mushrooms need a knife; unknown plants need a machete.",
+      "Finish your selection. Results appear afterward."
+    ],
+    "button": "GOT IT",
+    "note": "Results are shown after the attempt.",
+    "headerArt": "herb"
+  },
+  {
+    "id": "tutorial-hunting",
+    "title": "HOW TO HUNT",
+    "kind": "popup",
+    "view": "tutorial",
+    "tutorial": "hunting",
+    "steps": [
+      "Bring a working spear.",
+      "Watch the moving marker and aim for the center.",
+      "One timed throw. You have 12 seconds."
+    ],
+    "button": "GOT IT",
+    "note": "Results are shown after the attempt.",
+    "headerArt": "stone_spear"
+  },
+  {
+    "id": "tutorial-ruins",
+    "title": "THE STONE SEAL",
+    "kind": "popup",
+    "view": "tutorial",
+    "tutorial": "ruins",
+    "steps": [
+      "Read the carved pattern above the altar.",
+      "Tap each disc to cycle its symbol.",
+      "ALIGN tests the seal and uses 1 daylight."
+    ],
+    "button": "GOT IT",
+    "note": "Results are shown after the attempt.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "map",
+    "title": "EXPLORE",
+    "kind": "scene",
+    "background": "explore_map.png",
+    "body": "Choose a destination.",
+    "cards": [
+      [
+        "water",
+        "RIVERBANK",
+        "2 time",
+        "TRAVEL"
+      ],
+      [
+        "camp_tier_2",
+        "BAMBOO\nGROVE",
+        "2 time",
+        "TRAVEL"
+      ],
+      [
+        "beacon_core",
+        "ANCIENT\nRUINS",
+        "2 time",
+        "LOCKED"
+      ]
+    ],
+    "detail": "RIVERBANK",
+    "note": "A river trail with fresh water and fishing supplies.",
+    "button": "TRAVEL · 2 TIME",
+    "headerArt": "journal"
+  },
+  {
+    "id": "location-detail",
+    "title": "PLANE WRECK",
+    "kind": "scene",
+    "background": "plane_wreck_camp_style_v2.png",
+    "body": "An old survey plane hidden in the jungle.",
+    "cards": [
+      [
+        "map",
+        "TRAVEL",
+        "2 time",
+        "TRAVEL"
+      ]
+    ],
+    "detail": "Prepare for the journey",
+    "note": "Bring tools and enough food and water.",
+    "button": "TRAVEL · 2 TIME",
+    "headerArt": "journal"
+  },
+  {
+    "id": "expedition",
+    "title": "BAMBOO GROVE · STEP 1",
+    "kind": "scene",
+    "background": "bamboo_grove_camp_style_v2.png",
+    "body": "Push on, or head home?",
+    "cards": [
+      [
+        "back",
+        "RETURN TO\nCAMP",
+        "",
+        "SAFE"
+      ],
+      [
+        "trail",
+        "GO DEEPER",
+        "1 time",
+        "RISKY"
+      ]
+    ],
+    "rows": [
+      [
+        "wood",
+        "Carried wood",
+        "3"
+      ],
+      [
+        "fiber",
+        "Carried fiber",
+        "2"
+      ]
+    ],
+    "note": "Next step: 1 time · 4 water · 3 food",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-jaguar",
+    "title": "JAGUAR ENCOUNTER",
+    "kind": "scene",
+    "background": "jaguar_encounter_camp_style_v1.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "torch",
+        "USE TORCH",
+        "Torch required",
+        "SAFE"
+      ],
+      [
+        "stone_spear",
+        "HOLD YOUR\nGROUND",
+        "Spear required",
+        "RISKY"
+      ],
+      [
+        "raw_meat",
+        "OFFER MEAT",
+        "Meat ×1",
+        "READY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-boar",
+    "title": "BOAR ENCOUNTER",
+    "kind": "scene",
+    "background": "boar_encounter_camp_style_v3.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "stone_axe",
+        "SWING AXE",
+        "Axe required",
+        "RISKY"
+      ],
+      [
+        "trail",
+        "CLIMB A\nBRANCH",
+        "",
+        "RISKY"
+      ],
+      [
+        "small_fish",
+        "TOSS A FISH",
+        "Fish ×1",
+        "READY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-snake",
+    "title": "SNAKE ENCOUNTER",
+    "kind": "scene",
+    "background": "snake_encounter_camp_style_v1.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "machete",
+        "CUT IT\nCLEAR",
+        "Machete required",
+        "READY"
+      ],
+      [
+        "moon",
+        "STAND STILL",
+        "",
+        "RISKY"
+      ],
+      [
+        "herb",
+        "TREAT BITE",
+        "Herb ×1",
+        "READY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-hornets",
+    "title": "HORNETS ENCOUNTER",
+    "kind": "scene",
+    "background": "hornet_encounter_camp_style_v1.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "torch",
+        "RAISE TORCH",
+        "Torch required",
+        "RISKY"
+      ],
+      [
+        "fiber",
+        "WEAVE COVER",
+        "Fiber ×2",
+        "READY"
+      ],
+      [
+        "moon",
+        "WAIT QUIETLY",
+        "",
+        "READY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-monkeys",
+    "title": "MONKEYS ENCOUNTER",
+    "kind": "scene",
+    "background": "monkey_encounter_camp_style_v1.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "food",
+        "SHARE RATION",
+        "Food required",
+        "READY"
+      ],
+      [
+        "stone_knife",
+        "GUARD PACK",
+        "Knife required",
+        "RISKY"
+      ],
+      [
+        "inventory",
+        "PULL IT FREE",
+        "",
+        "RISKY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "encounter-crocodile",
+    "title": "CROCODILE ENCOUNTER",
+    "kind": "scene",
+    "background": "crocodile_encounter_camp_style_v1.png",
+    "body": "Choose your next move.",
+    "cards": [
+      [
+        "small_fish",
+        "THROW FISH",
+        "Fish ×1",
+        "READY"
+      ],
+      [
+        "stone_spear",
+        "BRACE SPEAR",
+        "Spear required",
+        "RISKY"
+      ],
+      [
+        "trail",
+        "CLIMB ROOTS",
+        "",
+        "RISKY"
+      ]
+    ],
+    "note": "1–3 of 4 choices · Swipe for the remaining choice.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "night-event",
+    "title": "SOMETHING IN THE DARK",
+    "kind": "scene",
+    "background": "camp_tier_2_empty_v1.jpg",
+    "night": true,
+    "body": "You hear movement beyond the fire.",
+    "cards": [
+      [
+        "torch",
+        "USE TORCH",
+        "Torch ×1",
+        "SAFE"
+      ],
+      [
+        "firewood",
+        "FEED FIRE",
+        "Wood ×2",
+        "SAFE"
+      ],
+      [
+        "moon",
+        "WAIT",
+        "",
+        "RISKY"
+      ]
+    ],
+    "headerArt": "journal"
+  },
+  {
+    "id": "fishing-ready",
+    "title": "FISHING POND",
+    "kind": "scene",
+    "background": "fishing_pond.png",
+    "body": "Cast your line and watch for a bite.",
+    "cards": [
+      [
+        "basic_rod",
+        "CAST LINE",
+        "Bait ×1",
+        "READY"
+      ]
+    ],
+    "rows": [
+      [
+        "bait",
+        "Bait remaining",
+        "3"
+      ]
+    ],
+    "headerArt": "journal"
+  },
+  {
+    "id": "fishing-reeling",
+    "title": "FOLLOW THE FISH",
+    "kind": "scene",
+    "background": "fishing_pond.png",
+    "body": "Hold → · Release ←",
+    "timing": true,
+    "button": "HOLD TO REEL",
+    "note": "Stay in green to fill the catch bar.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "wood-chopping",
+    "title": "WOOD CHOPPING",
+    "kind": "scene",
+    "background": "wood_chopping_background_v1.png",
+    "body": "Aim for the center · 2 strikes left",
+    "timing": true,
+    "button": "CHOP",
+    "note": "Axe durability 75% · 8 seconds remaining",
+    "headerArt": "journal"
+  },
+  {
+    "id": "plant-gathering",
+    "title": "PLANT GATHERING",
+    "kind": "scene",
+    "background": "foraging_background_v1.png",
+    "body": "Choose up to 3 plants · 6 seconds",
+    "cards": [
+      [
+        "forage",
+        "BERRIES",
+        "",
+        "PICK"
+      ],
+      [
+        "fiber",
+        "FIBER",
+        "",
+        "PICK"
+      ],
+      [
+        "herb",
+        "HERBS",
+        "Knife required",
+        "PICK"
+      ]
+    ],
+    "note": "1 / 3 picked",
+    "button": "FINISH GATHERING",
+    "headerArt": "journal"
+  },
+  {
+    "id": "hunting",
+    "title": "HUNTING",
+    "kind": "scene",
+    "background": "hunting_background_v1.png",
+    "body": "One throw. Choose your moment.",
+    "timing": true,
+    "button": "THROW",
+    "note": "Spear durability 80% · 9 seconds remaining",
+    "headerArt": "journal"
+  },
+  {
+    "id": "ruins-puzzle",
+    "title": "ANCIENT RUINS",
+    "kind": "scene",
+    "background": "ancient_ruins_camp_style_v1.png",
+    "body": "Align the carved sequence.",
+    "discs": true,
+    "cards": [
+      [
+        "sun",
+        "SUN",
+        "Disc 1",
+        "TURN"
+      ],
+      [
+        "water",
+        "WATER",
+        "Disc 2",
+        "TURN"
+      ],
+      [
+        "fiber",
+        "LEAF",
+        "Disc 3",
+        "TURN"
+      ]
+    ],
+    "button": "ALIGN THE SEAL · 1 TIME",
+    "headerArt": "journal"
+  },
+  {
+    "id": "rescue-beacon",
+    "title": "RESCUE SIGNAL",
+    "kind": "scene",
+    "background": "camp_tier_3_empty_v1.jpg",
+    "body": "The beacon is ready.",
+    "rows": [
+      [
+        "battery",
+        "Battery",
+        "1 / 1"
+      ],
+      [
+        "wire",
+        "Wire",
+        "1 / 1"
+      ],
+      [
+        "metal_parts",
+        "Metal Parts",
+        "1 / 1"
+      ],
+      [
+        "radio_module",
+        "Radio Module",
+        "1 / 1"
+      ],
+      [
+        "beacon_core",
+        "Beacon Core",
+        "1 / 1"
+      ]
+    ],
+    "button": "SEND THE SIGNAL · 1 TIME",
+    "note": "Final storm starts next dawn.",
+    "headerArt": "journal"
+  },
+  {
+    "id": "rescue-storm",
+    "title": "FINAL RESCUE STORM",
+    "kind": "scene",
+    "background": "rescue_storm_camp_style_v1.png",
+    "body": "Rising water threatens the signal.",
+    "cards": [
+      [
+        "firewood",
+        "REINFORCE",
+        "Wood required",
+        "SAFE"
+      ],
+      [
+        "emergency_beacon",
+        "PROTECT\nSIGNAL",
+        "",
+        "RISKY"
+      ],
+      [
+        "back",
+        "SAVE\nSUPPLIES",
+        "",
+        "RISKY"
+      ]
+    ],
+    "headerArt": "journal"
+  },
+  {
+    "id": "rescued",
+    "title": "YOU ARE RESCUED",
+    "kind": "scene",
+    "background": "rescue_arrival_camp_style_v1.png",
+    "body": "Your signal reached them. Help has arrived.",
+    "rows": [
+      [
+        "sun",
+        "Days survived",
+        "14"
+      ],
+      [
+        "shelter",
+        "Camp reached",
+        "RESCUE BASE"
+      ],
+      [
+        "emergency_beacon",
+        "Final storm",
+        "SURVIVED"
+      ]
+    ],
+    "button": "VIEW JOURNAL",
+    "secondary": "START A NEW RUN",
+    "headerArt": "journal"
+  }
+]

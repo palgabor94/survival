@@ -1,6 +1,8 @@
 # Lost Canopy — egységes UI implementáció
 
-**2026-10-12 · 35 saját hátteres kártyaillusztráció implementálva; 28 esemény, 7 helyszín. 179 teszt sikeres, analyzer tiszta.**
+**2026-10-12 · 42 saját hátteres kártyaillusztráció; 37 esemény, 7 játszható helyszín; megmentési befejezés, romok puzzle és 3×3 shelter-változat.**
+
+[Aktuális megmentési validáció](../rescue-milestone/VALIDATION.md) · [32 rescue screenshot](../../screenshots/rescue-milestone-v1/index.html) · [9 táborváltozat](../../screenshots/camp-variants-v2/index.html).
 
 [Teljes új kártyakészlet](../../screenshots/card-illustrations-v1/index.html) · [Új expedíciók és encounterek](../../screenshots/expansion-v1/index.html) · [Aktuális grafikai szabályok](CARD_ILLUSTRATIONS_V1.md) · [Tesztjelentés](VALIDATION_2026_10_12.md).
 
@@ -23,6 +25,7 @@
 | Expedíció | Helyszín/lépés, hordott zsákmány és veszélyjelző, Return to Camp / Go Deeper. | 13 |
 | Horgászat | Dobás, várakozás, kapás, fárasztás, eredmény; közös kártyák, tényleges minijátékvezérlés és megállított időzítő a kilépési ablakban. | 17–22 |
 | Eredmény és popupok | Valós ActionReport és változáscsipek; tábor menü; napló; útmutató; új menet és horgászatból kilépés megerősítése; Game Over. | 21, 23–28 |
+| Romok / Beacon / Rescue | Forgatható kőlapok, komponenslista, beacon-építés és jeladás, három viharhelyzet, megmentett összesítő és új menet megerősítés. | [Rescue 01–32](../../screenshots/rescue-milestone-v1/index.html) |
 | Indulás | Betöltés HUD nélkül; induláskori hiba és Try Again. | 29–30 |
 
 ## Közös komponensek és grafika
@@ -37,9 +40,9 @@ A megjelenített számok, költségek, hatások és tiltások a meglévő motorb
 
 A screenshot-exportáló sikeresen lefordította az új Flutter-felületet és 30 képet renderelt 390 × 844 logikai méreten, 2× PNG-felbontásban. A képek előkészített játékállapotok és tényleges widgetműveletek eredményei; a horgászat sorozata végiglépteti a minijátékot. Az exportáló a widgetek renderelésekor jelentkező kivételeket hibának veszi. A screenshotok vizuális átnézése alapján javítva lett többek között a műhely fülváltásakor megmaradó görgetés, a térképi akciók elhelyezése és a központi jelenetek láthatósága.
 
-**A teljes jelenlegi tesztkör sikeres: 179 teszt, 0 hiba, 0 kihagyás; `flutter analyze`: No issues found.** A tesztek a localhostot tiltó környezet miatt a natív Flutter-motorban, a repository tényleges tesztdeklarációival futottak. A 200 seedelt szimuláció 37 502 tranzakciót és 2 288 visszatöltést végzett, mind a 28 eseményt elérve. A 30 képernyős galéria az új illusztrációkkal frissült. [Futtatás és lefedettség](VALIDATION_2026_10_12.md). Alkalmazásbuild és készülékes próba ebben a körben még nem történt.
+**A korábbi UI-mérföldkő ellenőrzése: 179 teszt, 0 hiba, 0 kihagyás; `flutter analyze`: No issues found.** Az új megmentési és shelter-mérföldkő ellenőrzése az [aktuális validációban](../rescue-milestone/VALIDATION.md) található. A tesztek a localhostot tiltó környezet miatt a natív Flutter-motorban, a repository tényleges tesztdeklarációival futottak. A 200 seedelt szimuláció 37 502 tranzakciót és 2 288 visszatöltést végzett, mind a 28 eseményt elérve. A 30 képernyős galéria az új illusztrációkkal frissült. [Futtatás és lefedettség](VALIDATION_2026_10_12.md). Alkalmazásbuild és készülékes próba ebben a körben még nem történt.
 
-A magasabb táborszintek háttere egyelőre a korábbi starter kit képeiből maradt; éjszaka a meglévő színszűrést kapják. A Bamboo Grove és Mangrove Shallows, valamint a krokodil, darázsfészek és majmok saját izometrikus hátteret használnak. Az összes encounter a jóváhagyott jaguáros referencia egyszerű stílusát követi: külön kígyó- és vaddisznóháttér, valamint a krokodil és majmok v2 képe, valamint a darazsak bambuszligetes v3 képe. [Hátterek és mobilképek](../../screenshots/encounter-style-v2/index.html). A Plane Wreck jelenet továbbra is a meglévő háttérválasztást használja. A generált tervlapok illusztratív tipográfiáját futásidőben az alkalmazás Arial betűkészlete és natív szövege helyettesíti.
+A magasabb táborszintek a starter kit táborait megőrző, újragenerált tűz/ágy/munkaasztal változatokat használják; éjszaka színszűrést kapnak. Nappali nyugalomban 30 másodpercenként 650 ms áttűnés történik, játékmeneti változás nélkül. A Bamboo Grove és Mangrove Shallows, valamint a krokodil, darázsfészek és majmok saját izometrikus hátteret használnak. Az összes encounter a jóváhagyott jaguáros referencia egyszerű stílusát követi: külön kígyó- és vaddisznóháttér, valamint a krokodil és majmok v2 képe, valamint a darazsak bambuszligetes v3 képe. [Hátterek és mobilképek](../../screenshots/encounter-style-v2/index.html). A Plane Wreck, Ancient Ruins, végső vihar és rescue saját új izometrikus hátteret használ. A kis alkatrészikonok külön alpha PNG-k; a nagy akciókártyák saját hátteres képei megmaradnak. A generált tervlapok illusztratív tipográfiáját futásidőben az alkalmazás Arial betűkészlete és natív szövege helyettesíti.
 
 ## Jelenetjavítás — izometrikus nézet és kártyalapozás
 
@@ -49,7 +52,7 @@ A felhasználói visszajelzés alapján az expedíció és a jaguáros encounter
 
 ## Eseménykártyák v3 — rövid döntések, utólagos összesítő
 
-A legújabb felhasználói kérés minden eseményre vonatkozik. Az EventScene csak akciónevet, illusztrációt és eszköz/készlet/statfeltételt jelenít meg. Nincs `effect.summary`, kudarcelőnézet, sikeresély vagy SAFE címke; a tooltip és ikonválasztás sem olvassa a rejtett eredményt. A kártyák egyetlen lapozható sorban, egységes 152 logikai pixel magassággal jelennek meg normál szövegméretnél, nagyított szövegnél egységesen magasabb változatban.
+A legújabb felhasználói kérés minden eseményre vonatkozik. Az EventScene csak akciónevet, illusztrációt és eszköz/készlet/statfeltételt jelenít meg. Nincs `effect.summary`, kudarcelőnézet, sikeresély vagy SAFE címke; a tooltip és ikonválasztás sem olvassa a rejtett eredményt. A kártyák egyetlen lapozható sorban, azonos, a sor legmagasabb kártyájához igazított természetes magassággal jelennek meg, nagyított szövegnél is.
 
 A választást követően az OutcomeDialog a tényleges narratív eredményt és a statok/készlet változásait mutatja. A motor a halálos eredményt is megőrzi; a CampScreen az összesítőt a Game Over előtt jeleníti meg. A meglévő mentési séma továbbra is tárolja a reportot. A motor- és widgettesztek a halálos döntést követő eredményablakot is ellenőrzik; a teljes tesztkör sikeres.
 

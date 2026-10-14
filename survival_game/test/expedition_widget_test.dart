@@ -57,6 +57,31 @@ Future<void> pumpUntil(
   }
 }
 
+/// Uses the rendered marker and real touch events, including pointer release.
+/// Never mutates the fishing model to pretend that the control is working.
+Future<void> reelWithTouch(WidgetTester tester, bool Function() done) async {
+  TestGesture? finger;
+  for (var i = 0; i < 220 && !done(); i++) {
+    final player = tester.getCenter(
+      find.byKey(const ValueKey('fishing-player-marker')),
+    );
+    final fish = tester.getCenter(
+      find.byKey(const ValueKey('fishing-fish-zone')),
+    );
+    if (player.dx < fish.dx && finger == null) {
+      finger = await tester.startGesture(
+        tester.getCenter(find.byKey(const ValueKey('reel-control'))),
+      );
+    } else if (player.dx >= fish.dx && finger != null) {
+      await finger.up();
+      finger = null;
+    }
+    await tester.pump(frame);
+  }
+  await finger?.up();
+  await tester.pump();
+}
+
 void main() {
   testWidgets('riverbank trip: map, event, outcome and back to camp', (
     tester,
@@ -187,11 +212,7 @@ void main() {
     await tester.pump();
     expect(session.holding, isFalse);
 
-    await pumpUntil(
-      tester,
-      () => session.complete,
-      eachFrame: () => session.holding = session.cursor < session.target,
-    );
+    await reelWithTouch(tester, () => session.complete);
     expect(session.stage, FishingStage.caught);
     final caught = session.quality == CatchQuality.perfect ? 2 : 1;
     expect(find.textContaining('+$caught Small Fish'), findsOneWidget);
@@ -214,6 +235,71 @@ void main() {
     await tapKey(tester, 'continue-outcome');
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'fishing tutorial teaches a complete catch without spending resources',
+    (tester) async {
+      final game = testGame(state: anglerState());
+      await showCamp(tester, game);
+      await travelToPond(tester);
+      expect(find.textContaining('White bar = you.'), findsOneWidget);
+      final before = game.toJson();
+      await tapKey(tester, 'fishing-practice');
+      expect(findUiText('HOW TO FISH'), findsOneWidget);
+      await tapKey(tester, 'practice-cast');
+      await pumpUntil(
+        tester,
+        () => find.byKey(const ValueKey('practice-hook')).evaluate().isNotEmpty,
+      );
+      // Practice never wastes a bite while the player is reading.
+      await tester.pump(const Duration(seconds: 4));
+      expect(find.byKey(const ValueKey('practice-hook')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const ValueKey('practice-hook')));
+      await tester.tap(find.byKey(const ValueKey('practice-hook')));
+      await tester.pump();
+      await tester.ensureVisible(find.byKey(const ValueKey('reel-control')));
+      await reelWithTouch(
+        tester,
+        () => find
+            .text('You caught it! You are ready for the pond.')
+            .evaluate()
+            .isNotEmpty,
+      );
+      expect(
+        find.text('You caught it! You are ready for the pond.'),
+        findsOneWidget,
+      );
+      await tapKey(tester, 'close-dialog');
+      expect(game.toJson(), before);
+      expect(game.fishing!.stage, FishingStage.ready);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'fishing reel reacts immediately and keeps holding during finger movement',
+    (tester) async {
+      final game = testGame(state: anglerState());
+      await showCamp(tester, game);
+      await travelToPond(tester);
+      await tester.tap(find.byKey(const ValueKey('cast-line')));
+      await tester.pump();
+      await pumpUntil(tester, () => game.fishing!.stage == FishingStage.bite);
+      await tester.tap(find.byKey(const ValueKey('hook-fish')));
+      await tester.pump();
+      final position = tester.getCenter(
+        find.byKey(const ValueKey('reel-control')),
+      );
+      final finger = await tester.startGesture(position);
+      expect(game.fishing!.holding, isTrue);
+      await finger.moveTo(position + const Offset(30, 0));
+      await tester.pump(frame);
+      expect(game.fishing!.holding, isTrue);
+      await finger.cancel();
+      expect(game.fishing!.holding, isFalse);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('a late hook lets the fish escape and the bait is spent', (
     tester,
@@ -348,6 +434,10 @@ void main() {
 
       await travelToPond(tester);
       expect(tester.takeException(), isNull);
+      await tapKey(tester, 'fishing-help');
+      expect(findUiText('HOW TO FISH'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tapKey(tester, 'close-dialog');
       final cast = find.byKey(const ValueKey('cast-line'));
       await tester.ensureVisible(cast);
       await tester.pump();

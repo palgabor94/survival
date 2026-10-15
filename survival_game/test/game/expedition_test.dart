@@ -269,27 +269,31 @@ void main() {
       expect(game.state.resource('bait'), 2);
     });
 
-    test('a perfect catch brings 2 fish, a good catch 1', () {
-      final perfect = angler();
-      perfect.travelTo('fishing_pond');
-      fish(perfect);
-      expect(perfect.fishing!.quality, CatchQuality.perfect);
-      expect(perfect.finishFishing(), isTrue);
-      expect(perfect.state.resource('small_fish'), 2);
-      expect(perfect.report!.title, 'A perfect catch');
-      expect(perfect.report!.changes, containsPair('small_fish', 2));
-      expect(perfect.fishing, isNull);
-      perfect.continueFromReport();
-      expect(perfect.state.locationId, 'camp');
+    test(
+      'each landed fish has its own species and size; quality is preserved',
+      () {
+        final perfect = angler();
+        perfect.travelTo('fishing_pond');
+        fish(perfect);
+        expect(perfect.fishing!.quality, CatchQuality.perfect);
+        expect(perfect.finishFishing(), isTrue);
+        expect(perfect.state.resource('small_fish'), 1);
+        expect(perfect.report!.catchRecord!.speciesId, 'small_fish');
+        expect(perfect.report!.title, 'A perfect catch');
+        expect(perfect.report!.changes, containsPair('small_fish', 1));
+        expect(perfect.fishing, isNull);
+        perfect.continueFromReport();
+        expect(perfect.state.locationId, 'camp');
 
-      final good = angler();
-      good.travelTo('fishing_pond');
-      fish(good, reaction: .9);
-      expect(good.fishing!.quality, CatchQuality.good);
-      good.finishFishing();
-      expect(good.state.resource('small_fish'), 1);
-      expect(good.report!.title, 'Fresh from the pond');
-    });
+        final good = angler();
+        good.travelTo('fishing_pond');
+        fish(good, reaction: .9);
+        expect(good.fishing!.quality, CatchQuality.good);
+        good.finishFishing();
+        expect(good.state.resource('small_fish'), 1);
+        expect(good.report!.title, 'Fresh from the pond');
+      },
+    );
 
     test('the rod is reused across trips', () {
       final game = angler();
@@ -301,7 +305,8 @@ void main() {
       }
       expect(game.state.tools, contains('basic_rod'));
       expect(game.state.resource('bait'), 0);
-      expect(game.state.resource('small_fish'), 4);
+      expect(game.state.resource('small_fish'), 2);
+      expect(game.state.toolCondition('basic_rod'), 10);
       expect(game.state.timeLeft, 2);
     });
 

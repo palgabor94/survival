@@ -15,6 +15,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/game/crafting.dart';
 import 'package:survival_game/game/event_catalog.dart';
 import 'package:survival_game/game/fishing_session.dart';
+import 'package:survival_game/ui/fishing_panels.dart';
+import '../../test/game/fishing_session_test.dart'
+    show waitForBite, reelByTracking;
 import 'package:survival_game/game/game_engine.dart';
 import 'package:survival_game/game/gathering_session.dart';
 import 'package:survival_game/game/run_state.dart';
@@ -294,6 +297,124 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (Platform.environment['LOST_CANOPY_CAPTURE_FISHING_PROGRESSION'] ==
+        '1') {
+      RunState fishingState({String rod = 'river_rod'}) => RunState(
+        day: 5,
+        campTier: 2,
+        equippedRod: rod,
+        knownFish: {'small_fish', 'redfin_perch', 'spiny_sunlurker'},
+        tools: {'basic_rod', 'reinforced_rod', 'river_rod', 'stone_knife'},
+        resources: {
+          'wood': 14,
+          'stone': 4,
+          'fiber': 12,
+          'bait': 4,
+          'insect_bait': 2,
+          'fruit_bait': 3,
+          'antidote': 1,
+          'spiny_sunlurker': 1,
+        },
+        stats: {
+          SurvivalStat.health: 88,
+          SurvivalStat.water: 72,
+          SurvivalStat.food: 57,
+          SurvivalStat.sanity: 76,
+        },
+      );
+      GameEngine fishingGame({int seed = 42, String rod = 'river_rod'}) =>
+          GameEngine(
+            catalog,
+            world: world,
+            recipes: recipes,
+            random: Random(seed),
+            initialState: fishingState(rod: rod),
+          );
+      GameEngine catchGame(String species) {
+        for (var seed = 0; seed < 1000; seed++) {
+          final g = fishingGame(seed: seed);
+          g.travelTo('fishing_pond');
+          g.selectFishingBait('fruit_bait');
+          g.castLine();
+          if (g.fishing!.catchRecord!.speciesId != species) continue;
+          waitForBite(g.fishing!);
+          g.fishing!.hook();
+          reelByTracking(g.fishing!);
+          if (g.fishing!.stage != FishingStage.caught) continue;
+          g.saveFishingProgress();
+          return g;
+        }
+        throw StateError('No seeded catch for $species');
+      }
+
+      final ready = fishingGame();
+      ready.travelTo('fishing_pond');
+      await mount(CampScreen(engine: ready));
+      await shot('01-loadout');
+      await tap('fishing-bait-insect_bait');
+      await shot('02-insect-bait-details');
+      await mount(CampScreen(engine: fishingGame()..travelTo('fishing_pond')));
+      await tester.tap(find.text('CHANGE'));
+      await tester.pumpAndSettle();
+      await shot('03-rod-selection');
+      final reeling = fishingGame();
+      reeling.travelTo('fishing_pond');
+      reeling.castLine();
+      waitForBite(reeling.fishing!);
+      reeling.fishing!.hook();
+      reeling.fishing!.update(.5);
+      await mount(FishingScreen(game: reeling), settle: false);
+      await shot('04-reeling');
+      for (final item in [
+        ('small_fish', '05-stream-silverfish'),
+        ('goldspot_riverfish', '06-first-rare-catch'),
+        ('spiny_sunlurker', '07-dangerous-catch'),
+      ]) {
+        await mount(CampScreen(engine: catchGame(item.$1)));
+        await shot(item.$2);
+      }
+      final food = fishingGame();
+      await mount(CampScreen(engine: food));
+      await tap('open-inventory');
+      await tap('inventory-tab-1');
+      await tap('inventory-spiny_sunlurker');
+      await shot('08-fish-item-details');
+      await tester.tap(find.text('PREPARE SAFELY · 1 WOOD · 1 TIME'));
+      await tester.pumpAndSettle();
+      await shot('09-prepare-confirmation');
+      await tap('confirm-prepare-fish');
+      await shot('10-prepared-outcome');
+      final unsafe = fishingGame();
+      await mount(CampScreen(engine: unsafe));
+      await tap('open-inventory');
+      await tap('inventory-tab-1');
+      await tap('inventory-spiny_sunlurker');
+      await tap('consume-spiny_sunlurker');
+      await shot('11-unsafe-confirmation');
+      await tap('confirm-unsafe-fish');
+      await shot('12-poison-outcome');
+      await mount(Scaffold(body: FishJournalDialog(game: unsafe)));
+      await shot('13-fish-journal');
+      final paused = fishingGame();
+      paused.travelTo('fishing_pond');
+      paused.castLine();
+      paused.pauseFishing(true);
+      await mount(CampScreen(engine: paused));
+      await shot('14-paused-cast');
+      final craft = fishingGame();
+      await mount(CraftScreen(game: craft));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('recipe-river_rod')),
+      );
+      await tester.pumpAndSettle();
+      await shot('15-new-gear-recipes');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
     }
 
     if (Platform.environment['LOST_CANOPY_CAPTURE_ECOLOGY'] == '1') {

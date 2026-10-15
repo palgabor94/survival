@@ -5,6 +5,7 @@ import '../game/game_engine.dart';
 import '../game/world_catalog.dart';
 import 'card_art.dart';
 import 'ecology_art.dart';
+import 'fishing_art.dart';
 import 'card_illustration.dart';
 import 'parchment_components.dart';
 
@@ -290,7 +291,13 @@ class _CraftDetails extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
                   child: Row(
                     children: [
-                      if (hasEcologyArt(recipe.id))
+                      if (hasFishingArt(recipe.id))
+                        SizedBox(
+                          width: 64,
+                          height: 48,
+                          child: FishingArt(recipe.id),
+                        )
+                      else if (hasEcologyArt(recipe.id))
                         SizedBox(
                           width: 64,
                           height: 48,

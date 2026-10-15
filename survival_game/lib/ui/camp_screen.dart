@@ -1,4 +1,5 @@
 import '../game/ecology_catalog.dart';
+import 'fishing_panels.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -453,6 +454,10 @@ class _CampScreenState extends State<CampScreen> {
     if (!mounted || command == null) return;
     if (command == 'workshop') {
       await _showWorkshop();
+    } else if (command.startsWith('prepare-fish:')) {
+      _run(() => game.prepareFish(command.substring(13)));
+    } else if (command.startsWith('equip-rod:')) {
+      _run(() => game.equipFishingRod(command.substring(10)));
     } else if (command == 'dry') {
       _run(game.dryByFire);
     } else if (command == 'roots') {
@@ -658,6 +663,15 @@ class _CampScreenState extends State<CampScreen> {
         subtitle:
             'DAY ${game.state.day} · ${campTierName(game.recipes, game.state.campTier)}',
         actions: [
+          parchmentButton(
+            'FISH FIELD GUIDE',
+            () => showDialog<void>(
+              context: context,
+              builder: (context) => FishJournalDialog(game: game),
+            ),
+            secondary: true,
+            key: const ValueKey('journal-fish'),
+          ),
           parchmentButton(
             'VIEW CAMP UPGRADES',
             () => Navigator.pop(context, 'camp'),

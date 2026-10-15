@@ -1,5 +1,6 @@
 import 'rescue_progress.dart';
 import 'survival_condition.dart';
+import 'fishing_catalog.dart';
 export 'survival_condition.dart';
 
 enum RunPhase { day, night, gameOver, rescued }
@@ -27,6 +28,8 @@ enum SurvivalStat {
 /// A snapshot cannot be mutated by the UI or by content definitions.
 class RunState {
   RunState({
+    this.equippedRod = 'basic_rod',
+    Set<String> knownFish = const {},
     this.exposure = 0,
     this.strain = 0,
     List<SurvivalCondition> conditions = const [],
@@ -46,7 +49,8 @@ class RunState {
     Map<String, int> durability = const {},
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
-  }) : conditions = List.unmodifiable(conditions),
+  }) : knownFish = Set.unmodifiable(knownFish),
+       conditions = List.unmodifiable(conditions),
        knownSpecies = Set.unmodifiable(knownSpecies),
        worldFlags = Set.unmodifiable(worldFlags),
        foundComponents = Set.unmodifiable(foundComponents),
@@ -65,6 +69,8 @@ class RunState {
          resources ?? {'wood': 2, 'stone': 0, 'fiber': 0},
        );
 
+  final String equippedRod;
+  final Set<String> knownFish;
   final List<SurvivalCondition> conditions;
   final Set<String> worldFlags;
   final Set<String> knownSpecies;
@@ -104,7 +110,13 @@ class RunState {
 
   /// Every crafted tool and camp item the survivor owns.
   final Set<String> tools;
-  static const toolDurability = {'stone_axe': 10, 'stone_spear': 10};
+  static const toolDurability = {
+    'stone_axe': 10,
+    'stone_spear': 10,
+    'basic_rod': 12,
+    'reinforced_rod': 20,
+    'river_rod': 30,
+  };
   final Map<String, int> durability;
   int toolCondition(String id) =>
       tools.contains(id) ? (durability[id] ?? toolDurability[id] ?? 0) : 0;
@@ -125,6 +137,8 @@ class RunState {
       : 'Dusk';
 
   RunState copyWith({
+    String? equippedRod,
+    Set<String>? knownFish,
     List<SurvivalCondition>? conditions,
     Set<String>? worldFlags,
     Set<String>? knownSpecies,
@@ -145,6 +159,8 @@ class RunState {
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
   }) => RunState(
+    equippedRod: equippedRod ?? this.equippedRod,
+    knownFish: knownFish ?? this.knownFish,
     conditions: conditions ?? this.conditions,
     worldFlags: worldFlags ?? this.worldFlags,
     knownSpecies: knownSpecies ?? this.knownSpecies,
@@ -167,6 +183,8 @@ class RunState {
   );
 
   Map<String, dynamic> toJson() => {
+    'equippedRod': equippedRod,
+    'knownFish': knownFish.toList()..sort(),
     'conditions': conditions.map((c) => c.toJson()).toList(),
     'worldFlags': worldFlags.toList()..sort(),
     'knownSpecies': knownSpecies.toList()..sort(),
@@ -189,6 +207,8 @@ class RunState {
   };
 
   factory RunState.fromJson(Map<String, dynamic> j) => RunState(
+    equippedRod: j['equippedRod'] as String? ?? 'basic_rod',
+    knownFish: Set<String>.from(j['knownFish'] as List? ?? []),
     conditions: [
       for (final c in j['conditions'] as List? ?? [])
         SurvivalCondition.fromJson(Map<String, dynamic>.from(c as Map)),
@@ -246,12 +266,14 @@ class ActionReport {
     required this.body,
     required Map<String, int> changes,
     this.daySummary,
+    this.catchRecord,
     this.conditionChanges = const [],
   }) : changes = Map.unmodifiable(changes);
 
   ActionReport({
     required this.title,
     required this.body,
+    this.catchRecord,
     required RunState before,
     required RunState after,
     this.daySummary,
@@ -273,6 +295,7 @@ class ActionReport {
            if (after.resource(id) != before.resource(id))
              id: after.resource(id) - before.resource(id),
        });
+  final FishCatch? catchRecord;
   final String title;
   final String body;
   final Map<String, int> changes;
@@ -284,6 +307,7 @@ class ActionReport {
     'body': body,
     'changes': changes,
     'conditionChanges': conditionChanges,
+    if (catchRecord != null) 'catchRecord': catchRecord!.toJson(),
     if (daySummary != null) 'daySummary': daySummary!.toJson(),
   };
 
@@ -291,6 +315,11 @@ class ActionReport {
     title: j['title'] as String,
     body: j['body'] as String,
     changes: Map<String, int>.from(j['changes'] as Map),
+    catchRecord: j['catchRecord'] == null
+        ? null
+        : FishCatch.fromJson(
+            Map<String, dynamic>.from(j['catchRecord'] as Map),
+          ),
     conditionChanges: List<String>.from(j['conditionChanges'] as List? ?? []),
     daySummary: j['daySummary'] == null
         ? null

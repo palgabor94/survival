@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/game/fishing_session.dart';
+import 'package:survival_game/game/fishing_catalog.dart';
 import 'package:survival_game/game/run_state.dart';
 import 'package:survival_game/ui/craft_screen.dart';
 import 'package:survival_game/ui/action_card.dart';
@@ -231,23 +232,26 @@ void main() {
 
     await reelWithTouch(tester, () => session.complete);
     expect(session.stage, FishingStage.caught);
-    final caught = session.quality == CatchQuality.perfect ? 2 : 1;
-    expect(find.textContaining('+$caught Small Fish'), findsOneWidget);
+    const caught = 1;
+    final fishId = session.catchRecord!.speciesId;
+    final fish = fishSpecies[fishId]!;
+    expect(findUiText(fish.name), findsOneWidget);
+    expect(find.text(session.catchRecord!.weightLabel), findsOneWidget);
 
-    await tester.tap(findUiText('RETURN TO CAMP'));
+    await tester.tap(find.byKey(const ValueKey('keep-fish-catch')));
     await tester.pumpAndSettle();
     expect(find.byType(FishingScreen), findsNothing);
-    expect(game.state.resource('small_fish'), caught);
+    expect(game.state.resource(fishId), caught);
     await tapKey(tester, 'continue-outcome');
     expect(game.state.locationId, 'camp');
 
     await tapKey(tester, 'open-inventory');
     await tapKey(tester, 'inventory-tab-1');
-    await tapKey(tester, 'inventory-small_fish');
-    await tapKey(tester, 'consume-small_fish');
+    await tapKey(tester, 'inventory-$fishId');
+    await tapKey(tester, 'consume-$fishId');
     expect(findUiText('A meal beneath the canopy'), findsOneWidget);
-    expect(game.state.value(SurvivalStat.food), 50 - 6 + 25);
-    expect(game.state.resource('small_fish'), caught - 1);
+    expect(game.state.value(SurvivalStat.food), 50 - 6 + fish.food);
+    expect(game.state.resource(fishId), caught - 1);
     expect(game.state.timeLeft, 4);
     await tapKey(tester, 'continue-outcome');
     expect(tester.takeException(), isNull);
@@ -421,6 +425,9 @@ void main() {
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('fishing-resume')));
+    await tester.pump();
     await pumpUntil(tester, () => game.fishing!.stage != FishingStage.waiting);
     expect(game.fishing!.stage, FishingStage.bite);
   });

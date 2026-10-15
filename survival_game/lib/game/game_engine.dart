@@ -6,6 +6,7 @@ import 'expedition.dart';
 import 'run_state.dart';
 import 'world_catalog.dart';
 import 'fishing_session.dart';
+import 'fishing_catalog.dart';
 import 'rescue_progress.dart';
 import 'ruins_puzzle.dart';
 import 'gathering_session.dart';
@@ -154,10 +155,12 @@ class GameEngine {
       return 'Need ${location.timeCost + 1} daylight for the journey and altar.';
     }
     if (id == 'fishing_pond') {
-      if (!state.tools.contains('basic_rod')) {
-        return 'Craft a Basic Rod in the workshop.';
+      if (!fishingRods.keys.any(state.toolUsable)) {
+        return fishingRods.keys.any(state.tools.contains)
+            ? 'Repair a fishing rod in the workshop.'
+            : 'Craft a Basic Rod in the workshop.';
       }
-      if (state.resource('bait') < 1) {
+      if (!fishingBaits.keys.any((id) => state.resource(id) > 0)) {
         return 'Collect bait at the Riverbank first.';
       }
     }
@@ -195,6 +198,10 @@ class GameEngine {
           random: _random,
           zoneScale: before.hasCondition(ConditionKind.exhausted) ? .9 : 1,
         );
+        _fishing!.rodId = activeFishingRod;
+        _fishing!.baitId = fishingBaits.keys.firstWhere(
+          (id) => state.resource(id) > 0,
+        );
         _changed();
         _sound(GameSound.travel);
       }
@@ -203,32 +210,95 @@ class GameEngine {
     return false;
   }
 
+  String get activeFishingRod =>
+      state.toolUsable(state.equippedRod) &&
+          fishingRods.containsKey(state.equippedRod)
+      ? state.equippedRod
+      : fishingRods.keys.toList().reversed.firstWhere(
+          state.toolUsable,
+          orElse: () => 'basic_rod',
+        );
+
+  bool selectFishingBait(String id) {
+    final session = _fishing;
+    if (session == null ||
+        session.stage != FishingStage.ready ||
+        !fishingBaits.containsKey(id) ||
+        state.resource(id) < 1) {
+      return false;
+    }
+    session.baitId = id;
+    _changed();
+    return true;
+  }
+
+  bool equipFishingRod(String id) {
+    if (!fishingRods.containsKey(id) || !state.toolUsable(id)) return false;
+    if (_fishing != null
+        ? _fishing!.stage != FishingStage.ready
+        : !canUseSupplies || state.locationId != 'camp') {
+      return false;
+    }
+    _state = state.copyWith(equippedRod: id);
+    _fishing?.rodId = id;
+    _changed();
+    return true;
+  }
+
+  void saveFishingProgress() {
+    if (_fishing != null) _changed();
+  }
+
+  void pauseFishing(bool paused) {
+    if (_fishing == null ||
+        _fishing!.complete ||
+        _fishing!.stage == FishingStage.ready) {
+      return;
+    }
+    _fishing!.paused = paused;
+    _fishing!.holding = false;
+    _changed();
+  }
+
   bool castLine() {
     final session = _fishing;
     if (session == null ||
         session.stage != FishingStage.ready ||
         _castSpent ||
-        state.resource('bait') < 1) {
+        state.resource(session.baitId) < 1 ||
+        !state.toolUsable(session.rodId)) {
       return false;
     }
+    // Freeze species and size once. Reloads cannot reroll a cast.
+    session.catchRecord = FishCatch.draw(
+      _random,
+      bait: session.baitId,
+      rod: session.rodId,
+      day: state.day,
+    );
     if (!session.cast()) return false;
-    _apply(EventEffect(resources: {'bait': -1}));
+    _apply(EventEffect(resources: {session.baitId: -1}));
+    _wearTool(session.rodId, 1);
     _castSpent = true;
     _changed();
     return true;
   }
 
-  bool finishFishing({bool abandon = false}) {
+  bool finishFishing({bool abandon = false, bool release = false}) {
     final session = _fishing;
     if (session == null || _fishingBefore == null) return false;
-    if (abandon) session.abandon();
+    if (abandon && session.stage != FishingStage.caught) session.abandon();
     if (!session.complete) return false;
     final before = _fishingBefore!;
     final caught = session.quality != CatchQuality.missed && _castSpent;
-    final count = caught
-        ? (session.quality == CatchQuality.perfect ? 2 : 1)
-        : 0;
-    if (caught) _apply(EventEffect(resources: {'small_fish': count}));
+    final record = caught ? session.catchRecord : null;
+    // Legacy interrupted sessions may lack a species record.
+    final speciesId = record?.speciesId ?? 'small_fish';
+    final count = caught ? 1 : 0;
+    if (caught) {
+      if (!release) _apply(EventEffect(resources: {speciesId: count}));
+      _state = state.copyWith(knownFish: {...state.knownFish, speciesId});
+    }
     _state = state.copyWith(
       locationId: 'camp',
       worldFlags: {...state.worldFlags}
@@ -241,13 +311,53 @@ class GameEngine {
     _castSpent = false;
     _finish(
       caught
-          ? (count == 2 ? 'A perfect catch' : 'Fresh from the pond')
+          ? release
+                ? 'Catch released'
+                : session.quality == CatchQuality.perfect
+                ? 'A perfect catch'
+                : 'Fresh from the pond'
           : 'Back from the pond',
       caught
-          ? 'You bring home $count small fish. Cook and eat your catch from the inventory.'
+          ? '${record?.species.name ?? 'Stream Silverfish'}${record == null ? '' : ' · ${record.lengthCm} cm · ${record.weightLabel}'}. ${release ? 'You release the fish alive.' : 'You keep the fish. Prepare it from Items at camp.'}'
           : baitSpent
           ? 'The fish slipped away. Your bait is gone, but you made it home.'
           : 'You return without casting. The journey still used daylight and supplies.',
+      before,
+      catchRecord: record,
+    );
+    return true;
+  }
+
+  String? prepareFishBlockReason(String id) {
+    if (!fishSpecies.containsKey(id)) return 'Unknown fish';
+    if (!canAct(CampAction.rest) || state.locationId != 'camp') {
+      return 'Prepare at camp in daylight';
+    }
+    if (state.resource(id) < 1) return 'No raw fish available';
+    if (state.resource('wood') < 1) return 'Need 1 wood';
+    if (fishSpecies[id]!.requiresKnife &&
+        !state.toolUsable('stone_knife') &&
+        !state.toolUsable('machete')) {
+      return 'Knife required';
+    }
+    return null;
+  }
+
+  bool prepareFish(String id) {
+    if (prepareFishBlockReason(id) != null) return false;
+    final before = state;
+    _apply(EventEffect(resources: {id: -1, 'wood': -1}));
+    _spendTime(1, outdoor: false);
+    if (state.isAlive) {
+      _apply(EventEffect(resources: {fishSpecies[id]!.preparedId: 1}));
+    }
+    _finish(
+      state.isAlive
+          ? 'Fish prepared: ${fishSpecies[id]!.name}'
+          : 'An unfinished meal',
+      state.isAlive
+          ? 'You clean and cook the fish safely. The prepared portion is stored in Items, ready to eat.'
+          : 'Your strength gives out before the meal is ready.',
       before,
     );
     return true;
@@ -592,6 +702,15 @@ class GameEngine {
 
   /// Items eaten or used from the inventory without spending daylight.
   static const consumables = {
+    'redfin_perch',
+    'mud_whisker',
+    'spiny_sunlurker',
+    'goldspot_riverfish',
+    'prepared_small_fish',
+    'prepared_redfin_perch',
+    'prepared_mud_whisker',
+    'prepared_spiny_sunlurker',
+    'prepared_goldspot_riverfish',
     'small_fish',
     'raw_meat',
     'herb',
@@ -626,6 +745,30 @@ class GameEngine {
       stats: {SurvivalStat.health: 4},
       resources: {'bandage': -1},
     ),
+    _ when fishSpecies.containsKey(id) => EventEffect(
+      stats: {
+        SurvivalStat.food: fishSpecies[id]!.hazardous
+            ? 8
+            : fishSpecies[id]!.food + recipes.bonus(state, CampBonus.fishFood),
+      },
+      resources: {id: -1},
+      conditions: [
+        if (fishSpecies[id]!.hazardous)
+          SurvivalCondition(
+            ConditionKind.poisoned,
+            4,
+            severity: fishSpecies[id]!.poison,
+          ),
+      ],
+    ),
+    _ when preparedFishSource(id) != null => EventEffect(
+      stats: {
+        SurvivalStat.food:
+            fishSpecies[preparedFishSource(id)]!.food +
+            recipes.bonus(state, CampBonus.fishFood),
+      },
+      resources: {id: -1},
+    ),
     _ when jungleFoods.containsKey(id) => EventEffect(
       stats: jungleFoods[id]!.nutrition,
       resources: {id: -1},
@@ -647,6 +790,10 @@ class GameEngine {
         state.rescued ||
         !canUseSupplies ||
         state.resource(id) < 1) {
+      return false;
+    }
+    if (state.locationId != 'camp' &&
+        (fishSpecies.containsKey(id) || {'raw_meat', 'herb'}.contains(id))) {
       return false;
     }
     if (id == 'antidote') return state.hasCondition(ConditionKind.poisoned);
@@ -675,6 +822,10 @@ class GameEngine {
     if (jungleFoods.containsKey(id)) {
       _state = state.copyWith(knownSpecies: {...state.knownSpecies, id});
     }
+    final source = fishSpecies.containsKey(id) ? id : preparedFishSource(id);
+    if (source != null) {
+      _state = state.copyWith(knownFish: {...state.knownFish, source});
+    }
     _apply(consumeEffect(id));
     final trip = _expedition;
     if (trip != null && (trip.loot[id] ?? 0) > 0) {
@@ -695,6 +846,10 @@ class GameEngine {
         'bandage' => 'You dress the wound. The injury is cleared.',
         _ when jungleFoods.containsKey(id) =>
           'You eat one portion of ${jungleFoods[id]!.name.toLowerCase()}. ${jungleFoods[id]!.description}',
+        _ when fishSpecies.containsKey(id) =>
+          '${fishSpecies[id]!.name}: ${fishSpecies[id]!.hazardous ? 'You ate the fish without safe preparation. Poison takes hold.' : 'You cook and eat the fish.'}',
+        _ when preparedFishSource(id) != null =>
+          'You eat a safely prepared portion of fish.',
         'small_fish' =>
           'You cook one small fish over the campfire and eat it. No daylight spent.',
         'raw_meat' =>
@@ -1582,6 +1737,7 @@ class GameEngine {
     String body,
     RunState before, {
     DaySummary? daySummary,
+    FishCatch? catchRecord,
   }) {
     if (!state.isAlive) {
       _state = state.copyWith(phase: RunPhase.gameOver);
@@ -1620,6 +1776,7 @@ class GameEngine {
       before: before,
       after: state,
       daySummary: daySummary,
+      catchRecord: catchRecord,
     );
     if (daySummary == null && before.day == state.day) {
       _dayHighlights.add(title);
@@ -1664,6 +1821,7 @@ class GameEngine {
         'before': _fishingBefore!.toJson(),
         'castSpent': _castSpent,
         'zoneScale': _fishing!.zoneScale,
+        'session': _fishing!.toJson(),
       },
     if (_ruinsPuzzle != null)
       'ruinsPuzzle': {
@@ -1765,15 +1923,21 @@ class GameEngine {
           fishing['before'] as Map<String, dynamic>,
         );
         _castSpent = fishing['castSpent'] as bool;
-        _fishing = FishingSession(
-          random: _random,
-          zoneScale: (fishing['zoneScale'] as num? ?? 1).toDouble().clamp(
-            .9,
-            1,
-          ),
-        );
-        // A cast interrupted by closing the app is lost, like letting go.
-        if (_castSpent) finishFishing(abandon: true);
+        _fishing = fishing['session'] == null
+            ? FishingSession(
+                random: _random,
+                zoneScale: (fishing['zoneScale'] as num? ?? 1).toDouble().clamp(
+                  .9,
+                  1,
+                ),
+              )
+            : FishingSession.fromJson(
+                Map<String, dynamic>.from(fishing['session'] as Map),
+              );
+        // Preserve the old interrupted-cast policy only for legacy saves.
+        if (_castSpent && fishing['session'] == null) {
+          finishFishing(abandon: true);
+        }
       }
       if (_pendingEvent == null &&
           _report == null &&

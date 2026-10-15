@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'fishing_catalog.dart';
 
 enum FishingStage { ready, waiting, bite, reeling, caught, escaped }
 
@@ -12,11 +13,19 @@ class FishingSession {
     _biteDelay = 1.4 + rng.nextDouble() * 1.4;
     _wavePhase = rng.nextDouble() * pi * 2;
   }
+  FishCatch? catchRecord;
+  String baitId = 'bait', rodId = 'basic_rod';
+  bool paused = false;
   final double zoneScale;
-  double get effectiveZoneHalfWidth => zoneHalfWidth * zoneScale;
+  double get effectiveZoneHalfWidth =>
+      (zoneHalfWidth *
+              zoneScale *
+              (fishingRods[rodId]?.zoneScale ?? 1) *
+              (catchRecord?.species.minRod == 2 ? .88 : 1))
+          .clamp(.1, .28);
   FishingStage stage = FishingStage.ready;
   CatchQuality quality = CatchQuality.missed;
-  late final double _biteDelay, _wavePhase;
+  late double _biteDelay, _wavePhase;
   double _phaseTime = 0;
   double _inZoneTime = 0;
   double _reeledTime = 0;
@@ -53,7 +62,8 @@ class FishingSession {
   }
 
   void update(double seconds) {
-    if (!seconds.isFinite ||
+    if (paused ||
+        !seconds.isFinite ||
         seconds <= 0 ||
         complete ||
         stage == FishingStage.ready) {
@@ -91,6 +101,63 @@ class FishingSession {
         }
       }
     }
+  }
+
+  Map<String, dynamic> toJson() => {
+    'stage': stage.name,
+    'quality': quality.name,
+    'zoneScale': zoneScale,
+    'bait': baitId,
+    'rod': rodId,
+    'catch': catchRecord?.toJson(),
+    'biteDelay': _biteDelay,
+    'wavePhase': _wavePhase,
+    'phaseTime': _phaseTime,
+    'inZoneTime': _inZoneTime,
+    'reeledTime': _reeledTime,
+    'hookReaction': _hookReaction,
+    'cursor': cursor,
+    'target': target,
+    'progress': progress,
+  };
+  factory FishingSession.fromJson(Map<String, dynamic> j) {
+    final s = FishingSession(
+      random: Random(0),
+      zoneScale: (j['zoneScale'] as num).toDouble().clamp(.9, 1),
+    );
+    s.stage = FishingStage.values.byName(j['stage'] as String);
+    s.quality = CatchQuality.values.byName(j['quality'] as String);
+    s.baitId = j['bait'] as String;
+    s.rodId = j['rod'] as String;
+    if (!fishingBaits.containsKey(s.baitId) ||
+        !fishingRods.containsKey(s.rodId)) {
+      throw const FormatException('Invalid fishing loadout');
+    }
+    s.catchRecord = j['catch'] == null
+        ? null
+        : FishCatch.fromJson(Map<String, dynamic>.from(j['catch'] as Map));
+    double value(String key) => (j[key] as num).toDouble();
+    s._biteDelay = value('biteDelay');
+    s._wavePhase = value('wavePhase');
+    s._phaseTime = value('phaseTime');
+    s._inZoneTime = value('inZoneTime');
+    s._reeledTime = value('reeledTime');
+    s._hookReaction = value('hookReaction');
+    s.cursor = value('cursor').clamp(0, 1);
+    s.target = value('target').clamp(0, 1);
+    s.progress = value('progress').clamp(0, 1);
+    if ([
+      s._biteDelay,
+      s._wavePhase,
+      s._phaseTime,
+      s._inZoneTime,
+      s._reeledTime,
+      s._hookReaction,
+    ].any((v) => !v.isFinite || v < 0)) {
+      throw const FormatException('Invalid fishing progress');
+    }
+    s.paused = !s.complete && s.stage != FishingStage.ready;
+    return s;
   }
 
   void abandon() {

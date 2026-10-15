@@ -1,4 +1,5 @@
 import 'ecology_catalog.dart';
+import 'fishing_catalog.dart';
 import 'dart:convert';
 
 import 'run_state.dart';
@@ -95,6 +96,12 @@ class WorldCatalog {
 }
 
 String itemName(String id) =>
+    fishSpecies[id]?.name ??
+    fishingRods[id]?.name ??
+    fishingBaits[id]?.name ??
+    (preparedFishSource(id) == null
+        ? null
+        : 'Prepared ${fishSpecies[preparedFishSource(id)]!.name}') ??
     jungleFoods[id]?.name ??
     switch (id) {
       'antidote' => 'Antidote',

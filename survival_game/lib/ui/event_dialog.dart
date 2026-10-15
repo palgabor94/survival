@@ -29,7 +29,7 @@ class OutcomeDialog extends StatelessWidget {
     final supplies = report.changes.entries.where((e) => !_isVital(e)).toList();
     return CanopyDialog(
       title: report.title,
-      art: 'journal',
+      art: report.catchRecord?.speciesId ?? 'journal',
       subtitle: 'WHAT HAPPENED',
       actions: [
         ActionCard(

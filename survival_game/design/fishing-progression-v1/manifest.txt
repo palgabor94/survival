@@ -1,0 +1,13 @@
+01-fishing-loadout.png
+02-bait-details.png
+03-fishing-reeling.png
+04-catch-common.png
+05-catch-new-rare.png
+06-catch-dangerous.png
+07-fish-journal.png
+08-species-and-preparation.png
+09-prepare-fish.png
+10-items-fish.png
+11-rod-progression.png
+12-unsafe-meal-confirmation.png
+13-illness-after-unsafe-meal.png

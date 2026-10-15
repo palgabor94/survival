@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'card_illustration.dart';
 import 'card_art.dart';
 import 'ecology_art.dart';
+import 'fishing_art.dart';
 
 abstract final class ParchmentColors {
   static const ink = Color(0xFF203B31),
@@ -127,7 +128,7 @@ class ParchmentCard extends StatelessWidget {
   final String? image;
   final Widget? artWidget;
   final String title, art, info, status;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool selected;
   @override
   Widget build(BuildContext context) {
@@ -164,7 +165,9 @@ class ParchmentCard extends StatelessWidget {
                   aspectRatio: 1.5,
                   child:
                       artWidget ??
-                      (hasEcologyArt(art) && image == null
+                      (hasFishingArt(art) && image == null
+                          ? FishingArt(art)
+                          : hasEcologyArt(art) && image == null
                           ? EcologyArt(art)
                           : Image.asset(
                               image ??

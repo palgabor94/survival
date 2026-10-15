@@ -377,15 +377,21 @@ void main() {
       expect(copy.state.resource('bait'), 1);
     });
 
-    test('closing the app mid-cast loses the bait, not the run', () {
+    test('closing the app mid-cast preserves the paid cast paused', () {
       final game = engine(tools: {'basic_rod'}, resources: {'bait': 2});
       game.travelTo('fishing_pond');
       game.castLine();
       final copy = restored(roundTrip(game));
-      expect(copy.fishing, isNull);
-      expect(copy.report!.body, contains('slipped away'));
+      expect(copy.fishing, isNotNull);
+      expect(copy.fishing!.paused, isTrue);
+      expect(
+        copy.fishing!.catchRecord!.toJson(),
+        game.fishing!.catchRecord!.toJson(),
+      );
+      expect(copy.report, isNull);
       expect(copy.state.resource('bait'), 1);
       expect(copy.state.resource('small_fish'), 0);
+      expect(copy.finishFishing(abandon: true), isTrue);
       copy.continueFromReport();
       expect(copy.state.locationId, 'camp');
     });

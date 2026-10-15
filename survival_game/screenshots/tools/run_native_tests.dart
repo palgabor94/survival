@@ -28,6 +28,9 @@ import '../../test/game/card_test.dart' as card_logic;
 import '../../test/game/camp_test.dart' as camp_logic;
 import '../../test/game/expedition_test.dart' as expedition_logic;
 import '../../test/game/fishing_session_test.dart' as fishing;
+import '../../test/game/fishing_progression_test.dart' as fishing_progression;
+import '../../test/fishing_progression_widget_test.dart'
+    as fishing_progression_ui;
 import '../../test/game/game_engine_test.dart' as engine;
 import '../../test/game/trip_test.dart' as trip;
 import '../../test/game/content_expansion_test.dart' as expansion;
@@ -59,6 +62,8 @@ Future<void> main() async {
       'card_logic': card_logic.main,
       'expedition_logic': expedition_logic.main,
       'fishing': fishing.main,
+      'fishing_progression': fishing_progression.main,
+      'fishing_progression_widgets': fishing_progression_ui.main,
       'gathering': gathering.main,
       'gathering_widgets': gathering_ui.main,
       'music': music.main,

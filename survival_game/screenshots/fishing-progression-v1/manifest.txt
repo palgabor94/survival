@@ -1,0 +1,15 @@
+01-loadout.png
+02-insect-bait-details.png
+03-rod-selection.png
+04-reeling.png
+05-stream-silverfish.png
+06-first-rare-catch.png
+07-dangerous-catch.png
+08-fish-item-details.png
+09-prepare-confirmation.png
+10-prepared-outcome.png
+11-unsafe-confirmation.png
+12-poison-outcome.png
+13-fish-journal.png
+14-paused-cast.png
+15-new-gear-recipes.png

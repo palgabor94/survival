@@ -4,7 +4,7 @@
     "name": "Basic Rod",
     "kind": "tool",
     "description": "Wood and vine lashed into a simple fishing rod.",
-    "effect": "Opens the Fishing Pond. Reusable.",
+    "effect": "Opens the Fishing Pond. 12 durability; repair in the workshop.",
     "costs": {
       "wood": 2,
       "fiber": 3
@@ -276,5 +276,73 @@
     "timeCost": 1,
     "description": "Layer broad leaves over a fibre frame.",
     "effect": "Reduces rain exposure; does not protect against wading."
+  },
+  {
+    "id": "reinforced_rod",
+    "name": "Reinforced Rod",
+    "kind": "tool",
+    "costs": {
+      "wood": 4,
+      "fiber": 5,
+      "stone": 1
+    },
+    "minCampTier": 1,
+    "requiresItems": [
+      "basic_rod"
+    ],
+    "timeCost": 1,
+    "description": "Bamboo sections reinforced with tightly bound line.",
+    "effect": "Wider reeling zone; lands catfish and spiny fish. 20 durability.",
+    "outputs": {}
+  },
+  {
+    "id": "river_rod",
+    "name": "River Rod",
+    "kind": "tool",
+    "costs": {
+      "hardwood": 3,
+      "metal_scrap": 2,
+      "fiber": 5
+    },
+    "minCampTier": 2,
+    "requiresItems": [
+      "reinforced_rod"
+    ],
+    "timeCost": 1,
+    "description": "A hardwood rod with a salvaged reel and strong line.",
+    "effect": "Best control; can land rare Goldspot Riverfish. 30 durability.",
+    "outputs": {}
+  },
+  {
+    "id": "insect_bait",
+    "name": "Insect Bait",
+    "kind": "camp_item",
+    "costs": {
+      "fiber": 2
+    },
+    "minCampTier": 0,
+    "requiresItems": [],
+    "timeCost": 1,
+    "description": "Bundle grasshoppers collected from broad leaves.",
+    "effect": "Makes 2 portions. Favours surface-hunting fish.",
+    "outputs": {
+      "insect_bait": 2
+    }
+  },
+  {
+    "id": "fruit_bait",
+    "name": "Fruit Bait",
+    "kind": "camp_item",
+    "costs": {
+      "ember_berries": 1
+    },
+    "minCampTier": 0,
+    "requiresItems": [],
+    "timeCost": 1,
+    "description": "Cut a portion of ember berries into small bait pieces.",
+    "effect": "Makes 3 portions. Attracts unusual river fish.",
+    "outputs": {
+      "fruit_bait": 3
+    }
   }
 ]

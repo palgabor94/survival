@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'item_icon.dart';
 import 'ecology_art.dart';
+import 'fishing_art.dart';
 
 /// Fits each complete painted object from its atlas into the available space.
 class CardArt extends StatelessWidget {
@@ -53,6 +54,12 @@ class CardArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (hasFishingArt(id)) {
+      return SizedBox.square(
+        dimension: size,
+        child: FishingArt(id, icon: true),
+      );
+    }
     if (id == 'cooked_root') {
       return SizedBox.square(
         dimension: size,

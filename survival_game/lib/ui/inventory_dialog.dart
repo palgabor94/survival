@@ -1,10 +1,13 @@
 import '../game/ecology_catalog.dart';
+import '../game/fishing_catalog.dart';
 import 'package:flutter/material.dart';
 import '../game/game_engine.dart';
 import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'card_art.dart';
 import 'canopy_components.dart';
+import 'fishing_art.dart';
+import 'fishing_panels.dart';
 import 'parchment_components.dart';
 
 class InventoryDialog extends StatefulWidget {
@@ -29,7 +32,9 @@ class _InventoryDialogState extends State<InventoryDialog> {
       builder: (context) => _ItemDetails(game: game, id: id),
     );
     if (!mounted || command == null) return;
-    if (command.startsWith('study:') ||
+    if (command.startsWith('prepare-fish:') ||
+        command.startsWith('equip-rod:') ||
+        command.startsWith('study:') ||
         command == 'dry' ||
         command == 'roots' ||
         command == 'chew' ||
@@ -233,6 +238,7 @@ class _ItemDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final recipe = game.recipes.find(id);
+    final fish = fishSpecies[id];
     final consumable = GameEngine.consumables.contains(id);
     final effect = consumable
         ? (game.consumeEffect(id).summary.split(' · ')
@@ -276,6 +282,10 @@ class _ItemDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (fish != null || preparedFishSource(id) != null) ...[
+                          AspectRatio(aspectRatio: 1.5, child: FishingArt(id)),
+                          const SizedBox(height: 12),
+                        ],
                         if (recipe != null) ...[
                           ParchmentLabel(
                             recipe.description,
@@ -306,7 +316,11 @@ class _ItemDetails extends StatelessWidget {
                           ),
                           const SizedBox(height: 14),
                           ParchmentLabel(
-                            jungleFoods.containsKey(id)
+                            fish != null
+                                ? fish.handling
+                                : preparedFishSource(id) != null
+                                ? 'Safely prepared fish. Ready to eat at camp or a calm expedition stop.'
+                                : jungleFoods.containsKey(id)
                                 ? (game.state.knownSpecies.contains(id)
                                       ? jungleFoods[id]!.description
                                       : 'Unstudied species. Its properties are consistent, but you have not identified it yet.')
@@ -345,6 +359,46 @@ class _ItemDetails extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (fishingRods.containsKey(id))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: parchmentButton(
+                      'EQUIP ROD',
+                      game.state.toolUsable(id)
+                          ? () => Navigator.pop(context, 'equip-rod:$id')
+                          : null,
+                      secondary: true,
+                    ),
+                  ),
+                if (fish != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: parchmentButton(
+                      'PREPARE SAFELY · 1 WOOD · 1 TIME',
+                      game.prepareFishBlockReason(id) == null
+                          ? () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (context) =>
+                                    FishPreparationDialog(game: game, id: id),
+                              );
+                              if (confirmed == true && context.mounted) {
+                                Navigator.pop(context, 'prepare-fish:$id');
+                              }
+                            }
+                          : null,
+                      secondary: true,
+                    ),
+                  ),
+                if (fish != null && game.prepareFishBlockReason(id) != null)
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: ParchmentLabel(
+                      game.prepareFishBlockReason(id)!,
+                      size: 12,
+                      color: ParchmentColors.rust,
+                    ),
+                  ),
                 if (id == 'herb' &&
                     game.state.condition(ConditionKind.poisoned) != null &&
                     game.state.condition(ConditionKind.poisoned)!.remaining >
@@ -397,11 +451,39 @@ class _ItemDetails extends StatelessWidget {
                               ? 'BREW TEA · USE 1'
                               : id == 'antidote' || id == 'bandage'
                               ? 'USE TREATMENT · 1'
+                              : fish?.hazardous == true
+                              ? 'EAT UNPREPARED · UNSAFE'
+                              : preparedFishSource(id) != null
+                              ? 'EAT · USE 1'
                               : jungleFoods.containsKey(id)
                               ? 'EAT · USE 1'
                               : 'COOK & EAT · USE 1',
                           canUse
-                              ? () => Navigator.pop(context, 'consume:$id')
+                              ? () async {
+                                  if (fish?.hazardous == true) {
+                                    final confirmed = await showDialog<bool>(
+                                      context: context,
+                                      builder: (context) => CanopyConfirmation(
+                                        title: 'Eat without preparing?',
+                                        destructive: true,
+                                        art: id,
+                                        message:
+                                            '${fish!.handling} Use a knife and prepare it safely instead.',
+                                        confirm: 'Eat unprepared',
+                                        cancel: 'Keep fish',
+                                        confirmKey: const ValueKey(
+                                          'confirm-unsafe-fish',
+                                        ),
+                                      ),
+                                    );
+                                    if (confirmed != true || !context.mounted) {
+                                      return;
+                                    }
+                                  }
+                                  if (context.mounted) {
+                                    Navigator.pop(context, 'consume:$id');
+                                  }
+                                }
                               : null,
                           key: ValueKey('consume-$id'),
                         )

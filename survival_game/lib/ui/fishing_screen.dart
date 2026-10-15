@@ -5,6 +5,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import '../game/fishing_session.dart';
+import '../game/fishing_catalog.dart';
+import 'fishing_panels.dart';
+import 'parchment_components.dart';
 import '../feedback/haptics_controller.dart';
 import '../feedback/haptics_scope.dart';
 import '../game/game_engine.dart';
@@ -30,6 +33,8 @@ class _FishingScreenState extends State<FishingScreen>
   bool _inactive = false;
   bool _confirming = false;
   bool _leaving = false;
+  bool _catchMinimized = false;
+  double _saveElapsed = 0;
 
   Future<void> _showTutorial() async {
     if (_confirming || _leaving) return;
@@ -60,20 +65,23 @@ class _FishingScreenState extends State<FishingScreen>
         _inactive = state != AppLifecycleState.resumed;
         _last = null;
         if (_inactive) {
+          widget.game.pauseFishing(true);
           session.holding = false;
           if (_ticker.isActive) _ticker.stop();
         } else if (!_confirming &&
             !session.complete &&
+            !session.paused &&
             session.stage != FishingStage.ready &&
             !_ticker.isActive) {
           _ticker.start();
         }
+        if (mounted) setState(() {});
       },
     );
   }
 
   void _tick(Duration elapsed) {
-    if (_inactive || _confirming) {
+    if (_inactive || _confirming || session.paused) {
       _last = null;
       return;
     }
@@ -91,6 +99,11 @@ class _FishingScreenState extends State<FishingScreen>
         HapticsScope.of(context)?.pulse(HapticCue.warning);
       }
     }
+    _saveElapsed += dt;
+    if (_saveElapsed >= 1 || stage != session.stage) {
+      _saveElapsed = 0;
+      widget.game.saveFishingProgress();
+    }
     if (session.complete) _ticker.stop();
   }
 
@@ -98,6 +111,7 @@ class _FishingScreenState extends State<FishingScreen>
   void dispose() {
     _lifecycle.dispose();
     _ticker.dispose();
+    widget.game.saveFishingProgress();
     super.dispose();
   }
 
@@ -117,14 +131,21 @@ class _FishingScreenState extends State<FishingScreen>
     setState(() => session.holding = value);
   }
 
-  void _return({bool abandon = false}) {
-    if (_leaving || !widget.game.finishFishing(abandon: abandon)) return;
+  void _return({bool abandon = false, bool release = false}) {
+    if (_leaving ||
+        !widget.game.finishFishing(abandon: abandon, release: release)) {
+      return;
+    }
     _leaving = true;
     Navigator.pop(context);
   }
 
   Future<void> _askLeave() async {
     if (_confirming || _leaving) return;
+    if (session.stage == FishingStage.caught && session.catchRecord != null) {
+      setState(() => _catchMinimized = false);
+      return;
+    }
     if (session.complete) {
       _return();
       return;
@@ -175,6 +196,33 @@ class _FishingScreenState extends State<FishingScreen>
     final large =
         MediaQuery.textScalerOf(context).scale(14) > 19 ||
         MediaQuery.sizeOf(context).width < 360;
+    if (session.stage == FishingStage.caught &&
+        session.catchRecord != null &&
+        !_catchMinimized) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) setState(() => _catchMinimized = true);
+        },
+        child: Scaffold(
+          body: CanopyBackdrop(
+            background: 'assets/art/fishing_pond.png',
+            child: Center(
+              child: FishingCatchDialog(
+                record: session.catchRecord!,
+                isNew: !widget.game.state.knownFish.contains(
+                  session.catchRecord!.speciesId,
+                ),
+                quality: session.quality,
+                onKeep: () => _return(),
+                onRelease: () => _return(release: true),
+                onClose: () => setState(() => _catchMinimized = true),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return PopScope(
       canPop: _leaving,
       onPopInvokedWithResult: (didPop, _) {
@@ -203,7 +251,7 @@ class _FishingScreenState extends State<FishingScreen>
                                 title: 'Fishing Pond',
                                 art: 'basic_rod',
                                 subtitle:
-                                    'Basic Rod · Bait ${widget.game.state.resource('bait')} · one cast per trip',
+                                    '${fishingRods[session.rodId]!.name} · one cast per trip',
                               ),
                             ),
                             IconButton(
@@ -217,86 +265,126 @@ class _FishingScreenState extends State<FishingScreen>
                       ),
                     ],
                   ),
-                  footer: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _statusPanel(),
-                      const SizedBox(height: 8),
-                      CardDeck(
-                        cards: [
-                          if (session.stage == FishingStage.ready)
-                            ActionCard(
-                              key: const ValueKey('cast-line'),
-                              title: 'Cast line',
-                              art: 'basic_rod',
-                              compact: true,
-                              horizontal: large,
-                              tag: '1 BAIT',
-                              description:
-                                  widget.game.state.resource('bait') < 1
-                                  ? 'Need 1 bait'
-                                  : 'Watch for a bite',
-                              onTap: widget.game.state.resource('bait') >= 1
-                                  ? _cast
-                                  : null,
+                  footer: session.stage == FishingStage.ready
+                      ? FishingLoadout(
+                          game: widget.game,
+                          onChanged: () => setState(() {}),
+                          onCast: _cast,
+                          onLeave: _askLeave,
+                          onPractice: _showTutorial,
+                        )
+                      : session.paused
+                      ? PaperSurface(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const ParchmentLabel(
+                                  'FISHING PAUSED',
+                                  size: 17,
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Your cast and bait are saved. Resume when you are ready.',
+                                ),
+                                const SizedBox(height: 10),
+                                parchmentButton(
+                                  'RESUME CAST',
+                                  () {
+                                    widget.game.pauseFishing(false);
+                                    _last = null;
+                                    if (!_ticker.isActive) _ticker.start();
+                                    setState(() {});
+                                  },
+                                  key: const ValueKey('fishing-resume'),
+                                ),
+                              ],
                             ),
-                          if (session.stage == FishingStage.bite)
-                            ActionCard(
-                              key: const ValueKey('hook-fish'),
-                              title: 'Hook!',
-                              art: 'basic_rod',
-                              compact: true,
-                              horizontal: large,
-                              tag: 'BITE',
-                              description: 'Tap now to hook the fish',
-                              onTap: () {
-                                if (session.hook()) {
-                                  HapticsScope.of(
-                                    context,
-                                  )?.pulse(HapticCue.light);
-                                  setState(() {});
-                                }
-                              },
-                            ),
-                          if (session.stage == FishingStage.waiting)
-                            ActionCard(
-                              key: const ValueKey('waiting-for-fish'),
-                              title: 'Waiting…',
-                              art: 'basic_rod',
-                              compact: true,
-                              horizontal: large,
-                              tag: 'WATCH THE LINE',
-                              description: 'Hook when the fish bites',
-                            ),
-                          if (session.stage == FishingStage.reeling)
-                            _ReelControl(
-                              holding: session.holding,
-                              onHold: _hold,
-                              horizontal: large,
-                            ),
-                          ActionCard(
-                            key: const ValueKey('fishing-return'),
-                            title: session.complete
-                                ? 'Return to camp'
-                                : 'Leave',
-                            art: 'back',
-                            tone: CardTone.river,
-                            compact: true,
-                            horizontal: large,
-                            description: session.complete
-                                ? (session.stage == FishingStage.caught
-                                      ? 'Carry your catch home'
-                                      : 'Try again next trip')
-                                : 'Return to camp',
-                            onTap: session.complete
-                                ? () => _return()
-                                : _askLeave,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _statusPanel(),
+                            const SizedBox(height: 8),
+                            CardDeck(
+                              cards: [
+                                if (session.stage == FishingStage.ready)
+                                  ActionCard(
+                                    key: const ValueKey('cast-line'),
+                                    title: 'Cast line',
+                                    art: 'basic_rod',
+                                    compact: true,
+                                    horizontal: large,
+                                    tag: '1 BAIT',
+                                    description:
+                                        widget.game.state.resource('bait') < 1
+                                        ? 'Need 1 bait'
+                                        : 'Watch for a bite',
+                                    onTap:
+                                        widget.game.state.resource('bait') >= 1
+                                        ? _cast
+                                        : null,
+                                  ),
+                                if (session.stage == FishingStage.bite)
+                                  ActionCard(
+                                    key: const ValueKey('hook-fish'),
+                                    title: 'Hook!',
+                                    art: 'basic_rod',
+                                    compact: true,
+                                    horizontal: large,
+                                    tag: 'BITE',
+                                    description: 'Tap now to hook the fish',
+                                    onTap: () {
+                                      if (session.hook()) {
+                                        HapticsScope.of(
+                                          context,
+                                        )?.pulse(HapticCue.light);
+                                        setState(() {});
+                                      }
+                                    },
+                                  ),
+                                if (session.stage == FishingStage.waiting)
+                                  ActionCard(
+                                    key: const ValueKey('waiting-for-fish'),
+                                    title: 'Waiting…',
+                                    art: 'basic_rod',
+                                    compact: true,
+                                    horizontal: large,
+                                    tag: 'WATCH THE LINE',
+                                    description: 'Hook when the fish bites',
+                                  ),
+                                if (session.stage == FishingStage.reeling)
+                                  _ReelControl(
+                                    holding: session.holding,
+                                    onHold: _hold,
+                                    horizontal: large,
+                                  ),
+                                ActionCard(
+                                  key: const ValueKey('fishing-return'),
+                                  title: session.complete
+                                      ? 'Return to camp'
+                                      : 'Leave',
+                                  art: 'back',
+                                  tone: CardTone.river,
+                                  compact: true,
+                                  horizontal: large,
+                                  description: session.complete
+                                      ? (session.stage == FishingStage.caught
+                                            ? 'Carry your catch home'
+                                            : 'Try again next trip')
+                                      : 'Return to camp',
+                                  onTap: session.complete
+                                      ? _askLeave
+                                      : _askLeave,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -401,7 +489,7 @@ class _FishingScreenState extends State<FishingScreen>
               Flexible(
                 child: Text(
                   session.stage == FishingStage.caught
-                      ? '+${session.quality == CatchQuality.perfect ? 2 : 1} Small Fish\nCook your catch in the camp inventory.'
+                      ? '${session.catchRecord?.species.name ?? 'Fish caught'}\nOpen the catch to keep or release it.'
                       : 'Try again on your next trip. The bait was used.',
                   style: const TextStyle(fontSize: 12, height: 1.3),
                 ),

@@ -265,6 +265,7 @@ class RunSummary {
 
 class PlayerProfile {
   PlayerProfile();
+  bool firstRunGuideHandled = false, completedFirstDay = false;
   int xp = 0,
       journeys = 0,
       rescues = 0,
@@ -312,6 +313,8 @@ class PlayerProfile {
 
   Map<String, dynamic> toJson() => {
     'version': 1,
+    'firstRunGuideHandled': firstRunGuideHandled,
+    'completedFirstDay': completedFirstDay,
     'xp': xp,
     'journeys': journeys,
     'rescues': rescues,
@@ -332,6 +335,8 @@ class PlayerProfile {
       throw const FormatException('Unknown profile version');
     }
     final p = PlayerProfile();
+    p.firstRunGuideHandled = j['firstRunGuideHandled'] as bool? ?? true;
+    p.completedFirstDay = j['completedFirstDay'] as bool? ?? false;
     p.xp = j['xp'] as int;
     p.journeys = j['journeys'] as int;
     p.rescues = j['rescues'] as int;

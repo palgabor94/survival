@@ -1,3 +1,4 @@
+import 'package:survival_game/ui/first_day_guide.dart';
 import 'dart:convert';
 import 'package:survival_game/game/run_progression.dart';
 import 'package:survival_game/ui/progression_screens.dart' as progression;
@@ -59,6 +60,7 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final firstDay = Platform.environment['LOST_CANOPY_CAPTURE_FIRST_DAY'] == '1';
   final runProgression =
       Platform.environment['LOST_CANOPY_CAPTURE_PROGRESSION'] == '1';
   final inventoryProgression =
@@ -233,7 +235,8 @@ Future<void> main() async {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (runProgression ||
+        if (firstDay ||
+            runProgression ||
             inventoryProgression ||
             toolProgression ||
             minigames ||
@@ -313,6 +316,87 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (firstDay) {
+      final g = GameEngine(
+        EventCatalog.fromJson(
+          File('assets/data/events.json').readAsStringSync(),
+        ),
+        recipes: RecipeCatalog.fromJson(
+          File('assets/data/recipes.json').readAsStringSync(),
+        ),
+        world: WorldCatalog.fromJson(
+          File('assets/data/locations.json').readAsStringSync(),
+        ),
+        random: Random(42),
+        offerFirstRunGuide: true,
+      );
+      await mount(LostCanopyApp(engine: g), app: true);
+      await shot('01-first-run-welcome');
+      await tap('accept-first-day');
+      await shot('02-first-forage');
+      await tester.pumpWidget(const SizedBox());
+      g.startAction(CampAction.forage);
+      g.choose('gather');
+      g.continueFromReport();
+      await mount(LostCanopyApp(engine: g), app: true);
+      await shot('03-eat-your-find');
+      await mount(
+        Scaffold(
+          body: Center(child: InventoryDialog(game: g)),
+        ),
+      );
+      await shot('04-items-guide');
+      await tester.pumpWidget(const SizedBox());
+      g.consume('ember_berries');
+      g.continueFromReport();
+      await mount(CraftScreen(game: g));
+      await shot('05-first-craft');
+      await tester.pumpWidget(const SizedBox());
+      g.craft('torch');
+      g.continueFromReport();
+      g.beginPacking('riverbank');
+      g.updatePacking({'ember_berries': 1, 'herb': 1}, {'torch'});
+      await mount(PackingScreen(game: g));
+      await shot('06-first-pack');
+      await tester.pumpWidget(const SizedBox());
+      g.leaveCamp();
+      g.choose('rod_materials');
+      g.continueFromReport();
+      await mount(ExpeditionScene(game: g));
+      await shot('07-bring-supplies-home');
+      await tester.pumpWidget(const SizedBox());
+      g.returnHome();
+      g.continueFromReport();
+      await mount(LostCanopyApp(engine: g), app: true);
+      await shot('08-prepare-for-night');
+      await tester.pumpWidget(const SizedBox());
+      for (var i = 0; i < 2; i++) {
+        g.startAction(CampAction.rest);
+        g.continueFromReport();
+      }
+      await mount(EventScene(game: g));
+      await shot('09-night-guide');
+      await tester.pumpWidget(const SizedBox());
+      g.choose('torch');
+      g.continueFromReport();
+      g.sleep();
+      await mount(DayEndScreen(game: g, summary: g.report!.daySummary!));
+      await shot('10-survived-first-night');
+      await tester.pumpWidget(const SizedBox());
+      g.continueFromReport();
+      await mount(LostCanopyApp(engine: g), app: true);
+      // The completed guide is shown once, after the real day summary.
+      await shot('11-first-day-complete');
+      await mount(
+        Scaffold(
+          body: Center(child: FirstDayReference(game: g)),
+        ),
+      );
+      await shot('12-learned-survival-notes');
+      await tester.pumpWidget(const SizedBox.shrink());
+      return;
     }
 
     if (runProgression) {

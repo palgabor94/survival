@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import 'parchment_components.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class ExpeditionScene extends StatelessWidget {
     final canGo = game.canGoDeeper;
 
     return SceneLayout(
+      guide: FirstDayCoach(game: game, place: 'expedition'),
       state: state,
       background: place?.background ?? campArt(state.campTier),
       backgroundAlignment: trip.locationId == 'riverbank'

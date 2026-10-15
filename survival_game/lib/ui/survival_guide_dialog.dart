@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import '../game/game_engine.dart';
+import 'first_day_guide.dart';
 import 'canopy_components.dart';
 import 'camp_widgets.dart';
 import 'parchment_components.dart';
 import 'fishing_screen.dart';
 
 class SurvivalGuideDialog extends StatelessWidget {
-  const SurvivalGuideDialog({super.key});
+  const SurvivalGuideDialog({super.key, this.game});
+  final GameEngine? game;
   @override
   Widget build(BuildContext context) => CanopyDialog(
     title: 'How to survive',
@@ -23,6 +26,16 @@ class SurvivalGuideDialog extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
+              if (game != null)
+                ParchmentMenuRow(
+                  key: const ValueKey('guide-first-day'),
+                  title: 'First-day guide',
+                  art: 'journal',
+                  onTap: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => FirstDayReference(game: game!),
+                  ),
+                ),
               const ParchmentMenuRow(
                 title: '6 time each day',
                 art: 'sun',

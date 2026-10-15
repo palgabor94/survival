@@ -15,6 +15,7 @@ class SceneLayout extends StatelessWidget {
     required this.panel,
     required this.cards,
     this.beforeCards,
+    this.guide,
     this.backgroundAlignment = const Alignment(0, .1),
     this.dark = false,
     this.backgroundTint,
@@ -31,6 +32,7 @@ class SceneLayout extends StatelessWidget {
   final Widget panel;
   final List<Widget> cards;
   final Widget? beforeCards;
+  final Widget? guide;
   final bool cardCarousel;
   final Widget Function(BuildContext context, Rect artworkRect)?
   foregroundBuilder;
@@ -58,6 +60,7 @@ class SceneLayout extends StatelessWidget {
                     CanopyHud(state: state),
                     const SizedBox(height: 12),
                     panel,
+                    if (guide != null) ...[const SizedBox(height: 8), guide!],
                   ],
                 ),
                 footer: Column(

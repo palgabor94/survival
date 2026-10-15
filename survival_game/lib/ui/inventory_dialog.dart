@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import '../game/crafting.dart';
 import '../game/inventory_catalog.dart';
 import 'inventory_panels.dart';
@@ -114,6 +115,7 @@ class _InventoryDialogState extends State<InventoryDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              FirstDayCoach(game: game, place: 'items'),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 10, 12),
                 child: Row(

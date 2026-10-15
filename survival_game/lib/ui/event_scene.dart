@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import 'tool_panels.dart';
 import 'tool_art.dart';
 import '../game/tool_catalog.dart';
@@ -66,6 +67,9 @@ class EventScene extends StatelessWidget {
       _ => 2,
     };
     return SceneLayout(
+      guide: game.state.phase == RunPhase.night
+          ? FirstDayCoach(game: game, place: 'night')
+          : null,
       state: state,
       background: background,
       foregroundBuilder: background == campArt(state.campTier)

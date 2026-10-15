@@ -128,6 +128,7 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
     final engine =
         widget.engine ??
         GameEngine(
+          offerFirstRunGuide: true,
           EventCatalog.fromJson(
             await rootBundle.loadString('assets/data/events.json'),
           ),

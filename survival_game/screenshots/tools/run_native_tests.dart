@@ -1,3 +1,5 @@
+import '../../test/first_day_tutorial_widget_test.dart' as first_day_ui;
+import '../../test/game/first_day_tutorial_test.dart' as first_day;
 import '../../test/run_progression_widget_test.dart' as run_progression_ui;
 import '../../test/game/run_progression_test.dart' as run_progression;
 // Run the unchanged test declarations in Flutter's native engine when the
@@ -72,6 +74,8 @@ Future<void> main() async {
       'fishing': fishing.main,
       'fishing_progression': fishing_progression.main,
       'tool_progression': tool_progression.main,
+      'first_day_tutorial_widgets': first_day_ui.main,
+      'first_day_tutorial': first_day.main,
       'inventory': inventory.main,
       'inventory_widgets': inventory_ui.main,
       'tool_progression_widgets': tool_progression_ui.main,

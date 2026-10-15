@@ -1,6 +1,6 @@
 # Lost Canopy — állapot és további menetrend
 
-**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 450 teszt sikeres; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
+**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 462 teszt sikeres; az első menet tutorialja bekötve; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
 
 Most már az új játéktól a sikeres befejezésig működik a lánc: táborfejlesztés → roncsalkatrészek → Machete → Ancient Ruins puzzle → Beacon Core → Rescue Base → Emergency Beacon → jeladás → végső vihar → RESCUED.
 
@@ -79,7 +79,7 @@ Az első balanszlépés elkészült és újramért. A tutorial után következő
 2. **Új halak és zsákmány — elkészült:** öt faj, méret/ritkaság, három csali, három bot, veszélyes halak, biztonságos előkészítés és halfajnapló. [Bekötés és pontos szabályok](design/fishing-progression-v1/IMPLEMENTATION_HU.md) · [15 tényleges screenshot](screenshots/fishing-progression-v1/README.md).
 3. **Készlet és tárolás — elkészült:** 8/12/16 helyes hátizsák, külön felszerelés, kezdettől biztonságos korlátlan tábori készlet, explicit túlcsordulás és automatikus hazatérési kirakodás. [Bekötés, mentésmigráció és validáció](design/inventory-storage-v1/IMPLEMENTATION_HU.md) · [Valódi screenshotok](screenshots/inventory-storage-v1/README.md).
 4. **Menetösszesítő és meta — elkészült:** közös győztes/vesztes összesítő, tételes Survival XP, tartós profil/rekordok, húsz menetes archívum és három választható indulókészlet-csere. [Bekötés és nyolc teljes végigjátszás](design/run-progression-v1/IMPLEMENTATION_HU.md) · [16 tényleges screenshot](screenshots/run-progression-v1/README.md).
-5. **Vezetett első nap és tutorial — ez következik:** a felhasználó legutóbbi döntése alapján a teljes balansz előtt. Rövid játszható bevezető, menthető/átugorható segítséggel és későbbi helyzetfüggő tanítással. [Pontos terv és látványtervek](design/first-day-tutorial-v1/README.md).
+5. **Vezetett első menet — elkészült:** csak az első friss menetben felajánlott, menthető/átugorható hatlépéses segítség. Normál tranzakciókat figyel, a Guide alatt visszaolvasható; régi mentésben és későbbi új menetben nem indul automatikusan. [Bekötés és korlátok](design/first-day-tutorial-v1/IMPLEMENTATION_HU.md) · [12 screenshot](screenshots/first-day-tutorial-v1/README.md).
 6. **Teljes rendszer balanszolása:** a tutorial elkészülte után, az új tartalommal, több stratégiával és hibázó minijátékossal.
 7. **Záró készülékes ellenőrzés:** sikeres/vesztes menet, process-kill és folytatás, mért játékidő, iOS/Android build és teljesítmény.
 
@@ -94,3 +94,7 @@ A Craft, Camp upgrade, Items, Camp menu, Journal, Guide és annak minijáték-ú
 Az Explore térkép új, teljes képernyőn látható dzsungelképet használ. A hét helyszín saját tájrészletére vagy annak címkéjére lehet koppintani. A kiválasztott hely alul mutatja a pontos utazási költséget, a feloldási feltételt és az indulás gombját; a lezárt helyek is megtekinthetők. A horgásztó hiányzó bot esetén műhely-gyorsgombot ad. A helyszínválasztás nem indítja el az utat.
 
 A [tényleges Flutter screenshotok](screenshots/parchment-all-v1/README.md) külön mappákban fedik a fő játékfolyamot, mentést, minijátékokat, útmutatókat és a frissített világot. A korábbi [47 képes tervezési sorozat](design/parchment-ui-all-v1/manifest.json) koncepcióként marad meg; az új térkép terve a `design/map-on-scene-concept-v1/` mappában van. Az új térkép bekötése után a teljes tesztfutás **324/324**, ezen belül az új térkép 15/15 célzott tesztje sikeres.
+
+## Legutóbbi ellenőrzés — 2026-10-15
+
+Első menetes tutorial: 462 sikeres teszt, 0 hiba, analyzer tiszta. Az új splashscreen és főmenü külön látványterv, még nincs bekötve: [tervek](design/splash-menu-v1/README.md). A következő játékmeneti feladat a balansz, majd készülékes ellenőrzés.

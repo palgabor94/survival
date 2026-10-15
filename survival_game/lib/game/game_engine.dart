@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'tutorial_progress.dart';
 import 'dart:convert';
 import 'run_progression.dart';
 import 'inventory_catalog.dart';
@@ -27,6 +28,7 @@ class GameEngine {
     RunState? initialState,
     WorldCatalog? world,
     RecipeCatalog? recipes,
+    bool offerFirstRunGuide = false,
   }) : world = world ?? WorldCatalog([]),
        recipes = recipes ?? RecipeCatalog([]),
        _random = random ?? Random(),
@@ -34,11 +36,47 @@ class GameEngine {
            initialState ??
            RunState(resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2}) {
     metrics.campTier = state.campTier;
+    tutorial.offered = offerFirstRunGuide && initialState == null;
   }
   RunMetrics metrics = RunMetrics();
   PlayerProfile profile = PlayerProfile();
   RunSummary? completedRun;
   bool rankNoticePending = false;
+  TutorialProgress tutorial = TutorialProgress();
+  void decideFirstRunGuide(bool accept) {
+    if (!tutorial.welcomePending || profile.firstRunGuideHandled) return;
+    profile.firstRunGuideHandled = true;
+    tutorial.accepted = accept;
+    tutorial.skipped = !accept;
+    _changed();
+  }
+
+  void collapseGuide(bool value) {
+    tutorial.collapsed = value;
+    _changed();
+  }
+
+  void skipGuide() {
+    tutorial.skipped = true;
+    profile.firstRunGuideHandled = true;
+    _changed();
+  }
+
+  void resumeGuide() {
+    // Only the original accepted journey can resume its practical lessons.
+    if (!tutorial.accepted || tutorial.complete) return;
+    tutorial.skipped = false;
+    tutorial.collapsed = false;
+    _changed();
+  }
+
+  void acknowledgeGuideCompletion() {
+    if (!tutorial.complete) return;
+    tutorial.completionRead = true;
+    profile.completedFirstDay = true;
+    _changed();
+  }
+
   void acknowledgeRank() {
     rankNoticePending = false;
     _changed();
@@ -372,6 +410,9 @@ class GameEngine {
   }
 
   void _unloadPack() {
+    if (state.inField && state.isAlive && tutorial.completed.contains('pack')) {
+      tutorial.learn('return');
+    }
     if (_pendingFishId != null) {
       if (state.isAlive &&
           state.availableResource(_pendingFishId!) > _pendingFishBaseline) {
@@ -532,6 +573,7 @@ class GameEngine {
     }
     final location = world.find(id)!;
     if (id != 'fishing_pond' && _expeditionPool(id, 0).isEmpty) return false;
+    tutorial.learn('pack');
     _visit(id);
     _lastPack = {...selectedPack};
     _lastPackSaved = true;
@@ -1097,6 +1139,7 @@ class GameEngine {
     final upgrade = recipe.kind == RecipeKind.campTier;
     if (state.isAlive) {
       if (!repairing) {
+        if (recipe.kind == RecipeKind.tool) tutorial.learn('craft');
         if (!upgrade) {
           metrics.crafted++;
           metrics.recipes.add(id);
@@ -1275,7 +1318,13 @@ class GameEngine {
     if (source != null) {
       _state = state.copyWith(knownFish: {...state.knownFish, source});
     }
-    _apply(consumeEffect(id));
+    final meal = consumeEffect(id);
+    if ((meal.stats[SurvivalStat.food] ?? 0) > 0 &&
+        (jungleFoods[id]?.poison ?? 0) == 0 &&
+        !(fishSpecies[id]?.hazardous ?? false)) {
+      tutorial.learn('eat');
+    }
+    _apply(meal);
     _finish(
       id == 'herb'
           ? 'Herbal tea'
@@ -1871,6 +1920,7 @@ class GameEngine {
         ),
       );
       metrics.nights++;
+      tutorial.learn('night');
       _state = state.copyWith(
         day: state.day + 1,
         timeLeft: RunState.dayLength,
@@ -2007,6 +2057,8 @@ class GameEngine {
     if (!canStartNewRun) return;
     ensureRunSummary(outcome: completedRun == null ? 'abandoned' : null);
     final option = optionById(profile.nextOption);
+    profile.firstRunGuideHandled = true;
+    tutorial = TutorialProgress();
     metrics = RunMetrics(option: option.id);
     completedRun = null;
     rankNoticePending = false;
@@ -2079,6 +2131,22 @@ class GameEngine {
               .where((e) => e.locations.isEmpty)
               .toList()
         : _expeditionPool(locationId, depth, trigger: trigger);
+    final opener = switch ((trigger, locationId)) {
+      ('forage', null) => 'berry_patch',
+      ('explore', 'riverbank') when depth == 0 => 'river_supplies',
+      ('night', null) => 'fire_dying',
+      _ => null,
+    };
+    if (tutorial.active &&
+        opener != null &&
+        !tutorial.openers.contains(opener)) {
+      final matches = pool.where((e) => e.id == opener);
+      if (matches.isNotEmpty) {
+        tutorial.openers.add(opener);
+        _lastEvent[trigger] = opener;
+        return matches.first;
+      }
+    }
     final priority = pool.fold<int>(0, (p, e) => max(p, e.priority));
     final preferred = pool.where((e) => e.priority == priority).toList();
     final fresh = preferred.where((e) => e.id != _lastEvent[trigger]).toList();
@@ -2299,6 +2367,15 @@ class GameEngine {
     DaySummary? daySummary,
     FishCatch? catchRecord,
   }) {
+    if (state.isAlive &&
+        <String>{
+          ...jungleFoods.keys.where((id) => id != 'cooked_root'),
+          ...fishSpecies.keys,
+          'small_fish',
+          'raw_meat',
+        }.any((id) => state.resource(id) > before.resource(id))) {
+      tutorial.learn('gather');
+    }
     if (!state.isAlive) {
       _state = state.copyWith(phase: RunPhase.gameOver);
       _expedition = null;
@@ -2398,6 +2475,7 @@ class GameEngine {
     'version': saveVersion,
     'metrics': metrics.toJson(),
     'profile': profile.toJson(),
+    'tutorial': tutorial.toJson(),
     'completedRun': completedRun?.toJson(),
     'rankNoticePending': rankNoticePending,
     'pendingFishId': _pendingFishId,
@@ -2508,6 +2586,12 @@ class GameEngine {
       _state = restored;
       metrics = restoredMetrics;
       profile = restoredProfile;
+      tutorial = json['tutorial'] == null
+          ? TutorialProgress()
+          : TutorialProgress.fromJson(
+              Map<String, dynamic>.from(json['tutorial'] as Map),
+            );
+      if (json['tutorial'] == null) profile.firstRunGuideHandled = true;
       completedRun = restoredSummary;
       rankNoticePending = json['rankNoticePending'] as bool? ?? false;
       _pendingFishId = json['pendingFishId'] as String?;

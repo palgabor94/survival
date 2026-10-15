@@ -1,6 +1,6 @@
 # Vezetett első nap — terv és nyolc látványterv
 
-2026-10-15 · **A következő fejlesztési feladat a tutorial, utána a balansz.** A sorrendet a menetrendben is átvezettük. A tutorial még nincs bekötve; az alábbi PNG-k ellenőrizhető, natív Flutterből kirajzolt koncepciók. [Pontos működési és mentési terv](PLAN_HU.md).
+2026-10-15 · **Az első menetes tutorial bekötve; a balansz később következik.** [Tényleges működés és 462 sikeres teszt](IMPLEMENTATION_HU.md) · [12 bekötött képernyőkép](../../screenshots/first-day-tutorial-v1/README.md). Az alábbi PNG-k a bekötés előtti koncepciók; a többi szöveg az eredeti tervet dokumentálja. [Eredeti működési és mentési terv](PLAN_HU.md).
 
 ## Áttekintők
 

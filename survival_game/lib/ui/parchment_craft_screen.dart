@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import '../game/tool_catalog.dart';
 import 'tool_art.dart';
 import 'tool_panels.dart';
@@ -227,6 +228,10 @@ class _ParchmentCraftScreenState extends State<ParchmentCraftScreen> {
                             padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
                             child: Column(
                               children: [
+                                FirstDayCoach(
+                                  game: widget.game,
+                                  place: 'craft',
+                                ),
                                 ParchmentCardGrid(
                                   children: [
                                     for (final r in recipes)

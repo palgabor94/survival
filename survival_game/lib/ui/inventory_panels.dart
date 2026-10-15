@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import 'package:flutter/material.dart';
 import '../game/game_engine.dart';
 import '../game/inventory_catalog.dart';
@@ -330,6 +331,7 @@ class _PackingScreenState extends State<PackingScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              FirstDayCoach(game: game, place: 'packing'),
                               if (game.packingNotice != null)
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12),

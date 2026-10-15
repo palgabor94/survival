@@ -304,6 +304,7 @@ void main() {
   testWidgets('the app autosaves and resumes a run mid-event', (tester) async {
     final storage = MemoryRunStorage();
     await pumpApp(tester, storage);
+    await tapKey(tester, 'skip-first-day');
     expect(findUiText('DAY 1'), findsOneWidget);
     await tapKey(tester, 'action-forage');
     expect(find.byType(EventScene), findsOneWidget);

@@ -1,3 +1,4 @@
+import 'first_day_guide.dart';
 import 'progression_screens.dart' as progression;
 import 'inventory_panels.dart';
 import '../game/ecology_catalog.dart';
@@ -58,7 +59,11 @@ class _CampScreenState extends State<CampScreen> {
     super.initState();
     game.ensureRunSummary();
     // A restored run may resume mid-event, mid-report or at the pond.
-    if (game.isBusy ||
+    if ((game.tutorial.complete &&
+            !game.tutorial.completionRead &&
+            game.state.isAlive) ||
+        game.tutorial.welcomePending ||
+        game.isBusy ||
         game.packingDraft != null ||
         game.state.phase == RunPhase.gameOver ||
         game.state.rescued) {
@@ -78,6 +83,30 @@ class _CampScreenState extends State<CampScreen> {
     _presenting = true;
     try {
       while (mounted) {
+        if (game.tutorial.welcomePending) {
+          final accept = await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) =>
+                const PopScope(canPop: false, child: FirstDayWelcome()),
+          );
+          if (!mounted) return;
+          setState(() => game.decideFirstRunGuide(accept == true));
+          continue;
+        }
+        if (game.tutorial.complete &&
+            !game.tutorial.completionRead &&
+            game.report == null &&
+            !game.isBusy &&
+            game.state.isAlive) {
+          await showDialog<void>(
+            context: context,
+            builder: (_) => const FirstDayComplete(),
+          );
+          if (!mounted) return;
+          setState(game.acknowledgeGuideCompletion);
+          continue;
+        }
         if (game.hasPendingHaul) {
           final resolved = await Navigator.push<bool>(
             context,
@@ -276,6 +305,7 @@ class _CampScreenState extends State<CampScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (!game.isBusy) FirstDayCoach(game: game),
                       if (game.hasPendingHaul)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
@@ -803,7 +833,7 @@ class _CampScreenState extends State<CampScreen> {
   Future<void> _showGuide() async {
     final command = await showDialog<String>(
       context: context,
-      builder: (_) => const SurvivalGuideDialog(),
+      builder: (_) => SurvivalGuideDialog(game: game),
     );
     if (mounted && command == 'workshop') await _showWorkshop();
   }

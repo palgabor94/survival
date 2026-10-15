@@ -140,8 +140,12 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
         );
     if (storage != null) {
       final saved = await storage.load();
-      if (saved != null) engine.restore(saved);
-      engine.onChanged = () => storage.save(engine.toJson());
+      if (saved != null && !engine.restore(saved)) {
+        final backup = await storage.loadBackup();
+        if (backup != null) engine.restore(backup);
+      }
+      engine.persistSnapshot = storage.save;
+      await engine.retrySave();
     }
     if (mounted) {
       _music?.attach(engine);

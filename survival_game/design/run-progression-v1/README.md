@@ -1,3 +1,7 @@
+# Menetvége és fejlődés — már bekötve
+
+2026-10-15: [Implementáció és validáció](IMPLEMENTATION_HU.md) · [16 működő Flutter-kép](../../screenshots/run-progression-v1/README.md). Az alábbi anyag a jóváhagyott látványtervek archívuma.
+
 # Menetvége és tartós fejlődés — pergamentes látványtervek
 
 2026-10-15 · **Tervezési kör, még nincs bekötve a játékba.** [Pontos mechanikai terv](PLAN_HU.md).

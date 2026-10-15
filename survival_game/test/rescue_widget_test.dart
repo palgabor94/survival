@@ -13,13 +13,15 @@ import 'expedition_widget_test.dart' show tapKey;
 import 'game/rescue_test.dart' show rescueGame, rescueState, openAltar, reopen;
 import 'widget_test.dart' show showCamp, findUiText;
 
-GameEngine stormGame() => reopen(
-  rescueGame(
+GameEngine stormGame() {
+  final game = rescueGame(
     state: rescueState(
       stage: RescueStage.storm,
     ).copyWith(foundComponents: beaconComponents.keys.toSet()),
-  ),
-);
+  );
+  game.metrics.components.addAll(beaconComponents.keys);
+  return reopen(game);
+}
 
 void main() {
   testWidgets(

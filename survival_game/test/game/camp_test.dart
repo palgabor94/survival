@@ -406,19 +406,22 @@ void main() {
       expect(copy.canSleep, isTrue);
     });
 
-    test('another version or a broken save starts a fresh run', () {
-      final game = engine(campTier: 1);
-      final old = roundTrip(game)..['version'] = 0;
-      final fresh = engine();
-      expect(fresh.restore(old), isFalse);
-      expect(fresh.state.campTier, 0);
+    test(
+      'another version or a broken save preserves the current valid run',
+      () {
+        final game = engine(campTier: 1);
+        final old = roundTrip(game)..['version'] = 0;
+        final fresh = engine();
+        expect(fresh.restore(old), isFalse);
+        expect(fresh.state.campTier, 0);
 
-      final broken = roundTrip(game)..['state'] = {'day': 'three'};
-      final reset = engine(campTier: 1);
-      expect(reset.restore(broken), isFalse);
-      expect(reset.state.campTier, 0);
-      expect(reset.state.day, 1);
-      expect(reset.isBusy, isFalse);
-    });
+        final broken = roundTrip(game)..['state'] = {'day': 'three'};
+        final reset = engine(campTier: 1);
+        expect(reset.restore(broken), isFalse);
+        expect(reset.state.campTier, 1);
+        expect(reset.state.day, 1);
+        expect(reset.isBusy, isFalse);
+      },
+    );
   });
 }

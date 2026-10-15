@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:survival_game/game/run_progression.dart';
+import 'package:survival_game/ui/progression_screens.dart' as progression;
 import 'package:survival_game/game/tool_catalog.dart';
 import 'package:survival_game/ui/tool_panels.dart';
 import 'package:survival_game/ui/inventory_panels.dart';
@@ -56,6 +59,8 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final runProgression =
+      Platform.environment['LOST_CANOPY_CAPTURE_PROGRESSION'] == '1';
   final inventoryProgression =
       Platform.environment['LOST_CANOPY_CAPTURE_INVENTORY'] == '1';
   final toolProgression =
@@ -228,7 +233,8 @@ Future<void> main() async {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (inventoryProgression ||
+        if (runProgression ||
+            inventoryProgression ||
             toolProgression ||
             minigames ||
             fishingTutorial ||
@@ -307,6 +313,183 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (runProgression) {
+      final g = game(
+        state: RunState(
+          day: 8,
+          campTier: 2,
+          tools: {'stone_axe', 'machete', 'torch'},
+          resources: {'wood': 12, 'stone': 4, 'fiber': 8, 'herb': 2},
+          conditions: [
+            const SurvivalCondition(ConditionKind.poisoned, 1, severity: 2),
+          ],
+          stats: {
+            SurvivalStat.health: 2,
+            SurvivalStat.water: 55,
+            SurvivalStat.food: 63,
+            SurvivalStat.sanity: 72,
+          },
+        ),
+      );
+      g.profile.xp = 420;
+      g.metrics.nights = 7;
+      g.metrics.crafted = 9;
+      g.metrics.fishCaught = 5;
+      g.metrics.fishKept = 3;
+      g.metrics.locations.addAll(['riverbank', 'plane_wreck', 'bamboo_grove']);
+      g.metrics.fishSpecies.addAll(['small_fish', 'mud_whisker']);
+      g.metrics.recipes.addAll([
+        'stone_knife',
+        'stone_axe',
+        'torch',
+        'bandage',
+        'leaf_bed',
+        'water_filter',
+      ]);
+      g.metrics.encounterTypes.addAll(['jaguar_trail', 'snake_thicket']);
+      g.metrics.components.add('battery');
+      g.metrics.note(2, 'camp', 'Built the first camp upgrade', 'shelter');
+      g.metrics.note(
+        3,
+        'fishing_pond',
+        'Caught a Stream Silverfish',
+        'small_fish',
+      );
+      g.metrics.note(5, 'camp', 'Built Camp Tier 2', 'shelter');
+      g.metrics.note(6, 'camp', 'Brought Battery home', 'battery');
+      if (!g.travelTo('riverbank', pack: {}, gear: {})) {
+        throw StateError('Cannot enter final trip');
+      }
+      final choice = g.visibleChoices.firstWhere(
+        (c) => c.minigame == null && g.canChoose(c),
+      );
+      if (!g.choose(choice.id) || g.completedRun?.earned != 246) {
+        throw StateError('Expected real poison defeat with 246 XP');
+      }
+      g.continueFromReport();
+      final save = jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>;
+      final restored = game();
+      if (!restored.restore(save) || restored.profile.xp != 666) {
+        throw StateError('Profile round trip failed');
+      }
+      final summary = restored.completedRun!;
+      await mount(progression.RunResultScreen(game: restored));
+      await shot('01-defeat-summary');
+      await mount(progression.XpScreen(game: restored, summary: summary));
+      await shot('02-xp-breakdown');
+      await mount(
+        progression.RankUnlockedScreen(game: restored, summary: summary),
+      );
+      await shot('03-rank-unlocked');
+      await mount(progression.ProfileScreen(game: restored));
+      await shot('04-player-profile');
+      await mount(progression.ArchiveScreen(game: restored));
+      await shot('05-journey-archive');
+      await mount(
+        progression.JourneyDetailsScreen(game: restored, summary: summary),
+      );
+      await shot('06-journey-details');
+      await mount(progression.StartingOptionsScreen(game: restored));
+      await shot('07-starting-options');
+      await mount(
+        progression.OptionDetailsScreen(
+          game: restored,
+          option: startingOptions[3],
+        ),
+      );
+      await shot('08-locked-option');
+      await mount(
+        progression.OptionDetailsScreen(
+          game: restored,
+          option: startingOptions[1],
+        ),
+      );
+      await shot('09-scavenger-details');
+      restored.selectStartingOption('scavenger');
+      await mount(progression.StartingOptionsScreen(game: restored));
+      await shot('10-selected-option');
+      await mount(progression.NewJourneyScreen(game: restored));
+      await shot('11-new-journey-review');
+      restored.restart();
+      await mount(CampScreen(engine: restored));
+      await shot('12-new-starting-supplies');
+      final rescued = game(
+        state: RunState(
+          day: 11,
+          campTier: 3,
+          rescueStage: RescueStage.storm,
+          tools: {'machete', 'torch'},
+          resources: {'wood': 12, 'fiber': 12, 'metal_scrap': 8},
+          stats: {
+            SurvivalStat.health: 100,
+            SurvivalStat.water: 100,
+            SurvivalStat.food: 100,
+            SurvivalStat.sanity: 80,
+          },
+        ),
+      );
+      rescued.profile.xp = 420;
+      rescued.metrics.nights = 10;
+      rescued.metrics.crafted = 16;
+      rescued.metrics.fishCaught = 12;
+      rescued.metrics.locations.addAll(
+        world.locations.where((l) => l.id != 'camp').map((l) => l.id),
+      );
+      rescued.metrics.fishSpecies.addAll([
+        'small_fish',
+        'redfin_perch',
+        'mud_whisker',
+        'spiny_sunlurker',
+        'goldspot_riverfish',
+      ]);
+      rescued.metrics.recipes.addAll(recipes.crafts.take(10).map((r) => r.id));
+      rescued.metrics.encounterTypes.addAll(
+        catalog.events.where((e) => e.trigger == 'encounter').map((e) => e.id),
+      );
+      rescued.metrics.components.addAll(beaconComponents.keys);
+      if (!rescued.restore(
+        jsonDecode(jsonEncode(rescued.toJson())) as Map<String, dynamic>,
+      )) {
+        throw StateError('Cannot reopen storm');
+      }
+      for (final choice in ['raise', 'cut', 'torch']) {
+        if (!rescued.choose(choice)) throw StateError('Storm choice blocked');
+        rescued.continueFromReport();
+      }
+      if (!rescued.state.rescued || rescued.completedRun?.earned != 720) {
+        throw StateError(
+          'Rescue record failed: ${rescued.completedRun?.earned}',
+        );
+      }
+      await mount(progression.RunResultScreen(game: rescued));
+      await shot('13-rescued-summary');
+      await mount(progression.ProfileScreen(game: rescued));
+      await shot('14-rescued-profile');
+      final failure = game();
+      failure.abandonJourney();
+      failure.saveFailed = true;
+      await mount(progression.RunResultScreen(game: failure));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('retry-record-save')),
+      );
+      await tester.pumpAndSettle();
+      await shot('15-save-retry');
+      final legacy = game();
+      final old = legacy.toJson()
+        ..remove('metrics')
+        ..remove('profile')
+        ..remove('completedRun')
+        ..['version'] = 2;
+      if (!legacy.restore(old)) throw StateError('Legacy migration failed');
+      legacy.abandonJourney();
+      await mount(progression.RunResultScreen(game: legacy));
+      await shot('16-partial-legacy-record');
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
     }
 
     if (inventoryProgression) {

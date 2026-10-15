@@ -1,3 +1,4 @@
+import 'progression_screens.dart' as progression;
 import 'inventory_panels.dart';
 import '../game/ecology_catalog.dart';
 import 'fishing_panels.dart';
@@ -55,6 +56,7 @@ class _CampScreenState extends State<CampScreen> {
   @override
   void initState() {
     super.initState();
+    game.ensureRunSummary();
     // A restored run may resume mid-event, mid-report or at the pond.
     if (game.isBusy ||
         game.packingDraft != null ||
@@ -134,20 +136,18 @@ class _CampScreenState extends State<CampScreen> {
             MaterialPageRoute(builder: (context) => RescuedScreen(game: game)),
           );
           if (!mounted) return;
-          if (command == 'restart') setState(game.restart);
+          if (command == 'restarted') setState(() {});
           return;
         }
-        if (game.state.phase == RunPhase.gameOver) {
-          await showDialog<void>(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => PopScope(
-              canPop: false,
-              child: GameOverDialog(day: game.state.day),
+        if (game.state.phase == RunPhase.gameOver ||
+            game.completedRun != null) {
+          await Navigator.push<String>(
+            context,
+            MaterialPageRoute(
+              builder: (_) => progression.RunResultScreen(game: game),
             ),
           );
-          if (!mounted) return;
-          setState(game.restart);
+          if (mounted) setState(() {});
           return;
         }
         if (game.gathering != null) {
@@ -547,20 +547,15 @@ class _CampScreenState extends State<CampScreen> {
   }
 
   Future<void> _confirmNewRun() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => const CanopyConfirmation(
-        title: 'Start a new run?',
-        message:
-            'Your current camp, supplies and saved progress will be replaced.',
-        confirm: 'New run',
-        cancel: 'Keep playing',
-        art: 'shelter',
-        destructive: true,
-        confirmKey: ValueKey('confirm-new-run'),
+    await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => progression.NewJourneyScreen(game: game),
       ),
     );
-    if (confirmed == true && mounted && !game.isBusy) setState(game.restart);
+    if (!mounted) return;
+    setState(() {});
+    if (game.completedRun != null) unawaited(_showFlow());
   }
 
   Widget _action(CampAction action, {bool horizontal = false}) {
@@ -610,6 +605,7 @@ class _CampScreenState extends State<CampScreen> {
                   for (final (id, title, art) in [
                     ('gather', 'Gather around camp', 'forage'),
                     ('journal', 'Survival journal', 'journal'),
+                    ('profile', 'Survivor profile', 'journal'),
                     ('guide', 'How to survive', 'map'),
                     ('beacon', 'Rescue signal', 'emergency_beacon'),
                   ])
@@ -635,6 +631,12 @@ class _CampScreenState extends State<CampScreen> {
     );
     if (!mounted) return;
     if (choice == 'journal') _showJournal();
+    if (choice == 'profile') {
+      await progression.openProfile(context, game);
+      if (!mounted) return;
+      setState(() {});
+      if (game.completedRun != null) unawaited(_showFlow());
+    }
     if (choice == 'gather') await _showGathering();
     if (choice == 'guide') _showGuide();
     if (choice == 'beacon') await _showBeacon();

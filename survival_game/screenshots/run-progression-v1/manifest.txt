@@ -1,0 +1,16 @@
+01-defeat-summary.png
+02-xp-breakdown.png
+03-rank-unlocked.png
+04-player-profile.png
+05-journey-archive.png
+06-journey-details.png
+07-starting-options.png
+08-locked-option.png
+09-scavenger-details.png
+10-selected-option.png
+11-new-journey-review.png
+12-new-starting-supplies.png
+13-rescued-summary.png
+14-rescued-profile.png
+15-save-retry.png
+16-partial-legacy-record.png

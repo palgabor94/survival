@@ -1,3 +1,4 @@
+import 'package:survival_game/game/run_progression.dart';
 import 'dart:convert';
 import 'gathering_test.dart' show resolveGatheringForSimulation;
 import 'dart:io';
@@ -393,249 +394,266 @@ void main() {
     expect(game.state.foundComponents, isEmpty);
   });
 
-  test('malformed stone puzzle is rejected and restart clears activity', () {
-    final game = rescueGame();
-    openAltar(game);
-    final saved = game.toJson();
-    ((saved['ruinsPuzzle'] as Map)['session'] as Map)['tiles'] = [9, 0];
-    final restored = rescueGame();
-    expect(restored.restore(saved), isFalse);
-    expect(restored.ruinsPuzzle, isNull);
-    expect(restored.state.day, 1);
-    expect(
-      () => RuinsPuzzle.fromJson({
-        'pattern': [0, 1, 2],
-        'tiles': [0, 1, 2],
-        'moves': -1,
-      }),
-      throwsFormatException,
-    );
-  });
+  test(
+    'malformed stone puzzle is rejected without replacing the current run',
+    () {
+      final game = rescueGame();
+      openAltar(game);
+      final saved = game.toJson();
+      ((saved['ruinsPuzzle'] as Map)['session'] as Map)['tiles'] = [9, 0];
+      final restored = rescueGame();
+      expect(restored.restore(saved), isFalse);
+      expect(restored.ruinsPuzzle, isNull);
+      expect(restored.state.day, 8);
+      expect(
+        () => RuinsPuzzle.fromJson({
+          'pattern': [0, 1, 2],
+          'tiles': [0, 1, 2],
+          'moves': -1,
+        }),
+        throwsFormatException,
+      );
+    },
+  );
 
-  for (final seed in [42, 77]) {
-    test('fresh run reaches rescue through earned resources with seed $seed', () {
-      var game = rescueGame(state: RunState(), random: Random(seed));
-      const builds = [
-        'torch',
-        'stone_knife',
-        'stone_axe',
-        'leaf_bed',
-        'camp_tier_1',
-        'water_filter',
-        'rain_collector',
-        'camp_tier_2',
-        'machete',
-        'camp_tier_3',
-        'emergency_beacon',
-      ];
-      var transactions = 0;
-      var restorations = 0;
-      Map<String, int> needs() {
-        final target = builds.firstWhere((id) {
-          final recipe = game.recipes.find(id)!;
-          return recipe.kind == RecipeKind.campTier
-              ? game.state.campTier < recipe.tier!
-              : !game.state.tools.contains(id);
-        }, orElse: () => 'emergency_beacon');
-        return {
-          for (final e in game.recipes.find(target)!.costs.entries)
-            if (e.value > game.state.resource(e.key))
-              e.key: e.value - game.state.resource(e.key),
-        };
-      }
+  for (final scenario in [
+    for (final seed in [42, 77])
+      for (final option in startingOptions) (seed, option),
+  ]) {
+    final seed = scenario.$1;
+    final option = scenario.$2;
+    test(
+      'fresh run reaches rescue through earned resources with seed $seed option ${option.id}',
+      () {
+        var game = rescueGame(state: RunState(), random: Random(seed));
+        game.profile.xp = rankThreshold(option.rank);
+        game.selectStartingOption(option.id);
+        game.restart();
+        const builds = [
+          'torch',
+          'stone_knife',
+          'stone_axe',
+          'leaf_bed',
+          'camp_tier_1',
+          'water_filter',
+          'rain_collector',
+          'camp_tier_2',
+          'machete',
+          'camp_tier_3',
+          'emergency_beacon',
+        ];
+        var transactions = 0;
+        var restorations = 0;
+        Map<String, int> needs() {
+          final target = builds.firstWhere((id) {
+            final recipe = game.recipes.find(id)!;
+            return recipe.kind == RecipeKind.campTier
+                ? game.state.campTier < recipe.tier!
+                : !game.state.tools.contains(id);
+          }, orElse: () => 'emergency_beacon');
+          return {
+            for (final e in game.recipes.find(target)!.costs.entries)
+              if (e.value > game.state.resource(e.key))
+                e.key: e.value - game.state.resource(e.key),
+          };
+        }
 
-      double score(EventChoice choice) {
-        final effect = choice.effect;
-        if (choice.minigame != null) return 1000;
-        if (effect.endsExpedition || effect.dropLoot) return -1000;
-        final demand = needs();
-        var value = choice.isRisky ? -60.0 : 0.0;
-        for (final e in effect.stats.entries) {
-          final current = game.state.value(e.key);
-          final gain = min(e.value, 100 - current);
-          value +=
-              gain *
-              (e.key == SurvivalStat.health
-                  ? (current < 60 ? 3 : .5)
-                  : e.key == SurvivalStat.water
-                  ? (current < 50
-                        ? 4
-                        : current < 70
-                        ? 1.5
-                        : .3)
-                  : e.key == SurvivalStat.food
-                  ? (current < 50
-                        ? 4
-                        : current < 70
-                        ? 1.5
-                        : .3)
-                  : current < 35
-                  ? 2
-                  : .15);
-        }
-        for (final e in effect.resources.entries) {
-          value +=
-              e.value *
-              (beaconComponents.containsKey(e.key) &&
-                      game.state.resource(e.key) == 0
-                  ? 150
-                  : demand.containsKey(e.key)
-                  ? 10
-                  : e.key == 'herb'
-                  ? 4
-                  : 1);
-        }
-        return value;
-      }
-
-      while (!game.state.rescued &&
-          game.state.isAlive &&
-          transactions++ < 2000) {
-        // Persist real intermediate transactions, including carried parts and
-        // unfinished choices. No resource, stat or progression injection.
-        if (transactions % 23 == 0) {
-          final copy = rescueGame(
-            state: RunState(),
-            random: Random(seed + transactions),
-          );
-          expect(
-            copy.restore(
-              jsonDecode(jsonEncode(game.toJson())) as Map<String, dynamic>,
-            ),
-            isTrue,
-          );
-          game = copy;
-          restorations++;
-        }
-        if (game.report != null) {
-          game.continueFromReport();
-          continue;
-        }
-        if (game.gathering != null) {
-          resolveGatheringForSimulation(game);
-          continue;
-        }
-        if (game.ruinsPuzzle != null) {
-          solveAltar(game);
-          continue;
-        }
-        if (game.pendingEvent != null) {
-          final choices = game.visibleChoices.where(game.canChoose).toList()
-            ..sort((a, b) => score(b).compareTo(score(a)));
-          expect(choices, isNotEmpty);
-          expect(game.choose(choices.first.id), isTrue);
-          continue;
-        }
-        if (game.awaitingExpeditionDecision) {
-          if (game.canGoDeeper &&
-              game.state.value(SurvivalStat.water) >= 32 &&
-              game.state.value(SurvivalStat.food) >= 24) {
-            game.goDeeper();
-          } else {
-            game.returnHome();
+        double score(EventChoice choice) {
+          final effect = choice.effect;
+          if (choice.minigame != null) return 1000;
+          if (effect.endsExpedition || effect.dropLoot) return -1000;
+          final demand = needs();
+          var value = choice.isRisky ? -60.0 : 0.0;
+          for (final e in effect.stats.entries) {
+            final current = game.state.value(e.key);
+            final gain = min(e.value, 100 - current);
+            value +=
+                gain *
+                (e.key == SurvivalStat.health
+                    ? (current < 60 ? 3 : .5)
+                    : e.key == SurvivalStat.water
+                    ? (current < 50
+                          ? 4
+                          : current < 70
+                          ? 1.5
+                          : .3)
+                    : e.key == SurvivalStat.food
+                    ? (current < 50
+                          ? 4
+                          : current < 70
+                          ? 1.5
+                          : .3)
+                    : current < 35
+                    ? 2
+                    : .15);
           }
-          continue;
+          for (final e in effect.resources.entries) {
+            value +=
+                e.value *
+                (beaconComponents.containsKey(e.key) &&
+                        game.state.resource(e.key) == 0
+                    ? 150
+                    : demand.containsKey(e.key)
+                    ? 10
+                    : e.key == 'herb'
+                    ? 4
+                    : 1);
+          }
+          return value;
         }
-        if (game.canSleep) {
-          game.sleep();
-          continue;
-        }
-        if (game.state.value(SurvivalStat.food) < 65) {
-          final food = [
-            'small_fish',
-            'raw_meat',
-            'ember_berries',
-            'dew_fruit',
-            'canopy_fig',
-            'cooked_root',
-            'iron_nut',
-            'wild_honey',
-          ].where(game.canConsume).toList();
-          if (food.isNotEmpty) {
-            game.consume(food.first);
+
+        while (!game.state.rescued &&
+            game.state.isAlive &&
+            transactions++ < 2000) {
+          // Persist real intermediate transactions, including carried parts and
+          // unfinished choices. No resource, stat or progression injection.
+          if (transactions % 23 == 0) {
+            final copy = rescueGame(
+              state: RunState(),
+              random: Random(seed + transactions),
+            );
+            expect(
+              copy.restore(
+                jsonDecode(jsonEncode(game.toJson())) as Map<String, dynamic>,
+              ),
+              isTrue,
+            );
+            game = copy;
+            restorations++;
+          }
+          if (game.report != null) {
+            game.continueFromReport();
             continue;
           }
-        }
-        if (game.state.value(SurvivalStat.health) < 65 &&
-            game.canConsume('herb')) {
-          game.consume('herb');
-          continue;
-        }
-        if (game.state.value(SurvivalStat.health) < 45 ||
-            game.state.value(SurvivalStat.sanity) < 25) {
-          game.startAction(CampAction.rest);
-          continue;
-        }
-        if (game.state.rescueStage == RescueStage.signalSent) {
-          game.startAction(
-            game.state.value(SurvivalStat.water) < 70 ||
-                    game.state.value(SurvivalStat.food) < 65
-                ? CampAction.forage
-                : CampAction.rest,
-          );
-          continue;
-        }
-        if (game.activateBeaconBlockReason == null) {
-          game.activateBeacon();
-          continue;
-        }
-        if (game.state.value(SurvivalStat.water) < 45 ||
-            game.state.value(SurvivalStat.food) < 40) {
-          game.startAction(CampAction.forage);
-          continue;
-        }
-        final craftable = builds
-            .where((id) => game.craftBlockReason(id) == null)
-            .toList();
-        if (craftable.isNotEmpty) {
-          game.craft(craftable.first);
-          continue;
-        }
-        final demand = needs();
-        String? destination;
-        if (game.state.campTier >= 2 &&
-            game.state.tools.contains('machete') &&
-            game.state.resource('beacon_core') == 0) {
-          destination = 'ancient_ruins';
-        } else if (game.state.campTier >= 1 &&
-            ([
-                  'battery',
-                  'wire',
-                  'metal_parts',
-                  'radio_module',
-                ].any((id) => game.state.resource(id) == 0) ||
-                demand.containsKey('metal_scrap'))) {
-          destination = 'plane_wreck';
-        } else if (demand.containsKey('hardwood')) {
-          destination = 'bamboo_grove';
-        }
-        if (destination != null &&
-            game.travelBlockReason(destination) == null &&
-            game.state.value(SurvivalStat.water) >= 60 &&
-            game.state.value(SurvivalStat.food) >= 55) {
-          final gear = {...game.suggestedGear};
-          final required = game.world.find(destination)?.requiresTool;
-          if (required != null) {
-            if (required == 'machete') {
-              gear.remove('stone_knife');
-            }
-            gear.add(required);
+          if (game.gathering != null) {
+            resolveGatheringForSimulation(game);
+            continue;
           }
-          expect(game.travelTo(destination, gear: gear), isTrue);
-          continue;
+          if (game.ruinsPuzzle != null) {
+            solveAltar(game);
+            continue;
+          }
+          if (game.pendingEvent != null) {
+            final choices = game.visibleChoices.where(game.canChoose).toList()
+              ..sort((a, b) => score(b).compareTo(score(a)));
+            expect(choices, isNotEmpty);
+            expect(game.choose(choices.first.id), isTrue);
+            continue;
+          }
+          if (game.awaitingExpeditionDecision) {
+            if (game.canGoDeeper &&
+                game.state.value(SurvivalStat.water) >= 32 &&
+                game.state.value(SurvivalStat.food) >= 24) {
+              game.goDeeper();
+            } else {
+              game.returnHome();
+            }
+            continue;
+          }
+          if (game.canSleep) {
+            game.sleep();
+            continue;
+          }
+          if (game.state.value(SurvivalStat.food) < 65) {
+            final food = [
+              'small_fish',
+              'raw_meat',
+              'ember_berries',
+              'dew_fruit',
+              'canopy_fig',
+              'cooked_root',
+              'iron_nut',
+              'wild_honey',
+            ].where(game.canConsume).toList();
+            if (food.isNotEmpty) {
+              game.consume(food.first);
+              continue;
+            }
+          }
+          if (game.state.value(SurvivalStat.health) < 65 &&
+              game.canConsume('herb')) {
+            game.consume('herb');
+            continue;
+          }
+          if (game.state.value(SurvivalStat.health) < 45 ||
+              game.state.value(SurvivalStat.sanity) < 25) {
+            game.startAction(CampAction.rest);
+            continue;
+          }
+          if (game.state.rescueStage == RescueStage.signalSent) {
+            game.startAction(
+              game.state.value(SurvivalStat.water) < 70 ||
+                      game.state.value(SurvivalStat.food) < 65
+                  ? CampAction.forage
+                  : CampAction.rest,
+            );
+            continue;
+          }
+          if (game.activateBeaconBlockReason == null) {
+            game.activateBeacon();
+            continue;
+          }
+          if (game.state.value(SurvivalStat.water) < 45 ||
+              game.state.value(SurvivalStat.food) < 40) {
+            game.startAction(CampAction.forage);
+            continue;
+          }
+          final craftable = builds
+              .where((id) => game.craftBlockReason(id) == null)
+              .toList();
+          if (craftable.isNotEmpty) {
+            game.craft(craftable.first);
+            continue;
+          }
+          final demand = needs();
+          String? destination;
+          if (game.state.campTier >= 2 &&
+              game.state.tools.contains('machete') &&
+              game.state.resource('beacon_core') == 0) {
+            destination = 'ancient_ruins';
+          } else if (game.state.campTier >= 1 &&
+              ([
+                    'battery',
+                    'wire',
+                    'metal_parts',
+                    'radio_module',
+                  ].any((id) => game.state.resource(id) == 0) ||
+                  demand.containsKey('metal_scrap'))) {
+            destination = 'plane_wreck';
+          } else if (demand.containsKey('hardwood')) {
+            destination = 'bamboo_grove';
+          }
+          if (destination != null &&
+              game.travelBlockReason(destination) == null &&
+              game.state.value(SurvivalStat.water) >= 60 &&
+              game.state.value(SurvivalStat.food) >= 55) {
+            final gear = {...game.suggestedGear};
+            final required = game.world.find(destination)?.requiresTool;
+            if (required != null) {
+              if (required == 'machete') {
+                gear.remove('stone_knife');
+              }
+              gear.add(required);
+            }
+            expect(game.travelTo(destination, gear: gear), isTrue);
+            continue;
+          }
+          expect(game.startAction(CampAction.forage), isTrue);
         }
-        expect(game.startAction(CampAction.forage), isTrue);
-      }
-      expect(
-        game.state.rescued,
-        isTrue,
-        reason:
-            'day=${game.state.day}, transactions=$transactions, state=${game.state.toJson()}, event=${game.pendingEvent?.id}',
-      );
-      expect(game.state.campTier, 3);
-      expect(game.state.foundComponents, hasLength(5));
-      expect(restorations, greaterThan(0));
-      expect(game.state.day, lessThan(70));
-    });
+        expect(
+          game.state.rescued,
+          isTrue,
+          reason:
+              'day=${game.state.day}, transactions=$transactions, state=${game.state.toJson()}, event=${game.pendingEvent?.id}',
+        );
+        expect(game.state.campTier, 3);
+        expect(game.state.foundComponents, hasLength(5));
+        expect(restorations, greaterThan(0));
+        expect(game.state.day, lessThan(70));
+        stdout.writeln(
+          'BALANCE seed=$seed option=${option.id} day=${game.state.day} nights=${game.metrics.nights} transactions=$transactions health=${game.state.value(SurvivalStat.health)}',
+        );
+      },
+    );
   }
 }

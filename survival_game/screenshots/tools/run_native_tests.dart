@@ -1,3 +1,5 @@
+import '../../test/run_progression_widget_test.dart' as run_progression_ui;
+import '../../test/game/run_progression_test.dart' as run_progression;
 // Run the unchanged test declarations in Flutter's native engine when the
 // normal flutter test launcher cannot bind its local WebSocket in the sandbox.
 // The runner consumes the test_api version supplied by flutter_test.
@@ -59,6 +61,8 @@ Future<void> main() async {
   final declarer = Declarer(collectTraces: true, noRetry: true);
   declarer.declare(() {
     final files = <String, void Function()>{
+      'run_progression': run_progression.main,
+      'run_progression_widgets': run_progression_ui.main,
       'ecology': ecology.main,
       'ecology_widgets': ecology_ui.main,
       'game_engine': engine.main,

@@ -1,49 +1,70 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Keeps one saved run. Implementations must never throw: a broken save
-/// simply starts a fresh run.
+/// One snapshot contains both active run and persistent profile. Writes must
+/// report failures so the UI cannot replace an unrecorded completed journey.
 abstract class RunStorage {
   Future<Map<String, dynamic>?> load();
+  Future<Map<String, dynamic>?> loadBackup() async => null;
   Future<void> save(Map<String, dynamic> run);
 }
 
-class PreferencesRunStorage implements RunStorage {
+class PreferencesRunStorage extends RunStorage {
   static const _key = 'lost_canopy.run';
-
-  @override
-  Future<Map<String, dynamic>?> load() async {
+  static const _backup = 'lost_canopy.run.backup';
+  String? _lastGood;
+  Map<String, dynamic>? _decode(String? raw) {
     try {
-      final raw = (await SharedPreferences.getInstance()).getString(_key);
-      return raw == null ? null : jsonDecode(raw) as Map<String, dynamic>;
+      final j = jsonDecode(raw!) as Map<String, dynamic>;
+      return {1, 2, 3}.contains(j['version']) && j['state'] is Map ? j : null;
     } catch (_) {
       return null;
     }
   }
 
   @override
+  Future<Map<String, dynamic>?> load() async {
+    final p = await SharedPreferences.getInstance();
+    final primary = p.getString(_key), backup = p.getString(_backup);
+    _lastGood = _decode(primary) != null
+        ? primary
+        : _decode(backup) != null
+        ? backup
+        : null;
+    return _decode(_lastGood);
+  }
+
+  @override
+  Future<Map<String, dynamic>?> loadBackup() async {
+    final backup = (await SharedPreferences.getInstance()).getString(_backup);
+    _lastGood = _decode(backup) != null ? backup : null;
+    return _decode(_lastGood);
+  }
+
+  @override
   Future<void> save(Map<String, dynamic> run) async {
-    try {
-      await (await SharedPreferences.getInstance()).setString(
-        _key,
-        jsonEncode(run),
-      );
-    } catch (_) {
-      // Saving is best effort; the run continues in memory.
+    final encoded = jsonEncode(run);
+    final p = await SharedPreferences.getInstance();
+    final old = _lastGood ?? p.getString(_key);
+    if (_decode(old) != null && !await p.setString(_backup, old!)) {
+      throw StateError('Could not preserve previous save');
     }
+    // A single preferences value replaces the whole envelope, never half a
+    // profile followed by half a run. Engine serializes concurrent requests.
+    if (!await p.setString(_key, encoded)) {
+      throw StateError('Could not save journey');
+    }
+    _lastGood = encoded;
   }
 }
 
-class MemoryRunStorage implements RunStorage {
+class MemoryRunStorage extends RunStorage {
   MemoryRunStorage([this.saved]);
   Map<String, dynamic>? saved;
   int saves = 0;
-
   @override
   Future<Map<String, dynamic>?> load() async =>
       saved == null ? null : jsonDecode(jsonEncode(saved));
-
   @override
   Future<void> save(Map<String, dynamic> run) async {
     saves++;

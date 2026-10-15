@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-15",
+  "full_suite": {
+    "passed": 450,
+    "failed": 0,
+    "skipped": 0
+  },
+  "final_targeted_suite": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runner": "Native Flutter engine with test_api LiveTest",
+  "fresh_run_scenarios": [
+    {
+      "seed": 42,
+      "option": "none",
+      "rescued_day": 22,
+      "nights": 21,
+      "transactions": 522,
+      "final_health": 100
+    },
+    {
+      "seed": 42,
+      "option": "scavenger",
+      "rescued_day": 22,
+      "nights": 21,
+      "transactions": 522,
+      "final_health": 100
+    },
+    {
+      "seed": 42,
+      "option": "angler",
+      "rescued_day": 22,
+      "nights": 21,
+      "transactions": 522,
+      "final_health": 100
+    },
+    {
+      "seed": 42,
+      "option": "medic",
+      "rescued_day": 29,
+      "nights": 28,
+      "transactions": 731,
+      "final_health": 100
+    },
+    {
+      "seed": 77,
+      "option": "none",
+      "rescued_day": 28,
+      "nights": 27,
+      "transactions": 719,
+      "final_health": 100
+    },
+    {
+      "seed": 77,
+      "option": "scavenger",
+      "rescued_day": 47,
+      "nights": 46,
+      "transactions": 1257,
+      "final_health": 100
+    },
+    {
+      "seed": 77,
+      "option": "angler",
+      "rescued_day": 33,
+      "nights": 32,
+      "transactions": 848,
+      "final_health": 100
+    },
+    {
+      "seed": 77,
+      "option": "medic",
+      "rescued_day": 33,
+      "nights": 32,
+      "transactions": 859,
+      "final_health": 100
+    }
+  ],
+  "limits": [
+    "One cautious bot strategy; two seeds; not a human difficulty estimate.",
+    "Physical device lifecycle/audio/haptic validation remains."
+  ]
+}

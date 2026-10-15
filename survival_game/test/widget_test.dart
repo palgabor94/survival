@@ -203,8 +203,10 @@ void main() {
     expect(game.report, isNotNull);
     await tester.tap(find.byKey(const ValueKey('continue-outcome')));
     await tester.pumpAndSettle();
-    expect(findUiText('The jungle falls silent'), findsOneWidget);
-    await tester.tap(findUiText('Begin again'));
+    expect(findUiText('JOURNEY ENDED'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('result-new-run')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('confirm-new-run')));
     await tester.pumpAndSettle();
     expect(game.state.phase, RunPhase.day);
     expect(game.state.timeLeft, 6);

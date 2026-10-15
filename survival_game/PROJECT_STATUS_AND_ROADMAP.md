@@ -1,6 +1,6 @@
 # Lost Canopy — állapot és további menetrend
 
-**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 420 teszt sikeres; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
+**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 450 teszt sikeres; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
 
 Most már az új játéktól a sikeres befejezésig működik a lánc: táborfejlesztés → roncsalkatrészek → Machete → Ancient Ruins puzzle → Beacon Core → Rescue Base → Emergency Beacon → jeladás → végső vihar → RESCUED.
 
@@ -63,7 +63,9 @@ A 200 seedelt menet stressztesztje a jelenlegi 37 eseménnyel és az új minijá
 
 ## Következő mérföldkövek
 
-2026-10-15: a hátizsák és tábori készlet bekötve. **420/420 teszt sikeres**; mentett indulási pakolás és felszerelés, explicit zsákmányrendezés, automatikus kirakodás, 8/12/16 helyes fejlesztés és régi mentések veszteség nélküli folytatása működik. Következő tervezési mérföldkő a menetösszesítő és a meta; a vezetett első nap továbbra is az utolsó tartalmi fejlesztési lépés.
+2026-10-15: a menetvégi és profilrendszer bekötve. **450/450 teszt sikeres**, két maggal mind a négy indulókészlet eljutott a megmentésig (22–47. nap). Egyszeri XP-jóváírás, rangok, külön profil, archívum, perkválasztás, régi mentések részleges rekordja és látható mentési hiba/újrapróbálás működik. Következő mérföldkő a teljes rendszer több stratégiás és emberi balansza; a vezetett első nap ez után következik.
+
+2026-10-15: a hátizsák és tábori készlet bekötve. **420/420 teszt sikeres**; mentett indulási pakolás és felszerelés, explicit zsákmányrendezés, automatikus kirakodás, 8/12/16 helyes fejlesztés és régi mentések veszteség nélküli folytatása működik. Azóta a menetösszesítő és a meta is elkészült; a vezetett első nap továbbra is az utolsó tartalmi fejlesztési lépés.
 
 2026-10-15: a balta-/lándzsaprogresszió is bekötve. Teljes tesztfutás **398/398**, utolsó UI-tömörítés után **19/19** célzott teszt. Az azóta elkészült készletrendszer részletei alább. A teljes rendszer emberi balansza és a készülékes ellenőrzés még hátravan.
 
@@ -76,7 +78,7 @@ Az első balanszlépés elkészült és újramért. Következő külön lépés 
 1. **Eszköz- és fegyverprogresszió — elkészült:** három bot, három balta és három lándzsa, mentett felszerelés, külön javításköltség, eszközfüggő gyűjtés és fizikai események. [Bekötés és szabályok](design/tool-progression-v1/IMPLEMENTATION_HU.md) · [12 tényleges screenshot](screenshots/tool-progression-v1/README.md).
 2. **Új halak és zsákmány — elkészült:** öt faj, méret/ritkaság, három csali, három bot, veszélyes halak, biztonságos előkészítés és halfajnapló. [Bekötés és pontos szabályok](design/fishing-progression-v1/IMPLEMENTATION_HU.md) · [15 tényleges screenshot](screenshots/fishing-progression-v1/README.md).
 3. **Készlet és tárolás — elkészült:** 8/12/16 helyes hátizsák, külön felszerelés, kezdettől biztonságos korlátlan tábori készlet, explicit túlcsordulás és automatikus hazatérési kirakodás. [Bekötés, mentésmigráció és validáció](design/inventory-storage-v1/IMPLEMENTATION_HU.md) · [Valódi screenshotok](screenshots/inventory-storage-v1/README.md).
-4. **Menetösszesítő és meta — terv elkészült, még nincs bekötve:** közös győztes/vesztes összesítő, tételes Survival XP, tartós profil/rekordok, menetarchívum és választható indulókészlet-cserék. [Pontos terv és 10 pergamentes látványterv](design/run-progression-v1/README.md). Már 25 valódi tárgyrecept működik.
+4. **Menetösszesítő és meta — elkészült:** közös győztes/vesztes összesítő, tételes Survival XP, tartós profil/rekordok, húsz menetes archívum és három választható indulókészlet-csere. [Bekötés és nyolc teljes végigjátszás](design/run-progression-v1/IMPLEMENTATION_HU.md) · [16 tényleges screenshot](screenshots/run-progression-v1/README.md).
 5. **Teljes rendszer balanszolása:** az új tartalommal, több stratégiával és hibázó minijátékossal.
 6. **Vezetett első nap:** a felhasználó döntése szerint az MVP utolsó fejlesztési lépése, amikor a tartalom és a szabályok már véglegesek. Unlock-visszajelzésekkel együtt.
 7. **Záró készülékes ellenőrzés:** sikeres/vesztes menet, process-kill és folytatás, mért játékidő, iOS/Android build és teljesítmény.

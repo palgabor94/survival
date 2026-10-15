@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+import 'run_progression.dart';
 import 'inventory_catalog.dart';
 import 'tool_catalog.dart';
 import 'dart:math';
@@ -29,7 +32,113 @@ class GameEngine {
        _random = random ?? Random(),
        _state =
            initialState ??
-           RunState(resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2});
+           RunState(resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2}) {
+    metrics.campTier = state.campTier;
+  }
+  RunMetrics metrics = RunMetrics();
+  PlayerProfile profile = PlayerProfile();
+  RunSummary? completedRun;
+  bool rankNoticePending = false;
+  void acknowledgeRank() {
+    rankNoticePending = false;
+    _changed();
+  }
+
+  String? _pendingFishId;
+  int _pendingFishBaseline = 0;
+  Future<void> Function(Map<String, dynamic>)? persistSnapshot;
+  Future<void> _saveQueue = Future.value();
+  int _saveGeneration = 0;
+  bool saving = false, saveFailed = false;
+  bool get canStartNewRun => !saving && !saveFailed;
+  Future<void> get saveSettled => _saveQueue;
+  Future<void> retrySave() => _persist();
+  Future<void> _persist() {
+    final writer = persistSnapshot;
+    if (writer == null) return Future.value();
+    final snapshot = jsonDecode(jsonEncode(toJson())) as Map<String, dynamic>;
+    final generation = ++_saveGeneration;
+    saving = true;
+    _saveQueue = _saveQueue.then((_) async {
+      try {
+        await writer(snapshot);
+        if (generation == _saveGeneration) saveFailed = false;
+      } catch (_) {
+        if (generation == _saveGeneration) saveFailed = true;
+      } finally {
+        if (generation == _saveGeneration) {
+          saving = false;
+          _notify();
+        }
+      }
+    });
+    return _saveQueue;
+  }
+
+  void _notify() {
+    for (final listener in List<void Function()>.of(_listeners)) {
+      listener();
+    }
+  }
+
+  bool selectStartingOption(String id) {
+    if (!profile.canSelect(id)) return false;
+    profile.nextOption = id;
+    _changed();
+    return true;
+  }
+
+  void ensureRunSummary({String? outcome}) {
+    if (completedRun?.id == metrics.id) return;
+    final result =
+        outcome ??
+        (state.rescued
+            ? 'rescued'
+            : !state.isAlive || state.phase == RunPhase.gameOver
+            ? 'lost'
+            : null);
+    if (result == null) return;
+    completedRun = RunSummary(
+      metrics: metrics,
+      outcome: result,
+      day: state.day,
+      location: metrics.fatalLocation ?? state.locationId,
+      stats: Map.unmodifiable(state.stats),
+      xpBefore: profile.xp,
+    );
+    if (profile.record(completedRun!) && !metrics.legacyEnded) {
+      rankNoticePending =
+          rankFor(completedRun!.xpAfter) > rankFor(completedRun!.xpBefore);
+    }
+  }
+
+  bool abandonJourney() {
+    if (completedRun != null || !canStartNewRun) return false;
+    ensureRunSummary(outcome: 'abandoned');
+    _changed();
+    return true;
+  }
+
+  void _visit(String id) {
+    if (metrics.locations.add(id)) {
+      metrics.note(
+        state.day,
+        id,
+        'Reached ${world.find(id)?.name ?? id}',
+        'map',
+      );
+    }
+  }
+
+  void _recordHomeSupplies() {
+    if (!state.isAlive || state.inField) return;
+    for (final id in beaconComponents.keys) {
+      if ((state.storedResources[id] ?? 0) > 0 && metrics.components.add(id)) {
+        metrics.note(state.day, 'camp', 'Brought ${itemName(id)} home', id);
+      }
+    }
+  }
+
   final EventCatalog catalog;
   final WorldCatalog world;
   final RecipeCatalog recipes;
@@ -263,6 +372,13 @@ class GameEngine {
   }
 
   void _unloadPack() {
+    if (_pendingFishId != null) {
+      if (state.isAlive &&
+          state.availableResource(_pendingFishId!) > _pendingFishBaseline) {
+        metrics.fishKept++;
+      }
+      _pendingFishId = null;
+    }
     _state = state.copyWith(
       locationId: 'camp',
       packResources: {},
@@ -328,6 +444,7 @@ class GameEngine {
   }
 
   bool get isBusy =>
+      completedRun?.outcome == 'abandoned' ||
       hasPendingHaul ||
       _pendingEvent != null ||
       _report != null ||
@@ -415,6 +532,7 @@ class GameEngine {
     }
     final location = world.find(id)!;
     if (id != 'fishing_pond' && _expeditionPool(id, 0).isEmpty) return false;
+    _visit(id);
     _lastPack = {...selectedPack};
     _lastPackSaved = true;
     _lastGear = {...selectedGear};
@@ -550,6 +668,19 @@ class GameEngine {
     final speciesId = record?.speciesId ?? 'small_fish';
     final count = caught ? 1 : 0;
     if (caught) {
+      metrics.fishCaught++;
+      if (metrics.fishSpecies.add(speciesId)) {
+        metrics.note(
+          state.day,
+          state.locationId,
+          'Caught ${itemName(speciesId)}',
+          speciesId,
+        );
+      }
+      if (!release) {
+        _pendingFishId = speciesId;
+        _pendingFishBaseline = before.packResources[speciesId] ?? 0;
+      }
       if (!release) _apply(EventEffect(resources: {speciesId: count}));
       _state = state.copyWith(knownFish: {...state.knownFish, speciesId});
     }
@@ -752,6 +883,10 @@ class GameEngine {
       'explore' => CampAction.explore,
       _ => null,
     };
+    if (_gatheringSource?.trigger == 'encounter' && state.isAlive) {
+      metrics.encounters++;
+      metrics.encounterTypes.add(_gatheringSource!.id);
+    }
     _gathering = null;
     _gatheringBefore = null;
     _gatheringSource = null;
@@ -961,6 +1096,18 @@ class GameEngine {
     _spendTime(recipe.timeCost, outdoor: false);
     final upgrade = recipe.kind == RecipeKind.campTier;
     if (state.isAlive) {
+      if (!repairing) {
+        if (!upgrade) {
+          metrics.crafted++;
+          metrics.recipes.add(id);
+        }
+        metrics.note(
+          state.day,
+          'camp',
+          '${upgrade ? 'Built' : 'Crafted'} ${recipe.name}',
+          upgrade ? 'shelter' : id,
+        );
+      }
       if (recipe.outputs.isNotEmpty) {
         _apply(EventEffect(resources: recipe.outputs));
       } else {
@@ -1357,6 +1504,9 @@ class GameEngine {
         .whereType<String>()
         .toSet();
     final rescueTrial = _pendingEvent!.trigger == 'rescue';
+    final encounterId = _pendingEvent!.trigger == 'encounter'
+        ? _pendingEvent!.id
+        : null;
     final success = !choice.isRisky || _random.nextDouble() < chanceFor(choice);
     final eventTitle = _pendingEvent!.title;
     final protected =
@@ -1418,7 +1568,19 @@ class GameEngine {
           },
           physicalDamage: effect.physicalDamage,
         ),
+        source: encounterId == null ? 'event' : 'encounter:$encounterId',
       );
+    }
+    if (encounterId != null && state.isAlive) {
+      metrics.encounters++;
+      if (metrics.encounterTypes.add(encounterId)) {
+        metrics.note(
+          state.day,
+          before.locationId,
+          'Resolved $eventTitle',
+          'stone_spear',
+        );
+      }
     }
     _state = state.copyWith(
       tools: {...state.tools}..removeAll(choice.consumesTools),
@@ -1470,6 +1632,13 @@ class GameEngine {
     }
     if (rescueTrial && state.isAlive) {
       _state = state.copyWith(rescueStep: state.rescueStep + 1);
+      metrics.stormSteps = state.rescueStep;
+      metrics.note(
+        state.day,
+        'camp',
+        'Survived storm challenge ${state.rescueStep}',
+        'shelter',
+      );
       if (state.rescueStep == rescueEventIds.length) {
         _state = state.copyWith(phase: RunPhase.rescued, locationId: 'camp');
       }
@@ -1701,6 +1870,7 @@ class GameEngine {
           },
         ),
       );
+      metrics.nights++;
       _state = state.copyWith(
         day: state.day + 1,
         timeLeft: RunState.dayLength,
@@ -1834,8 +2004,26 @@ class GameEngine {
   }
 
   void restart() {
+    if (!canStartNewRun) return;
+    ensureRunSummary(outcome: completedRun == null ? 'abandoned' : null);
+    final option = optionById(profile.nextOption);
+    metrics = RunMetrics(option: option.id);
+    completedRun = null;
+    rankNoticePending = false;
+    _pendingFishId = null;
     _state = RunState(
       resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2},
+    );
+    _state = state.copyWith(
+      resources: {
+        ...state.resources,
+        for (final e in option.items.entries)
+          e.key: state.resource(e.key) + e.value,
+      },
+      stats: {
+        ...state.stats,
+        SurvivalStat.food: state.value(SurvivalStat.food) + option.food,
+      },
     );
     _packingDraft = null;
     _haulSelection = null;
@@ -1985,6 +2173,7 @@ class GameEngine {
           SurvivalStat.sanity: -min(2, wet),
         },
       ),
+      source: 'poisoned:$poison',
     );
     if (daytime) _applyDeprivation();
     _state = state.copyWith(
@@ -2029,9 +2218,10 @@ class GameEngine {
             (state.value(SurvivalStat.food) == 0 ? -6 : 0),
       },
     ),
+    source: 'deprivation',
   );
 
-  void _apply(EventEffect effect) {
+  void _apply(EventEffect effect, {String source = 'action'}) {
     final stats = {...state.stats};
     final resources = {...state.resources};
     final carried = {...state.packResources};
@@ -2049,6 +2239,22 @@ class GameEngine {
         }
       }
       stats[entry.key] = (state.value(entry.key) + delta).clamp(0, 100);
+      if (entry.key == SurvivalStat.health &&
+          state.isAlive &&
+          stats[entry.key] == 0 &&
+          metrics.fatalCause == null) {
+        metrics.fatalCause = source;
+        metrics.fatalLocation = state.locationId;
+        metrics.contributing = state.conditions
+            .where(
+              (c) =>
+                  !source.startsWith('poisoned:') ||
+                  c.kind != ConditionKind.poisoned,
+            )
+            .take(2)
+            .map((c) => c.label)
+            .toList();
+      }
     }
     for (final entry in effect.resources.entries) {
       final delta = state.inField && entry.value < 0
@@ -2178,16 +2384,24 @@ class GameEngine {
   }
 
   void _changed() {
+    metrics.campTier = max(metrics.campTier, state.campTier);
+    _recordHomeSupplies();
+    ensureRunSummary();
     onChanged?.call();
-    for (final listener in List<void Function()>.of(_listeners)) {
-      listener();
-    }
+    unawaited(_persist());
+    _notify();
   }
 
-  static const saveVersion = 2;
+  static const saveVersion = 3;
 
   Map<String, dynamic> toJson() => {
     'version': saveVersion,
+    'metrics': metrics.toJson(),
+    'profile': profile.toJson(),
+    'completedRun': completedRun?.toJson(),
+    'rankNoticePending': rankNoticePending,
+    'pendingFishId': _pendingFishId,
+    'pendingFishBaseline': _pendingFishBaseline,
     'packingDraft': _packingDraft?.toJson(),
     'lastPack': _lastPack,
     'lastPackSaved': _lastPackSaved,
@@ -2230,8 +2444,15 @@ class GameEngine {
   /// Continues a saved run. Returns false and keeps the current run when the
   /// save is from another version or cannot be read.
   bool restore(Map<String, dynamic> json) {
+    final checkpoint = jsonDecode(jsonEncode(toJson())) as Map<String, dynamic>;
+    if (_restore(json)) return true;
+    _restore(checkpoint);
+    return false;
+  }
+
+  bool _restore(Map<String, dynamic> json) {
     try {
-      if (!{1, saveVersion}.contains(json['version'])) return false;
+      if (!{1, 2, saveVersion}.contains(json['version'])) return false;
       final restored = RunState.fromJson(json['state'] as Map<String, dynamic>);
       final eventId = json['pendingEvent'] as String?;
       final events = catalog.events.where((e) => e.id == eventId);
@@ -2260,7 +2481,37 @@ class GameEngine {
           )) {
         throw const FormatException('Invalid inventory allocation');
       }
+      final restoredMetrics = json['metrics'] == null
+          ? (RunMetrics(
+              partialSince: restored.day,
+              legacyEnded:
+                  restored.rescued ||
+                  !restored.isAlive ||
+                  restored.phase == RunPhase.gameOver,
+            )..campTier = restored.campTier)
+          : RunMetrics.fromJson(
+              Map<String, dynamic>.from(json['metrics'] as Map),
+            );
+      final restoredProfile = json['profile'] == null
+          ? PlayerProfile()
+          : PlayerProfile.fromJson(
+              Map<String, dynamic>.from(json['profile'] as Map),
+            );
+      final restoredSummary = json['completedRun'] == null
+          ? null
+          : RunSummary.fromJson(
+              Map<String, dynamic>.from(json['completedRun'] as Map),
+            );
+      if (restoredSummary != null && restoredSummary.id != restoredMetrics.id) {
+        throw const FormatException('Mismatched journey summary');
+      }
       _state = restored;
+      metrics = restoredMetrics;
+      profile = restoredProfile;
+      completedRun = restoredSummary;
+      rankNoticePending = json['rankNoticePending'] as bool? ?? false;
+      _pendingFishId = json['pendingFishId'] as String?;
+      _pendingFishBaseline = json['pendingFishBaseline'] as int? ?? 0;
       _packingDraft = json['packingDraft'] == null
           ? null
           : PackingDraft.fromJson(
@@ -2381,9 +2632,10 @@ class GameEngine {
         if (_gathering != null) return true;
         _queueRescueEvent();
       }
+      _recordHomeSupplies();
+      ensureRunSummary();
       return true;
     } catch (_) {
-      restart();
       return false;
     }
   }

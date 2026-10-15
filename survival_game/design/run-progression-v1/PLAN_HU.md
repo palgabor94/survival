@@ -1,6 +1,6 @@
 # Menetvége, Survival XP és profil — javasolt mechanika
 
-2026-10-15 · **Jóváhagyásra kész terv, még nincs bekötve.** A számok kezdeti balanszértékek. Az eddig elfogadott pergamentes felület, egységes kártyák és részletpanelek maradnak. A vezetett első nap az utolsó tartalmi MVP-lépés.
+2026-10-15 · **Elfogadott terv; az implementálás elkészült.** [Bekötés és ellenőrzés](IMPLEMENTATION_HU.md). A számok kezdeti balanszértékek. Az eddig elfogadott pergamentes felület, egységes kártyák és részletpanelek maradnak. A vezetett első nap az utolsó tartalmi MVP-lépés.
 
 ## Mire való?
 
@@ -123,4 +123,4 @@ Végzetes ok: strukturált forrás a tényleges health-levonásból (poison, inj
 
 Szükséges tesztek a bekötéskor: minden XP-sor határa és cap, ismételt craft/halfaj/komponens, visszaengedett hal vs gyakorlás, végzetes ok, halálos éjszaka, több rang átugrása, MAX rank, mentés/folytatás, megszakított lezárás és ismételt összesítő, 20-as archívum vágása rekordvesztés nélkül, régi aktív/lezárt mentés, feladás-megszakítás, perk csak új menetre és pontos kezdőkészlet, teljes megmentés perk nélkül és minden perkkel. UI: 320/390 szélesség, fekvő nézet, 2× betűméret, reduced motion, címkézett bezárók és szöveges állapotok.
 
-Ez a tervezési kör a termelési játéklogikát nem módosítja. A PNG-k statikus Flutter-koncepciók, mintaszámokkal, nem már bekötött gameplay screenshotok.
+A terv eredeti készítési köre a termelési játéklogikát még nem módosította; az azóta elkészült bekötés a fent linkelt dokumentumban szerepel. A PNG-k statikus Flutter-koncepciók, mintaszámokkal, nem már bekötött gameplay screenshotok.

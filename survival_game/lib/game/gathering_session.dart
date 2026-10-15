@@ -33,6 +33,8 @@ class GatheringSession {
     this.day = 1,
     this.ecology = false,
     this.windowScale = 1,
+    this.toolId,
+    this.goodScale = 1,
   }) {
     final source = random ?? Random();
     mushroomSafe = source.nextDouble() >= .25;
@@ -41,6 +43,8 @@ class GatheringSession {
   final int day;
   final bool ecology;
   final double windowScale;
+  String? toolId;
+  double goodScale;
   List<String> get availablePlants => ecology
       ? ecologyPlants.where((id) => day >= 3 || id != 'mooncap').toList()
       : plants;
@@ -82,7 +86,7 @@ class GatheringSession {
     final distance = (marker - .5).abs();
     return distance <= .06 * windowScale
         ? TimingQuality.perfect
-        : distance <= .18 * windowScale
+        : distance <= .18 * windowScale * goodScale
         ? TimingQuality.good
         : TimingQuality.miss;
   }
@@ -157,6 +161,8 @@ class GatheringSession {
     'day': day,
     'ecology': ecology,
     'windowScale': windowScale,
+    'toolId': toolId,
+    'goodScale': goodScale,
     'kind': kind.name,
     'stage': stage.name,
     'elapsed': elapsed,
@@ -177,6 +183,8 @@ class GatheringSession {
       day: json['day'] as int? ?? 1,
       ecology: json['ecology'] as bool? ?? false,
       windowScale: (json['windowScale'] as num? ?? 1).toDouble().clamp(.75, 1),
+      toolId: json['toolId'] as String?,
+      goodScale: (json['goodScale'] as num? ?? 1).toDouble().clamp(1, 1.2),
     );
     session.stage = GatheringStage.values.byName(json['stage'] as String);
     session.elapsed = (json['elapsed'] as num).toDouble().clamp(

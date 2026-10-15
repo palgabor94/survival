@@ -1,3 +1,6 @@
+import 'tool_panels.dart';
+import 'tool_art.dart';
+import '../game/tool_catalog.dart';
 import 'package:flutter/material.dart';
 
 import '../game/event_catalog.dart';
@@ -144,13 +147,20 @@ class EventScene extends StatelessWidget {
           game.state.physicalPenalty > 0)
         'Weakened by current conditions',
       for (final id in choice.requiresTools)
-        '${game.state.tools.contains(id) && !game.state.toolUsable(id) ? 'Repair' : 'Needs'} ${game.recipes.find(id)?.name ?? itemName(id)}',
+        game.state.resolveTool(id) != null
+            ? 'Using ${itemName(game.state.resolveTool(id)!)}${fieldTools.containsKey(game.state.resolveTool(id)) ? ' · ${game.state.toolCondition(game.state.resolveTool(id)!)} condition · uses 1' : ''}'
+            : '${game.state.tools.contains(id) ? 'Repair' : 'Needs'} ${itemName(id)}',
       for (final r in choice.requires.entries)
         'Needs ${r.value} ${itemName(r.key).toLowerCase()}',
       for (final r in choice.requiresStats.entries)
         'Needs ${r.key.label} ${r.value}+',
       if (choice.minigame == 'ruins_symbols') 'Needs 1 extra daylight',
     ];
+    final used = choice.requiresTools
+        .map(game.state.resolveTool)
+        .whereType<String>()
+        .where(fieldTools.containsKey)
+        .firstOrNull;
     final textScale = MediaQuery.textScalerOf(context).scale(12) / 12;
     final baseHeight = 152.0 + (textScale > 1 ? (textScale - 1) * 94 : 0);
     final requiredHeight =
@@ -163,6 +173,30 @@ class EventScene extends StatelessWidget {
       message: [choice.label, ...requirements].join('. '),
       child: ActionCard(
         confirmDetails: true,
+        detailContent: used == null
+            ? null
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AspectRatio(aspectRatio: 1.5, child: ToolArt(used)),
+                  const SizedBox(height: 12),
+                  FieldToolSummary(game: game, id: used),
+                ],
+              ),
+        lines: [
+          if (choice.isRisky)
+            CardLine(
+              'Current success chance: ${(game.chanceFor(choice) * 100).round()}%',
+            ),
+          if (choice.isRisky &&
+              choice.riskDomain == 'physical' &&
+              game.state.physicalPenalty > 0)
+            CardLine(
+              'Physical condition penalty: −${(game.state.physicalPenalty.clamp(0, .25) * 100).round()} points',
+            ),
+          if (choice.isRisky && game.state.value(SurvivalStat.sanity) < 25)
+            const CardLine('Low sanity: −15 points'),
+        ],
         key: ValueKey('choice-${choice.id}'),
         title: _shortTitles[choice.label] ?? choice.label,
         compact: true,
@@ -173,7 +207,8 @@ class EventScene extends StatelessWidget {
         showStatus: false,
         icon: choiceIcon(choice),
         art: choice.requiresTools.isNotEmpty
-            ? choice.requiresTools.first
+            ? (game.state.resolveTool(choice.requiresTools.first) ??
+                  choice.requiresTools.first)
             : choice.requires.isNotEmpty
             ? choice.requires.keys.first
             : switch (choice.icon) {
@@ -192,7 +227,14 @@ class EventScene extends StatelessWidget {
                 'sanity' => 'sanity',
                 _ => choice.icon,
               },
-        image: choice.cardImage,
+        image:
+            choice.requiresTools.any(
+              (id) =>
+                  game.state.resolveTool(id) != null &&
+                  fieldTools.containsKey(game.state.resolveTool(id)),
+            )
+            ? null
+            : choice.cardImage,
         tone: !usable
             ? CardTone.sand
             : choice.icon == 'retreat'

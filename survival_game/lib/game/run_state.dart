@@ -1,4 +1,5 @@
 import 'rescue_progress.dart';
+import 'tool_catalog.dart';
 import 'survival_condition.dart';
 import 'fishing_catalog.dart';
 export 'survival_condition.dart';
@@ -29,6 +30,8 @@ enum SurvivalStat {
 class RunState {
   RunState({
     this.equippedRod = 'basic_rod',
+    this.equippedAxe = 'stone_axe',
+    this.equippedSpear = 'stone_spear',
     Set<String> knownFish = const {},
     this.exposure = 0,
     this.strain = 0,
@@ -69,7 +72,26 @@ class RunState {
          resources ?? {'wood': 2, 'stone': 0, 'fiber': 0},
        );
 
-  final String equippedRod;
+  final String equippedRod, equippedAxe, equippedSpear;
+  String? activeFieldTool(String family) {
+    final selected = family == 'axe' ? equippedAxe : equippedSpear;
+    if (fieldTools[selected]?.family == family && toolUsable(selected)) {
+      return selected;
+    }
+    for (final tool in fieldTools.values.toList().reversed) {
+      if (tool.family == family && toolUsable(tool.id)) return tool.id;
+    }
+    return null;
+  }
+
+  String? resolveTool(String requirement) {
+    final family = requirementFamily(requirement);
+    return family == null
+        ? (toolUsable(requirement) ? requirement : null)
+        : activeFieldTool(family);
+  }
+
+  bool satisfiesTool(String requirement) => resolveTool(requirement) != null;
   final Set<String> knownFish;
   final List<SurvivalCondition> conditions;
   final Set<String> worldFlags;
@@ -113,6 +135,10 @@ class RunState {
   static const toolDurability = {
     'stone_axe': 10,
     'stone_spear': 10,
+    'reinforced_axe': 16,
+    'salvage_axe': 24,
+    'hunting_spear': 16,
+    'salvage_spear': 24,
     'basic_rod': 12,
     'reinforced_rod': 20,
     'river_rod': 30,
@@ -138,6 +164,8 @@ class RunState {
 
   RunState copyWith({
     String? equippedRod,
+    String? equippedAxe,
+    String? equippedSpear,
     Set<String>? knownFish,
     List<SurvivalCondition>? conditions,
     Set<String>? worldFlags,
@@ -160,6 +188,8 @@ class RunState {
     Map<String, int>? resources,
   }) => RunState(
     equippedRod: equippedRod ?? this.equippedRod,
+    equippedAxe: equippedAxe ?? this.equippedAxe,
+    equippedSpear: equippedSpear ?? this.equippedSpear,
     knownFish: knownFish ?? this.knownFish,
     conditions: conditions ?? this.conditions,
     worldFlags: worldFlags ?? this.worldFlags,
@@ -184,6 +214,8 @@ class RunState {
 
   Map<String, dynamic> toJson() => {
     'equippedRod': equippedRod,
+    'equippedAxe': equippedAxe,
+    'equippedSpear': equippedSpear,
     'knownFish': knownFish.toList()..sort(),
     'conditions': conditions.map((c) => c.toJson()).toList(),
     'worldFlags': worldFlags.toList()..sort(),
@@ -208,6 +240,8 @@ class RunState {
 
   factory RunState.fromJson(Map<String, dynamic> j) => RunState(
     equippedRod: j['equippedRod'] as String? ?? 'basic_rod',
+    equippedAxe: j['equippedAxe'] as String? ?? 'stone_axe',
+    equippedSpear: j['equippedSpear'] as String? ?? 'stone_spear',
     knownFish: Set<String>.from(j['knownFish'] as List? ?? []),
     conditions: [
       for (final c in j['conditions'] as List? ?? [])

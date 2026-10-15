@@ -1,3 +1,5 @@
+import '../game/tool_catalog.dart';
+import 'tool_art.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../feedback/haptics_scope.dart';
@@ -26,6 +28,7 @@ class ActionCard extends StatelessWidget {
     this.image,
     this.art,
     this.artWidget,
+    this.detailContent,
     this.tag,
     this.tagColor = CanopyColors.leaf,
     this.lines = const [],
@@ -47,7 +50,7 @@ class ActionCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final String? description, image, art, tag;
-  final Widget? artWidget;
+  final Widget? artWidget, detailContent;
   final Color tagColor;
   final List<CardLine> lines;
   final VoidCallback? onTap;
@@ -205,14 +208,21 @@ class _ActionDetails extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
                 child: Row(
                   children: [
-                    Image.asset(
-                      card.image ??
-                          cardIllustrationFor(subject) ??
-                          'assets/art/card_trail_scene_v1.png',
-                      width: 66,
-                      height: 52,
-                      fit: BoxFit.cover,
-                    ),
+                    if (fieldTools.containsKey(subject))
+                      SizedBox(
+                        width: 66,
+                        height: 52,
+                        child: ToolArt(subject, icon: true),
+                      )
+                    else
+                      Image.asset(
+                        card.image ??
+                            cardIllustrationFor(subject) ??
+                            'assets/art/card_trail_scene_v1.png',
+                        width: 66,
+                        height: 52,
+                        fit: BoxFit.cover,
+                      ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: ParchmentLabel(card.title.toUpperCase(), size: 19),
@@ -227,6 +237,10 @@ class _ActionDetails extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (card.detailContent != null) ...[
+                        card.detailContent!,
+                        const SizedBox(height: 14),
+                      ],
                       if (card.description != null) ...[
                         ParchmentLabel(
                           card.description!,

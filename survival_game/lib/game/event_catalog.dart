@@ -227,8 +227,8 @@ class GameEvent {
 }
 
 class EventCatalog {
-  /// A situation never offers more cards than fit on a phone screen.
-  static const maxChoices = 4;
+  /// Compact choices scroll in one row; the boar offers five alternatives.
+  static const maxChoices = 5;
 
   EventCatalog(List<GameEvent> events) : events = List.unmodifiable(events) {
     final ids = <String>{};

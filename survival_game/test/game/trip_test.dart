@@ -164,7 +164,10 @@ void main() {
       game.goDeeper();
       expect(game.pendingEvent!.trigger, 'encounter');
       expect(game.pendingCost, 0);
-      expect(game.pendingEvent!.choices.length, lessThanOrEqualTo(4));
+      expect(
+        game.pendingEvent!.choices.length,
+        lessThanOrEqualTo(EventCatalog.maxChoices),
+      );
 
       // Whatever the danger, there is always a card that can be played.
       expect(game.visibleChoices.any((c) => c.isFree), isTrue);

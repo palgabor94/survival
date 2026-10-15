@@ -1,3 +1,6 @@
+import '../game/tool_catalog.dart';
+import 'tool_art.dart';
+import 'tool_panels.dart';
 import '../game/run_state.dart';
 import 'package:flutter/material.dart';
 import '../game/crafting.dart';
@@ -28,6 +31,7 @@ class ParchmentCraftScreen extends StatefulWidget {
 
 class _ParchmentCraftScreenState extends State<ParchmentCraftScreen> {
   String? selected;
+  String filter = 'ALL';
   bool owned(Recipe r) =>
       r.isOwnedBy(widget.game.state) && !widget.game.canRepairTool(r.id);
   String status(Recipe r) => owned(r)
@@ -60,7 +64,14 @@ class _ParchmentCraftScreenState extends State<ParchmentCraftScreen> {
   Widget build(BuildContext context) {
     final recipes = widget.showCamp
         ? widget.game.recipes.campTiers
-        : widget.game.recipes.crafts.toList();
+        : widget.game.recipes.crafts
+              .where(
+                (r) =>
+                    filter == 'ALL' ||
+                    fieldTools[r.id]?.family ==
+                        (filter == 'AXES' ? 'axe' : 'spear'),
+              )
+              .toList();
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -188,6 +199,29 @@ class _ParchmentCraftScreenState extends State<ParchmentCraftScreen> {
                             ),
                           ),
                         ),
+                        if (!widget.showCamp)
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                            child: Row(
+                              children: [
+                                for (final value in [
+                                  'ALL',
+                                  'AXES',
+                                  'SPEARS',
+                                ]) ...[
+                                  if (value != 'ALL') const SizedBox(width: 8),
+                                  Expanded(
+                                    child: parchmentButton(
+                                      value,
+                                      () => setState(() => filter = value),
+                                      secondary: filter != value,
+                                      key: ValueKey('tools-filter-$value'),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
                         Expanded(
                           child: SingleChildScrollView(
                             padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
@@ -291,7 +325,13 @@ class _CraftDetails extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
                   child: Row(
                     children: [
-                      if (hasFishingArt(recipe.id))
+                      if (fieldTools.containsKey(recipe.id))
+                        SizedBox(
+                          width: 64,
+                          height: 48,
+                          child: ToolArt(recipe.id, icon: true),
+                        )
+                      else if (hasFishingArt(recipe.id))
                         SizedBox(
                           width: 64,
                           height: 48,
@@ -328,26 +368,46 @@ class _CraftDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ParchmentLabel(
-                          recipe.description,
-                          size: 14,
-                          weight: FontWeight.w500,
-                        ),
+                        if (fieldTools.containsKey(recipe.id)) ...[
+                          Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 300),
+                              child: AspectRatio(
+                                aspectRatio: 1.5,
+                                child: ToolArt(recipe.id),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          FieldToolSummary(
+                            game: game,
+                            id: recipe.id,
+                            crafting: true,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                        if (!fieldTools.containsKey(recipe.id))
+                          ParchmentLabel(
+                            recipe.description,
+                            size: 14,
+                            weight: FontWeight.w500,
+                          ),
                         const SizedBox(height: 8),
-                        ParchmentLabel(
-                          recipe.effect,
-                          size: 13,
-                          color: ParchmentColors.muted,
-                          weight: FontWeight.w500,
-                        ),
+                        if (!fieldTools.containsKey(recipe.id))
+                          ParchmentLabel(
+                            recipe.effect,
+                            size: 13,
+                            color: ParchmentColors.muted,
+                            weight: FontWeight.w500,
+                          ),
                         const SizedBox(height: 18),
                         const ParchmentLabel(
-                          'MATERIALS · HAVE / NEED',
+                          'COST · NEEDED / AVAILABLE',
                           size: 11,
                           color: ParchmentColors.muted,
                         ),
                         const SizedBox(height: 8),
-                        for (final cost in recipe.costs.entries)
+                        for (final cost in game.craftCosts(recipe.id).entries)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             child: Row(
@@ -361,7 +421,7 @@ class _CraftDetails extends StatelessWidget {
                                   ),
                                 ),
                                 ParchmentLabel(
-                                  '${game.state.resource(cost.key)} / ${cost.value}',
+                                  '${cost.value} / ${game.state.resource(cost.key)}',
                                   size: 14,
                                   color:
                                       game.state.resource(cost.key) >=
@@ -398,7 +458,8 @@ class _CraftDetails extends StatelessWidget {
                               color: ParchmentColors.muted,
                             ),
                           ),
-                        if (recipe.requiresItems.isNotEmpty)
+                        if (recipe.requiresItems.isNotEmpty &&
+                            !game.canRepairTool(recipe.id))
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: ParchmentLabel(

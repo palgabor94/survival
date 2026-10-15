@@ -1,3 +1,4 @@
+import 'tool_catalog.dart';
 import 'ecology_catalog.dart';
 import 'fishing_catalog.dart';
 import 'dart:convert';
@@ -96,6 +97,7 @@ class WorldCatalog {
 }
 
 String itemName(String id) =>
+    fieldTools[id]?.name ??
     fishSpecies[id]?.name ??
     fishingRods[id]?.name ??
     fishingBaits[id]?.name ??

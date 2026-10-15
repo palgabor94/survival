@@ -1,6 +1,6 @@
 # Lost Canopy — balták és lándzsák
 
-2026-10-15 · **Terv, még nincs játékba kötve.** Az elfogadott pergamentes felülettel, egyforma 112×172-es kártyákkal és 3:2 képablakokkal. A képek a játék Flutter-komponenseiből kirajzolt, előkészített állapotú koncepciók, nem működő gameplay screenshotok.
+2026-10-15 · **Az elfogadott koncepciók archívuma; azóta elkészült a bekötés.** [Működő szabályok és validáció](IMPLEMENTATION_HU.md) · [12 tényleges screenshot](../../screenshots/tool-progression-v1/README.md). Az alábbi képek továbbra is a tervezési állapotot mutatják. Az elfogadott pergamentes felülettel, egyforma 112×172-es kártyákkal és 3:2 képablakokkal. A képek a játék Flutter-komponenseiből kirajzolt, előkészített állapotú koncepciók, nem működő gameplay screenshotok.
 
 **[Mind a 9 képernyő egy képen](00-overview.png)** · **[Pontos mechanika és költségek](PLAN_HU.md)**
 

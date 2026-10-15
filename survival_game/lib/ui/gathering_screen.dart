@@ -1,3 +1,4 @@
+import 'tool_panels.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -387,6 +388,16 @@ class _GatheringScreenState extends State<GatheringScreen>
     final ready = session.stage == GatheringStage.ready;
     final available = session.active && !_dialog && !_inactive;
     final reason = game.gatheringBlockReason(session.kind);
+    if (ready && session.kind != GatheringKind.foraging) {
+      return GatheringToolLoadout(
+        game: game,
+        kind: session.kind,
+        onChanged: () => setState(() {}),
+        onStart: _begin,
+        onBack: () => _back(),
+        onWorkshop: () => _back('workshop'),
+      );
+    }
     if (ready) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -539,6 +550,7 @@ class _GatheringScreenState extends State<GatheringScreen>
                       painter: _TimingPainter(
                         session.marker,
                         session.windowScale,
+                        session.goodScale,
                       ),
                     ),
                   ),
@@ -698,7 +710,8 @@ class _GatheringScreenState extends State<GatheringScreen>
 }
 
 class _TimingPainter extends CustomPainter {
-  const _TimingPainter(this.marker, this.scale);
+  const _TimingPainter(this.marker, this.scale, this.goodScale);
+  final double goodScale;
   final double scale;
   final double marker;
   @override
@@ -713,9 +726,9 @@ class _TimingPainter extends CustomPainter {
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(
-          size.width * (.5 - .18 * scale),
+          size.width * (.5 - .18 * scale * goodScale),
           3,
-          size.width * .36 * scale,
+          size.width * .36 * scale * goodScale,
           14,
         ),
         const Radius.circular(4),
@@ -755,5 +768,7 @@ class _TimingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TimingPainter oldDelegate) =>
-      oldDelegate.marker != marker || oldDelegate.scale != scale;
+      oldDelegate.marker != marker ||
+      oldDelegate.scale != scale ||
+      oldDelegate.goodScale != goodScale;
 }

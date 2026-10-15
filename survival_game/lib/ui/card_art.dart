@@ -1,3 +1,5 @@
+import '../game/tool_catalog.dart';
+import 'tool_art.dart';
 import 'package:flutter/material.dart';
 import 'item_icon.dart';
 import 'ecology_art.dart';
@@ -54,6 +56,9 @@ class CardArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (fieldTools.containsKey(id)) {
+      return SizedBox.square(dimension: size, child: ToolArt(id, icon: true));
+    }
     if (hasFishingArt(id)) {
       return SizedBox.square(
         dimension: size,

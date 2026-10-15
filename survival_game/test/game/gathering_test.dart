@@ -432,7 +432,7 @@ void main() {
       expect(game.beginGathering(), isFalse);
     },
   );
-  test('worn and broken tools can be repaired at real recipe costs', () {
+  test('worn and broken tools use the separate repair costs', () {
     final game = gatheringGame(
       state: RunState(
         tools: {'stone_axe'},
@@ -446,8 +446,8 @@ void main() {
     expect(game.craftBlockReason('stone_axe'), isNull);
     expect(game.craft('stone_axe'), isTrue);
     expect(game.state.toolCondition('stone_axe'), 10);
-    expect(game.state.resource('wood'), 6);
-    expect(game.state.resource('fiber'), 4);
+    expect(game.state.resource('wood'), 8);
+    expect(game.state.resource('fiber'), 5);
     expect(game.state.timeLeft, 5);
     game.continueFromReport();
     expect(game.craft('stone_axe'), isFalse);

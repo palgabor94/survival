@@ -1,3 +1,6 @@
+import '../game/tool_catalog.dart';
+import 'tool_art.dart';
+import 'tool_panels.dart';
 import '../game/ecology_catalog.dart';
 import '../game/fishing_catalog.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +37,8 @@ class _InventoryDialogState extends State<InventoryDialog> {
     if (!mounted || command == null) return;
     if (command.startsWith('prepare-fish:') ||
         command.startsWith('equip-rod:') ||
+        command.startsWith('equip-tool:') ||
+        command.startsWith('repair-tool:') ||
         command.startsWith('study:') ||
         command == 'dry' ||
         command == 'roots' ||
@@ -205,7 +210,13 @@ class _InventoryDialogState extends State<InventoryDialog> {
                                     ? 'View equipment'
                                     : 'View details',
                                 status: tab == 2
-                                    ? 'OWNED'
+                                    ? (fieldTools.containsKey(id) &&
+                                              game.state.activeFieldTool(
+                                                    fieldTools[id]!.family,
+                                                  ) ==
+                                                  id
+                                          ? 'EQUIPPED'
+                                          : 'OWNED')
                                     : '${game.state.resource(id)}',
                                 selected: selected == id,
                                 onTap: () => details(id),
@@ -282,6 +293,12 @@ class _ItemDetails extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (fieldTools.containsKey(id)) ...[
+                          AspectRatio(aspectRatio: 1.5, child: ToolArt(id)),
+                          const SizedBox(height: 12),
+                          FieldToolSummary(game: game, id: id),
+                          const SizedBox(height: 12),
+                        ],
                         if (fish != null || preparedFishSource(id) != null) ...[
                           AspectRatio(aspectRatio: 1.5, child: FishingArt(id)),
                           const SizedBox(height: 12),
@@ -359,6 +376,39 @@ class _ItemDetails extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (fieldTools.containsKey(id))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          child: parchmentButton(
+                            'EQUIP TOOL',
+                            game.state.toolUsable(id)
+                                ? () => Navigator.pop(context, 'equip-tool:$id')
+                                : null,
+                            secondary: true,
+                            key: ValueKey('equip-tool-$id'),
+                          ),
+                        ),
+                        if (game.canRepairTool(id))
+                          SizedBox(
+                            width: double.infinity,
+                            child: parchmentButton('REPAIR TOOL', () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) =>
+                                    ToolRepairDialog(game: game, id: id),
+                              );
+                              if (result == true && context.mounted) {
+                                Navigator.pop(context, 'repair-tool:$id');
+                              }
+                            }, secondary: true),
+                          ),
+                      ],
+                    ),
+                  ),
                 if (fishingRods.containsKey(id))
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),

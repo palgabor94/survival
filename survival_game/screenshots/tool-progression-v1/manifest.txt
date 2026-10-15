@@ -1,0 +1,12 @@
+01-workshop-axes.png
+02-axe-details.png
+03-workshop-spears.png
+04-items-gear.png
+05-repair-confirmation.png
+06-repaired-outcome.png
+07-chopping-loadout.png
+08-axe-selection.png
+09-chopping-outcome.png
+10-jaguar-choices.png
+11-spear-decision.png
+12-boar-spear-choice.png

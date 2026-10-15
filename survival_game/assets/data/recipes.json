@@ -344,5 +344,73 @@
     "outputs": {
       "fruit_bait": 3
     }
+  },
+  {
+    "id": "reinforced_axe",
+    "name": "Reinforced Axe",
+    "kind": "tool",
+    "description": "A reinforced field tool built for longer journeys.",
+    "effect": "16 durability. GOOD zone ×1.10; +1 wood per successful chopping attempt.",
+    "costs": {
+      "wood": 3,
+      "stone": 2,
+      "fiber": 3
+    },
+    "timeCost": 1,
+    "minCampTier": 1,
+    "requiresItems": [
+      "stone_axe"
+    ]
+  },
+  {
+    "id": "salvage_axe",
+    "name": "Salvage Axe",
+    "kind": "tool",
+    "description": "A reinforced field tool built for longer journeys.",
+    "effect": "24 durability. GOOD zone ×1.20; +2 wood per successful attempt; extra hardwood with two perfect strikes.",
+    "costs": {
+      "hardwood": 3,
+      "metal_scrap": 3,
+      "fiber": 3
+    },
+    "timeCost": 1,
+    "minCampTier": 2,
+    "requiresItems": [
+      "reinforced_axe"
+    ]
+  },
+  {
+    "id": "hunting_spear",
+    "name": "Hunting Spear",
+    "kind": "tool",
+    "description": "A balanced spear with a stronger shaft and a carefully shaped point.",
+    "effect": "16 durability. Hunting GOOD zone ×1.10; +8 percentage points on risky spear decisions.",
+    "costs": {
+      "hardwood": 2,
+      "stone": 2,
+      "fiber": 4
+    },
+    "timeCost": 1,
+    "minCampTier": 1,
+    "requiresItems": [
+      "stone_spear"
+    ]
+  },
+  {
+    "id": "salvage_spear",
+    "name": "Salvage Spear",
+    "kind": "tool",
+    "description": "A balanced spear with a stronger shaft and a carefully shaped point.",
+    "effect": "24 durability. Hunting GOOD zone ×1.20; +15 percentage points on risky spear decisions.",
+    "costs": {
+      "hardwood": 3,
+      "metal_scrap": 3,
+      "fiber": 4
+    },
+    "timeCost": 1,
+    "minCampTier": 2,
+    "requiresItems": [
+      "hunting_spear"
+    ]
   }
 ]

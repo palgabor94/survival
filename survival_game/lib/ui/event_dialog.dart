@@ -85,12 +85,22 @@ class OutcomeDialog extends StatelessWidget {
             const Divider(height: 18),
             Row(
               children: [
-                const ResourceIcon('sun', size: 22),
+                const Icon(
+                  Icons.schedule_rounded,
+                  size: 24,
+                  color: ParchmentColors.ink,
+                ),
                 const SizedBox(width: 8),
                 const Expanded(
                   child: ParchmentLabel('DAYLIGHT LEFT', size: 11),
                 ),
-                ParchmentLabel('${state!.timeLeft} / 6', size: 13),
+                Flexible(
+                  child: ParchmentLabel(
+                    '${state!.timeLeft} / 6 time',
+                    size: 13,
+                    align: TextAlign.right,
+                  ),
+                ),
               ],
             ),
           ],
@@ -116,33 +126,81 @@ class OutcomeDialog extends StatelessWidget {
         ),
       );
 
-  Widget _changeRow(MapEntry<String, int> change) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Row(
-      children: [
-        ResourceIcon(change.key.toLowerCase(), size: 25),
-        const SizedBox(width: 8),
-        Expanded(child: ParchmentLabel(itemName(change.key), size: 12)),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+  Widget _changeRow(MapEntry<String, int> change) {
+    if (_isVital(change) && state != null) {
+      final after = _afterValue(change);
+      final color = switch (change.key.toLowerCase()) {
+        'water' => const Color(0xFF287E90),
+        'food' => const Color(0xFF9C6338),
+        'health' => const Color(0xFFB54238),
+        _ => const Color(0xFF816095),
+      };
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ParchmentLabel(
-              '${change.value > 0 ? '+' : ''}${change.value}',
-              size: 14,
-              color: change.value > 0 ? CanopyColors.leaf : CanopyColors.food,
-            ),
-            if (state != null)
-              ParchmentLabel(
-                '${_afterValue(change)} ${change.value < 0 ? 'left' : 'now'}',
-                size: 10,
-                color: ParchmentColors.muted,
-                weight: FontWeight.w600,
+            ResourceIcon(change.key.toLowerCase(), size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ParchmentLabel(
+                    '${change.value > 0 ? '+' : ''}${change.value} ${itemName(change.key).toUpperCase()}',
+                    size: 15,
+                    color: change.value < 0
+                        ? ParchmentColors.rust
+                        : ParchmentColors.leaf,
+                  ),
+                  const SizedBox(height: 3),
+                  ParchmentLabel(
+                    'Remaining: $after / 100',
+                    size: 11,
+                    weight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 5),
+                  LinearProgressIndicator(
+                    value: (after / 100).clamp(0, 1),
+                    minHeight: 5,
+                    color: color,
+                    backgroundColor: const Color(0xFFCDC098),
+                  ),
+                ],
               ),
+            ),
           ],
         ),
-      ],
-    ),
-  );
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          ResourceIcon(change.key.toLowerCase(), size: 25),
+          const SizedBox(width: 8),
+          Expanded(child: ParchmentLabel(itemName(change.key), size: 12)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ParchmentLabel(
+                '${change.value > 0 ? '+' : ''}${change.value}',
+                size: 14,
+                color: change.value > 0 ? CanopyColors.leaf : CanopyColors.food,
+              ),
+              if (state != null)
+                ParchmentLabel(
+                  '${_afterValue(change)} ${change.value < 0 ? 'left' : 'now'}',
+                  size: 10,
+                  color: ParchmentColors.muted,
+                  weight: FontWeight.w600,
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   int _afterValue(MapEntry<String, int> change) {
     final stat = SurvivalStat.values

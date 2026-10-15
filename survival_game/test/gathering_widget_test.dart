@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/game/gathering_session.dart';
 import 'package:survival_game/game/run_state.dart';
-import 'package:survival_game/ui/action_card.dart';
 import 'package:survival_game/ui/craft_screen.dart';
 import 'package:survival_game/ui/gathering_screen.dart';
 
@@ -59,8 +58,8 @@ void main() {
     await showCamp(tester, game);
     expect(
       tester
-          .widget<ActionCard>(find.byKey(const ValueKey('gathering-start')))
-          .onTap,
+          .widget<FilledButton>(find.byKey(const ValueKey('gathering-start')))
+          .onPressed,
       isNull,
     );
     await press(tester, 'gathering-back', settle: true);
@@ -202,8 +201,13 @@ void main() {
             'gathering-start',
             'gathering-back',
           ].map((key) => tester.getSize(find.byKey(ValueKey(key)))).toList();
-          expect(ready[0], ready[1]);
-          expect(ready[0].width, lessThanOrEqualTo(160));
+          if (kind == GatheringKind.foraging) {
+            expect(ready[0], ready[1]);
+            expect(ready[0].width, lessThanOrEqualTo(160));
+          } else {
+            expect(ready[0].height, greaterThanOrEqualTo(48));
+            expect(ready[1].height, greaterThanOrEqualTo(48));
+          }
           await press(tester, 'gathering-start');
           await tester.pump(const Duration(milliseconds: 100));
           expect(tester.takeException(), isNull);

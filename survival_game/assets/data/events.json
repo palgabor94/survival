@@ -984,6 +984,29 @@
           "endsExpedition": true
         },
         "result": "You run until the sound behind you fades. The pack is somewhere back there."
+      },
+      {
+        "id": "brace_spear",
+        "label": "Keep it at bay",
+        "description": "Brace your spear and give the boar space to pass.",
+        "icon": "spear",
+        "requiresTools": [
+          "stone_spear"
+        ],
+        "riskDomain": "physical",
+        "successChance": 0.65,
+        "effect": {},
+        "result": "The boar veers away from your spear and disappears into the brush.",
+        "failureEffect": {
+          "stats": {
+            "health": -14,
+            "sanity": -4
+          },
+          "physicalDamage": true,
+          "dropLoot": true,
+          "endsExpedition": true
+        },
+        "failureResult": "The boar breaks past the point. You flee wounded, leaving your pack behind."
       }
     ]
   },
@@ -3022,7 +3045,7 @@
     "id": "ecology_marker",
     "trigger": "explore",
     "scene": "explore",
-    "title": "The striped hunter\u2019s trail",
+    "title": "The striped hunter’s trail",
     "description": "Tracks split between identical trees. Blue wax berries could mark a safe way back.",
     "locations": [
       "riverbank",

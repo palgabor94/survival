@@ -77,7 +77,7 @@ void main() {
     }
   });
 
-  test('a catalog with a fifth card is rejected', () {
+  test('a catalog exceeding the scrolling choice limit is rejected', () {
     GameEvent crowded() => GameEvent(
       id: 'crowded',
       trigger: 'forage',
@@ -85,7 +85,7 @@ void main() {
       description: 'd',
       scene: 'forage',
       choices: [
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i <= EventCatalog.maxChoices; i++)
           EventChoice(
             id: 'c$i',
             label: 'c',

@@ -1,5 +1,7 @@
 # Fejszék és lándzsák — javasolt mérföldkő
 
+Frissítés: a terv azóta [be van kötve](IMPLEMENTATION_HU.md). Az alábbi eredeti tervezési állapot archívum; az aktuális értékeket és az ellenőrzést a bekötési dokumentum rögzíti.
+
 2026-10-15 · Pontos mechanikai terv és natív Flutterben kirajzolt UI-koncepciók. **Még nincs bekötve a játékba.** Az értékek induló balanszjavaslatok; a fogásokhoz hasonlóan külön implementálás és mérés követi.
 
 ## Cél és jelenlegi helyzet

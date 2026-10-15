@@ -1,3 +1,5 @@
+import '../game/tool_catalog.dart';
+import 'tool_art.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'card_illustration.dart';
@@ -165,7 +167,9 @@ class ParchmentCard extends StatelessWidget {
                   aspectRatio: 1.5,
                   child:
                       artWidget ??
-                      (hasFishingArt(art) && image == null
+                      (fieldTools.containsKey(art) && image == null
+                          ? ToolArt(art)
+                          : hasFishingArt(art) && image == null
                           ? FishingArt(art)
                           : hasEcologyArt(art) && image == null
                           ? EcologyArt(art)

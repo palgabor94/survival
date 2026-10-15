@@ -1,3 +1,4 @@
+import 'tool_catalog.dart';
 import 'dart:math';
 
 import 'crafting.dart';
@@ -363,6 +364,32 @@ class GameEngine {
     return true;
   }
 
+  String? gatheringTool(GatheringKind kind) => kind == GatheringKind.foraging
+      ? null
+      : state.activeFieldTool(kind == GatheringKind.chopping ? 'axe' : 'spear');
+
+  bool equipFieldTool(String id) {
+    final tool = fieldTools[id];
+    final choosing = _gathering?.stage == GatheringStage.ready;
+    if (tool == null ||
+        !state.toolUsable(id) ||
+        !state.isAlive ||
+        state.phase != RunPhase.day ||
+        (!choosing && (isBusy || state.locationId != 'camp'))) {
+      return false;
+    }
+    _state = tool.family == 'axe'
+        ? state.copyWith(equippedAxe: id)
+        : state.copyWith(equippedSpear: id);
+    _changed();
+    return true;
+  }
+
+  Map<String, int> craftCosts(String id) =>
+      canRepairTool(id) && fieldTools.containsKey(id)
+      ? fieldTools[id]!.repairs
+      : recipes.find(id)?.costs ?? const {};
+
   bool canRepairTool(String id) =>
       state.tools.contains(id) &&
       RunState.toolDurability.containsKey(id) &&
@@ -377,7 +404,7 @@ class GameEngine {
     }
     final cost = _gathering?.kind == kind ? _gatheringCost : 1;
     if (state.timeLeft < cost) return 'Need $cost daylight.';
-    if (kind != GatheringKind.foraging && !state.toolUsable(kind.art)) {
+    if (kind != GatheringKind.foraging && !state.satisfiesTool(kind.art)) {
       return state.tools.contains(kind.art)
           ? 'Repair your ${itemName(kind.art).toLowerCase()} in the workshop.'
           : 'Craft a ${itemName(kind.art).toLowerCase()} in the workshop.';
@@ -410,6 +437,15 @@ class GameEngine {
         session.stage != GatheringStage.ready ||
         gatheringBlockReason(session.kind) != null) {
       return false;
+    }
+    if (session.kind != GatheringKind.foraging) {
+      final toolId = gatheringTool(session.kind)!;
+      session.toolId = toolId;
+      session.goodScale = fieldTools[toolId]!.goodScale;
+      final tool = fieldTools[toolId]!;
+      _state = tool.family == 'axe'
+          ? state.copyWith(equippedAxe: toolId)
+          : state.copyWith(equippedSpear: toolId);
     }
     session.start();
     if (session.kind != GatheringKind.foraging) _addStrain(1);
@@ -496,12 +532,14 @@ class GameEngine {
                   TimingQuality.perfect => 3,
                 },
           );
-          if (wood > 0) resources['wood'] = wood;
+          final tier = fieldTools[session.toolId]?.tier ?? 0;
+          if (wood > 0) resources['wood'] = wood + tier;
           final perfectHits = session.hits
               .where((h) => h == TimingQuality.perfect)
               .length;
           if (perfectHits >= 2) {
-            resources['hardwood'] = perfectHits == 3 ? 2 : 1;
+            resources['hardwood'] =
+                (perfectHits == 3 ? 2 : 1) + (tier == 2 ? 1 : 0);
           }
           notes.add(
             wood > 0
@@ -570,7 +608,7 @@ class GameEngine {
         );
       }
       if (session.kind != GatheringKind.foraging) {
-        final tool = session.kind.art;
+        final tool = session.toolId ?? session.kind.art;
         final wear = max(
           1,
           session.hits.where((h) => h == TimingQuality.miss).length + 1,
@@ -634,7 +672,7 @@ class GameEngine {
     if (state.campTier < recipe.minCampTier) {
       return 'Needs ${campTierName(recipes, recipe.minCampTier)}';
     }
-    for (final item in recipe.requiresItems) {
+    for (final item in canRepairTool(id) ? <String>{} : recipe.requiresItems) {
       if (!state.tools.contains(item)) {
         return 'Needs ${recipes.find(item)?.name ?? itemName(item)}';
       }
@@ -643,7 +681,7 @@ class GameEngine {
       return 'Need ${recipe.waterCost} water for the recipe';
     }
     final missing = [
-      for (final e in recipe.costs.entries)
+      for (final e in craftCosts(id).entries)
         if (state.resource(e.key) < e.value)
           '${e.value - state.resource(e.key)} ${itemName(e.key).toLowerCase()}',
     ];
@@ -661,7 +699,7 @@ class GameEngine {
     final repairing = canRepairTool(id);
     _apply(
       EventEffect(
-        resources: {for (final e in recipe.costs.entries) e.key: -e.value},
+        resources: {for (final e in craftCosts(id).entries) e.key: -e.value},
         stats: {SurvivalStat.water: -recipe.waterCost},
       ),
     );
@@ -679,6 +717,12 @@ class GameEngine {
         _state = state.copyWith(
           durability: {...state.durability, id: RunState.toolDurability[id]!},
         );
+      }
+      if (!repairing && fieldTools.containsKey(id)) {
+        final tool = fieldTools[id]!;
+        _state = tool.family == 'axe'
+            ? state.copyWith(equippedAxe: id)
+            : state.copyWith(equippedSpear: id);
       }
       if (id == 'emergency_beacon') {
         _state = state.copyWith(
@@ -982,8 +1026,17 @@ class GameEngine {
         ? 'Storm'
         : state.weather;
     final base = choice.weatherChances[weather] ?? choice.successChance;
-    return (base - penalty - (state.value(SurvivalStat.sanity) < 25 ? .15 : 0))
-        .clamp(.1, .95);
+    final spearAction =
+        choice.riskDomain == 'physical' &&
+        choice.requiresTools.contains('stone_spear');
+    final bonus = spearAction
+        ? fieldTools[state.activeFieldTool('spear')]?.chanceBonus ?? 0
+        : 0;
+    return (base +
+            bonus -
+            penalty -
+            (state.value(SurvivalStat.sanity) < 25 ? .15 : 0))
+        .clamp(.1, spearAction ? .9 : .95);
   }
 
   bool canChoose(EventChoice choice) =>
@@ -996,7 +1049,7 @@ class GameEngine {
       (choice.extraTime == 0 ||
           state.timeLeft >= _pendingCost + choice.extraTime) &&
       choice.requires.entries.every((r) => state.resource(r.key) >= r.value) &&
-      choice.requiresTools.every(state.toolUsable) &&
+      choice.requiresTools.every(state.satisfiesTool) &&
       choice.consumesTools.every(state.toolUsable) &&
       (choice.minigame != 'ruins_symbols' ||
           state.timeLeft >= _pendingCost + 1) &&
@@ -1050,17 +1103,40 @@ class GameEngine {
       }
       return true;
     }
+    final usedTools = choice.requiresTools
+        .map(state.resolveTool)
+        .whereType<String>()
+        .toSet();
     final rescueTrial = _pendingEvent!.trigger == 'rescue';
     final success = !choice.isRisky || _random.nextDouble() < chanceFor(choice);
     final eventTitle = _pendingEvent!.title;
     final protected =
         state.worldFlags.contains('trail_marker') &&
         _pendingEvent!.id.contains('lost');
-    final effect = protected
+    var effect = protected
         ? EventEffect()
         : success
         ? choice.effect
         : choice.failureEffect!;
+    if (success &&
+        usedTools.any((id) => fieldTools[id]?.family == 'axe') &&
+        (effect.resources['wood'] ?? 0) > 0) {
+      final tier = usedTools
+          .map((id) => fieldTools[id]?.tier ?? 0)
+          .fold(0, max);
+      effect = EventEffect(
+        stats: effect.stats,
+        resources: {
+          ...effect.resources,
+          'wood': effect.resources['wood']! + tier,
+        },
+        flags: effect.flags,
+        conditions: effect.conditions,
+        dropLoot: effect.dropLoot,
+        endsExpedition: effect.endsExpedition,
+        physicalDamage: effect.physicalDamage,
+      );
+    }
     if (protected || _pendingEvent!.id == 'ecology_crossing') {
       _state = state.copyWith(
         worldFlags: {...state.worldFlags}
@@ -1099,7 +1175,7 @@ class GameEngine {
       tools: {...state.tools}..removeAll(choice.consumesTools),
     );
     final wearNotes = [
-      for (final tool in choice.requiresTools)
+      for (final tool in usedTools)
         if (RunState.toolDurability.containsKey(tool)) _wearTool(tool, 1),
     ];
     final trip = _expedition;

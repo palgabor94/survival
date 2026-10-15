@@ -1,5 +1,13 @@
 # Tárgyatlasz generálás
 
+Bekötéskor külön kis ikonatlasz is készült built-in imagegennel, valódi átlátszó háttérrel (1536×1024 RGBA). Fájl: `assets/art/tool_icons_atlas_v1.png` az appban. Forrás: `/Users/palgabor/.codex/generated_images/01a12f08-1744-79c2-a79d-a201298416d9/exec-c8d212df-735e-4694-a8fa-5a7f8eb38ae0.png`.
+
+Ikonprompt:
+
+```
+Generate a transparent PNG icon atlas for Lost Canopy survival game. Reference image gives identity of six tools and simple painted faceted low-poly art style ONLY. Exact 3 columns x 2 rows equal square cells, canvas 1536x1024. True alpha transparent background, no scenery, no colored tiles, no shadows outside subjects, no text or borders. Top row left to right: stone axe, reinforced stone axe with cross binding and strong hardwood handle, salvage steel axe with wrapped grip. Bottom row: stone spear, hunting spear with longer polished stone point, salvage steel spear with leaf-shaped metal tip. All complete objects centered with 12% transparent safety margin inside own cell. Spears shown diagonally bottom-left to top-right with full shaft visible, axes same diagonal direction. Strong silhouettes readable at 28px. Match wood, cord and head designs in first six cells of reference; ignore reference backgrounds and bottom row maintenance objects. No people, no fantasy adornments. Six separate transparent game icons, no overlapping cells.
+```
+
 Built-in imagegen, 2026-10-15. Stílusreferencia: `assets/art/card_stone_axe_scene_v1.png`. Új kép, nem a meglévő art felülírása. Nincs karakter.
 
 ```

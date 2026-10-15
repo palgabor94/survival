@@ -1,3 +1,6 @@
+import 'package:survival_game/game/tool_catalog.dart';
+import 'package:survival_game/ui/tool_panels.dart';
+import 'package:survival_game/ui/inventory_dialog.dart';
 import 'package:survival_game/audio/music_controller.dart';
 import 'package:survival_game/audio/sounds_controller.dart';
 import 'package:survival_game/feedback/haptics_controller.dart';
@@ -52,6 +55,8 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final toolProgression =
+      Platform.environment['LOST_CANOPY_CAPTURE_TOOLS'] == '1';
   final sceneRevision =
       Platform.environment['LOST_CANOPY_CAPTURE_SCENES'] == '1';
   final eventRevision =
@@ -220,7 +225,8 @@ Future<void> main() async {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (minigames ||
+        if (toolProgression ||
+            minigames ||
             fishingTutorial ||
             sceneWidth ||
             itemsRefresh ||
@@ -297,6 +303,132 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (toolProgression) {
+      RunState toolState({
+        Set<String>? tools,
+        Map<String, int> durability = const {},
+        List<SurvivalCondition> conditions = const [],
+      }) => RunState(
+        day: 5,
+        campTier: 2,
+        tools: tools ?? fieldTools.keys.toSet(),
+        durability: durability,
+        conditions: conditions,
+        equippedAxe: 'reinforced_axe',
+        equippedSpear: 'hunting_spear',
+        resources: {
+          'wood': 12,
+          'stone': 4,
+          'fiber': 12,
+          'hardwood': 4,
+          'metal_scrap': 4,
+          'raw_meat': 1,
+        },
+        stats: {
+          SurvivalStat.health: 88,
+          SurvivalStat.water: 62,
+          SurvivalStat.food: 57,
+          SurvivalStat.sanity: 76,
+        },
+      );
+      final craft = game(state: toolState(tools: {'stone_axe', 'stone_spear'}));
+      await mount(CraftScreen(game: craft));
+      await tap('tools-filter-AXES');
+      await shot('01-workshop-axes');
+      await tap('recipe-reinforced_axe');
+      await shot('02-axe-details');
+      await tester.tap(find.byTooltip('Close').last);
+      await tester.pumpAndSettle();
+      await tap('tools-filter-SPEARS');
+      await shot('03-workshop-spears');
+      final gear = game(
+        state: toolState(durability: {'salvage_spear': 3, 'hunting_spear': 12}),
+      );
+      await mount(Scaffold(body: InventoryDialog(game: gear)));
+      await tester.tap(find.text('GEAR'));
+      await tester.pumpAndSettle();
+      await shot('04-items-gear');
+      await mount(
+        Scaffold(
+          body: ToolRepairDialog(game: gear, id: 'salvage_spear'),
+        ),
+      );
+      await shot('05-repair-confirmation');
+      if (!gear.craft('salvage_spear')) throw StateError('Repair was blocked');
+      await mount(
+        Scaffold(
+          body: OutcomeDialog(
+            report: gear.report!,
+            nightNext: false,
+            state: gear.state,
+          ),
+        ),
+      );
+      await shot('06-repaired-outcome');
+      final chop = game(state: toolState(durability: {'reinforced_axe': 14}));
+      chop.openGathering(GatheringKind.chopping);
+      await mount(GatheringScreen(game: chop));
+      await shot('07-chopping-loadout');
+      await tester.tap(find.text('CHANGE'));
+      await tester.pumpAndSettle();
+      await shot('08-axe-selection');
+      await tester.tap(find.byTooltip('Close').last);
+      await tester.pumpAndSettle();
+      // Drive the actual session, not the live ticker, to export its committed result.
+      await tester.pumpWidget(const SizedBox.shrink());
+      if (!chop.beginGathering()) throw StateError('Chopping was blocked');
+      for (var i = 0; i < 3; i++) {
+        chop.tickGathering(i == 0 ? .4 : .8);
+        chop.strikeGathering();
+      }
+      if (!chop.finishGathering()) throw StateError('Chopping did not finish');
+      await mount(
+        Scaffold(
+          body: OutcomeDialog(
+            report: chop.report!,
+            nightNext: false,
+            state: chop.state,
+          ),
+        ),
+      );
+      await shot('09-chopping-outcome');
+      final fight = game(
+        state: toolState(
+          conditions: [const SurvivalCondition(ConditionKind.injured, 3)],
+        ),
+      );
+      final save = fight.toJson()
+        ..['state'] = fight.state.copyWith(locationId: 'riverbank').toJson()
+        ..['pendingEvent'] = 'jaguar_trail'
+        ..['pendingCost'] = 0;
+      if (!fight.restore(save)) throw StateError('Encounter fixture invalid');
+      await mount(EventScene(game: fight));
+      await shot('10-jaguar-choices');
+      final spear = find.byKey(const ValueKey('choice-spear'));
+      await tester.ensureVisible(spear);
+      await tester.tap(spear);
+      await tester.pumpAndSettle();
+      await shot('11-spear-decision');
+      await tester.pumpWidget(const SizedBox.shrink());
+      final boar = game(state: toolState());
+      final boarSave = boar.toJson()
+        ..['state'] = boar.state.copyWith(locationId: 'riverbank').toJson()
+        ..['pendingEvent'] = 'boar_charge'
+        ..['pendingCost'] = 0;
+      if (!boar.restore(boarSave)) throw StateError('Boar fixture invalid');
+      await mount(EventScene(game: boar));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('choice-brace_spear')),
+      );
+      await tester.pumpAndSettle();
+      await shot('12-boar-spear-choice');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
     }
 
     if (Platform.environment['LOST_CANOPY_CAPTURE_FISHING_PROGRESSION'] ==

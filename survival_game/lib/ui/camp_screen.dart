@@ -456,6 +456,10 @@ class _CampScreenState extends State<CampScreen> {
       await _showWorkshop();
     } else if (command.startsWith('prepare-fish:')) {
       _run(() => game.prepareFish(command.substring(13)));
+    } else if (command.startsWith('equip-tool:')) {
+      _run(() => game.equipFieldTool(command.substring(11)));
+    } else if (command.startsWith('repair-tool:')) {
+      _run(() => game.craft(command.substring(12)));
     } else if (command.startsWith('equip-rod:')) {
       _run(() => game.equipFishingRod(command.substring(10)));
     } else if (command == 'dry') {

@@ -1,0 +1,8 @@
+01-welcome.png
+02-first-forage.png
+03-eat-your-find.png
+04-first-craft.png
+05-first-pack.png
+06-return-home.png
+07-first-night.png
+08-first-day-complete.png

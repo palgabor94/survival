@@ -63,7 +63,7 @@ A 200 seedelt menet stressztesztje a jelenlegi 37 eseménnyel és az új minijá
 
 ## Következő mérföldkövek
 
-2026-10-15: a menetvégi és profilrendszer bekötve. **450/450 teszt sikeres**, két maggal mind a négy indulókészlet eljutott a megmentésig (22–47. nap). Egyszeri XP-jóváírás, rangok, külön profil, archívum, perkválasztás, régi mentések részleges rekordja és látható mentési hiba/újrapróbálás működik. Következő mérföldkő a teljes rendszer több stratégiás és emberi balansza; a vezetett első nap ez után következik.
+2026-10-15: a menetvégi és profilrendszer bekötve. **450/450 teszt sikeres**, két maggal mind a négy indulókészlet eljutott a megmentésig (22–47. nap). Egyszeri XP-jóváírás, rangok, külön profil, archívum, perkválasztás, régi mentések részleges rekordja és látható mentési hiba/újrapróbálás működik. A felhasználó új sorrendje: előbb a vezetett első nap/tutorial, utána a teljes rendszer több stratégiás és emberi balansza.
 
 2026-10-15: a hátizsák és tábori készlet bekötve. **420/420 teszt sikeres**; mentett indulási pakolás és felszerelés, explicit zsákmányrendezés, automatikus kirakodás, 8/12/16 helyes fejlesztés és régi mentések veszteség nélküli folytatása működik. Azóta a menetösszesítő és a meta is elkészült; a vezetett első nap továbbra is az utolsó tartalmi fejlesztési lépés.
 
@@ -73,14 +73,14 @@ A 200 seedelt menet stressztesztje a jelenlegi 37 eseménnyel és az új minijá
 
 2026-10-15: az [új dzsungel-ökológia](design/survival-ecology-v1/IMPLEMENTATION_HU.md) bekötve: nyolc állandó növényi élelem, gyökér-előkészítés, négy menthető státusz, esőkitettség és fáradtság, négy új recept, tizenkét esemény, fajismeret és pergamentes kezelési UI. 355 teszt sikeres; analyzer tiszta. [13 valódi képernyőkép](screenshots/survival-ecology-v1/README.md). A mért emberi nehézség még nem végleges.
 
-Az első balanszlépés elkészült és újramért. Következő külön lépés a túl erős késői alvásgyógyítás és tea hangolása, majd a végső vihar feszültsége; ezek változatlanok. A növénygyűjtés hozamaránya is további vizsgálatot kér. Emberi játékosok és készülékes haptic/audio ellenőrzése szükséges, a botok nem adnak emberi sikerarányt.
+Az első balanszlépés elkészült és újramért. A tutorial után következő hangolási feladat a túl erős késői alvásgyógyítás és tea hangolása, majd a végső vihar feszültsége; ezek változatlanok. A növénygyűjtés hozamaránya is további vizsgálatot kér. Emberi játékosok és készülékes haptic/audio ellenőrzése szükséges, a botok nem adnak emberi sikerarányt.
 
 1. **Eszköz- és fegyverprogresszió — elkészült:** három bot, három balta és három lándzsa, mentett felszerelés, külön javításköltség, eszközfüggő gyűjtés és fizikai események. [Bekötés és szabályok](design/tool-progression-v1/IMPLEMENTATION_HU.md) · [12 tényleges screenshot](screenshots/tool-progression-v1/README.md).
 2. **Új halak és zsákmány — elkészült:** öt faj, méret/ritkaság, három csali, három bot, veszélyes halak, biztonságos előkészítés és halfajnapló. [Bekötés és pontos szabályok](design/fishing-progression-v1/IMPLEMENTATION_HU.md) · [15 tényleges screenshot](screenshots/fishing-progression-v1/README.md).
 3. **Készlet és tárolás — elkészült:** 8/12/16 helyes hátizsák, külön felszerelés, kezdettől biztonságos korlátlan tábori készlet, explicit túlcsordulás és automatikus hazatérési kirakodás. [Bekötés, mentésmigráció és validáció](design/inventory-storage-v1/IMPLEMENTATION_HU.md) · [Valódi screenshotok](screenshots/inventory-storage-v1/README.md).
 4. **Menetösszesítő és meta — elkészült:** közös győztes/vesztes összesítő, tételes Survival XP, tartós profil/rekordok, húsz menetes archívum és három választható indulókészlet-csere. [Bekötés és nyolc teljes végigjátszás](design/run-progression-v1/IMPLEMENTATION_HU.md) · [16 tényleges screenshot](screenshots/run-progression-v1/README.md).
-5. **Teljes rendszer balanszolása:** az új tartalommal, több stratégiával és hibázó minijátékossal.
-6. **Vezetett első nap:** a felhasználó döntése szerint az MVP utolsó fejlesztési lépése, amikor a tartalom és a szabályok már véglegesek. Unlock-visszajelzésekkel együtt.
+5. **Vezetett első nap és tutorial — ez következik:** a felhasználó legutóbbi döntése alapján a teljes balansz előtt. Rövid játszható bevezető, menthető/átugorható segítséggel és későbbi helyzetfüggő tanítással. [Pontos terv és látványtervek](design/first-day-tutorial-v1/README.md).
+6. **Teljes rendszer balanszolása:** a tutorial elkészülte után, az új tartalommal, több stratégiával és hibázó minijátékossal.
 7. **Záró készülékes ellenőrzés:** sikeres/vesztes menet, process-kill és folytatás, mért játékidő, iOS/Android build és teljesítmény.
 
 Analitika és monetizáció külön termékdöntés után következik. A játék már nyerhető, de a starter kit teljes MVP-tartalma még nincs kész.

@@ -70,4 +70,4 @@ A régi v1/v2 aktív mentés folytatható, de **Partial record · tracking began
 
 Ez egy óvatos, ellátmányt előnyben részesítő tesztstratégia, nem emberi nehézségmérés vagy statisztikai egyensúlybizonyíték. A magok a különböző tranzakciószám és mentési pontok miatt sem alkotnak szigorúan párosított összehasonlítást. Mind a nyolc végén 100 Health maradt; a korábban azonosított késői gyógyulás/ellátmány és a teljes gazdaság hangolása továbbra is szükséges. A perkek ára egyelőre az elfogadott terv értéke.
 
-Következő lépés: több stratégiás balanszmérés és emberi próba; utána a felhasználó által utolsó tartalmi lépésnek kért vezetett első nap, végül a fizikai készülékes ellenőrzés.
+A felhasználó legutóbbi döntése szerinti következő lépés: először a vezetett első nap/tutorial, utána a több stratégiás balanszmérés és emberi próba, végül a fizikai készülékes ellenőrzés.

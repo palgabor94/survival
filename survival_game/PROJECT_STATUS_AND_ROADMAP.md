@@ -73,7 +73,7 @@ Az első balanszlépés elkészült és újramért. Következő külön lépés 
 
 1. **Eszköz- és fegyverprogresszió — elkészült:** három bot, három balta és három lándzsa, mentett felszerelés, külön javításköltség, eszközfüggő gyűjtés és fizikai események. [Bekötés és szabályok](design/tool-progression-v1/IMPLEMENTATION_HU.md) · [12 tényleges screenshot](screenshots/tool-progression-v1/README.md).
 2. **Új halak és zsákmány — elkészült:** öt faj, méret/ritkaság, három csali, három bot, veszélyes halak, biztonságos előkészítés és halfajnapló. [Bekötés és pontos szabályok](design/fishing-progression-v1/IMPLEMENTATION_HU.md) · [15 tényleges screenshot](screenshots/fishing-progression-v1/README.md).
-3. **Készlet és tárolás:** hordott slotok, tábori storage és megtelt hátizsák kezelése.
+3. **Készlet és tárolás — tervezés elkészült:** 8/12/16 helyes hátizsák, külön felszerelés, kezdettől biztonságos korlátlan tábori készlet, explicit túlcsordulás és automatikus hazatérési kirakodás. [Pontos mechanika és 10 pergamentes látványterv](design/inventory-storage-v1/README.md); még nincs bekötve.
 4. **Menetösszesítő és meta:** vereségösszesítő, Survival XP, profil és perkek. Már 23 valódi tárgyrecept működik.
 5. **Teljes rendszer balanszolása:** az új tartalommal, több stratégiával és hibázó minijátékossal.
 6. **Vezetett első nap:** a felhasználó döntése szerint az MVP utolsó fejlesztési lépése, amikor a tartalom és a szabályok már véglegesek. Unlock-visszajelzésekkel együtt.

@@ -1,0 +1,10 @@
+01-camp-storage.png
+02-prepare-pack.png
+03-transfer-quantity.png
+04-departure-confirmation.png
+05-backpack-on-trail.png
+06-pending-haul.png
+07-choose-kept-items.png
+08-confirm-left-behind.png
+09-return-and-unload.png
+10-backpack-upgrades.png

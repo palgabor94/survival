@@ -45,7 +45,11 @@ const cardIllustrationSubjects = <String>[
 ];
 
 String? cardIllustrationFor(String subject) {
-  final id = subject == 'wood' ? 'firewood' : subject;
+  final id = {'trail_backpack', 'expedition_pack'}.contains(subject)
+      ? 'inventory'
+      : subject == 'wood'
+      ? 'firewood'
+      : subject;
   return cardIllustrationSubjects.contains(id)
       ? 'assets/art/card_${id}_scene_v1.png'
       : null;

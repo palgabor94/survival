@@ -108,10 +108,10 @@ class FishingLoadout extends StatelessWidget {
                 key: ValueKey('fishing-bait-${bait.id}'),
                 title: bait.name,
                 art: bait.id,
-                info: 'In pack · ${game.state.resource(bait.id)}',
+                info: 'In pack · ${game.state.availableResource(bait.id)}',
                 status: session.baitId == bait.id
                     ? 'SELECTED'
-                    : game.state.resource(bait.id) > 0
+                    : game.state.availableResource(bait.id) > 0
                     ? 'AVAILABLE'
                     : 'EMPTY',
                 selected: session.baitId == bait.id,
@@ -125,7 +125,7 @@ class FishingLoadout extends StatelessWidget {
                       actions: [
                         parchmentButton(
                           'SELECT ${bait.name.toUpperCase()}',
-                          game.state.resource(bait.id) > 0
+                          game.state.availableResource(bait.id) > 0
                               ? () => Navigator.pop(context, true)
                               : null,
                           key: ValueKey('select-bait-${bait.id}'),
@@ -177,7 +177,7 @@ class FishingLoadout extends StatelessWidget {
                 const SizedBox(height: 7),
                 parchmentButton(
                   'CAST LINE',
-                  game.state.resource(session.baitId) > 0 &&
+                  game.state.availableResource(session.baitId) > 0 &&
                           game.state.toolUsable(rod.id)
                       ? onCast
                       : null,
@@ -462,8 +462,12 @@ class FishPreparationDialog extends StatelessWidget {
             size: 11,
             color: ParchmentColors.muted,
           ),
-          line(id, fish.name, '${game.state.resource(id)} / 1'),
-          line('wood', 'Firewood', '${game.state.resource('wood')} / 1'),
+          line(id, fish.name, '${game.state.availableResource(id)} / 1'),
+          line(
+            'wood',
+            'Firewood',
+            '${game.state.availableResource('wood')} / 1',
+          ),
           if (fish.requiresKnife) line('stone_knife', 'Knife', 'REQUIRED'),
           const Divider(height: 20),
           line('sun', 'Daylight', '1 time'),

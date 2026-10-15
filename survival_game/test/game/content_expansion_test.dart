@@ -64,7 +64,16 @@ void main() {
       );
 
   void arrival(GameEngine game, String location) {
-    expect(game.travelTo(location), isTrue);
+    expect(
+      game.travelTo(
+        location,
+        pack: {
+          ...game.recommendedPack(location),
+          if (game.state.resource('small_fish') > 0) 'small_fish': 1,
+        },
+      ),
+      isTrue,
+    );
     final safe = game.visibleChoices.firstWhere(
       (c) => game.canChoose(c) && !c.effect.endsExpedition,
     );
@@ -125,7 +134,16 @@ void main() {
       '$location has distinct arrival and deeper stops; travel charged once',
       () {
         final game = make();
-        expect(game.travelTo(location), isTrue);
+        expect(
+          game.travelTo(
+            location,
+            pack: {
+              ...game.recommendedPack(location),
+              if (game.state.resource('small_fish') > 0) 'small_fish': 1,
+            },
+          ),
+          isTrue,
+        );
         final first = game.pendingEvent!.id;
         expect(game.state.timeLeft, 6);
         final cost = game.pendingCost;

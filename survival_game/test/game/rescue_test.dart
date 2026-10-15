@@ -613,7 +613,15 @@ void main() {
             game.travelBlockReason(destination) == null &&
             game.state.value(SurvivalStat.water) >= 60 &&
             game.state.value(SurvivalStat.food) >= 55) {
-          game.travelTo(destination);
+          final gear = {...game.suggestedGear};
+          final required = game.world.find(destination)?.requiresTool;
+          if (required != null) {
+            if (required == 'machete') {
+              gear.remove('stone_knife');
+            }
+            gear.add(required);
+          }
+          expect(game.travelTo(destination, gear: gear), isTrue);
           continue;
         }
         expect(game.startAction(CampAction.forage), isTrue);

@@ -259,7 +259,7 @@ void main() {
       expect(dawnWater(RainyRandom()), 17);
     });
 
-    test('the Water Filter adds water to every collection', () {
+    test('the camp Water Filter does not affect remote water collection', () {
       int collect(Set<String> tools) {
         final game = engine(tools: tools, stats: stats());
         game.travelTo('riverbank');
@@ -267,7 +267,7 @@ void main() {
         return game.state.value(SurvivalStat.water);
       }
 
-      expect(collect({'water_filter'}) - collect({}), 6);
+      expect(collect({'water_filter'}) - collect({}), 0);
     });
 
     test('the Drying Rack makes each fish more filling', () {

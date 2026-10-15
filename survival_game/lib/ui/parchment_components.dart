@@ -155,10 +155,17 @@ class ParchmentCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Center(
-                      child: ParchmentLabel(
+                      child: Text(
                         title.toUpperCase(),
-                        size: 10,
-                        align: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          height: 1.25,
+                          fontWeight: FontWeight.w800,
+                          color: ParchmentColors.ink,
+                        ),
                       ),
                     ),
                   ),

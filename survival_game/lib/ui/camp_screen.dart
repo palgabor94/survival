@@ -1,3 +1,4 @@
+import 'inventory_panels.dart';
 import '../game/ecology_catalog.dart';
 import 'fishing_panels.dart';
 import 'dart:async';
@@ -56,6 +57,7 @@ class _CampScreenState extends State<CampScreen> {
     super.initState();
     // A restored run may resume mid-event, mid-report or at the pond.
     if (game.isBusy ||
+        game.packingDraft != null ||
         game.state.phase == RunPhase.gameOver ||
         game.state.rescued) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -74,6 +76,24 @@ class _CampScreenState extends State<CampScreen> {
     _presenting = true;
     try {
       while (mounted) {
+        if (game.hasPendingHaul) {
+          final resolved = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(builder: (_) => HaulResolutionScreen(game: game)),
+          );
+          if (!mounted || resolved != true) return;
+          setState(() {});
+          continue;
+        }
+        if (game.packingDraft != null) {
+          await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(builder: (_) => PackingScreen(game: game)),
+          );
+          if (!mounted) return;
+          setState(() {});
+          continue;
+        }
         if (game.report != null) {
           final summary = game.report!.daySummary;
           if (summary != null) {
@@ -256,6 +276,15 @@ class _CampScreenState extends State<CampScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (game.hasPendingHaul)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: parchmentButton(
+                            'RESOLVE BACKPACK',
+                            () => _run(() {}),
+                            key: const ValueKey('resume-haul'),
+                          ),
+                        ),
                       if (state.value(SurvivalStat.water) <= 20 ||
                           state.value(SurvivalStat.food) <= 20)
                         Padding(
@@ -439,7 +468,7 @@ class _CampScreenState extends State<CampScreen> {
     if (destination == 'workshop') {
       await _showWorkshop();
     } else {
-      _run(() => game.travelTo(destination));
+      _run(() => game.beginPacking(destination));
     }
   }
 
@@ -452,7 +481,9 @@ class _CampScreenState extends State<CampScreen> {
     );
     _openingInventory = false;
     if (!mounted || command == null) return;
-    if (command == 'workshop') {
+    if (command == 'map') {
+      await _showMap();
+    } else if (command == 'workshop') {
       await _showWorkshop();
     } else if (command.startsWith('prepare-fish:')) {
       _run(() => game.prepareFish(command.substring(13)));

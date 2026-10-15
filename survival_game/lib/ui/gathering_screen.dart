@@ -666,7 +666,10 @@ class _GatheringScreenState extends State<GatheringScreen>
           itemBuilder: (context, index) {
             final id = session.availablePlants[index];
             final selected = session.picked.contains(id);
-            final block = GatheringSession.plantBlock(id, game.state.tools);
+            final block = GatheringSession.plantBlock(
+              id,
+              game.state.availableTools,
+            );
             final full = session.picked.length >= 3;
             return SizedBox(
               width: width,

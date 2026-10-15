@@ -30,6 +30,8 @@ import '../../test/game/expedition_test.dart' as expedition_logic;
 import '../../test/game/fishing_session_test.dart' as fishing;
 import '../../test/game/fishing_progression_test.dart' as fishing_progression;
 import '../../test/game/tool_progression_test.dart' as tool_progression;
+import '../../test/game/inventory_test.dart' as inventory;
+import '../../test/inventory_widget_test.dart' as inventory_ui;
 import '../../test/tool_progression_widget_test.dart' as tool_progression_ui;
 import '../../test/fishing_progression_widget_test.dart'
     as fishing_progression_ui;
@@ -66,6 +68,8 @@ Future<void> main() async {
       'fishing': fishing.main,
       'fishing_progression': fishing_progression.main,
       'tool_progression': tool_progression.main,
+      'inventory': inventory.main,
+      'inventory_widgets': inventory_ui.main,
       'tool_progression_widgets': tool_progression_ui.main,
       'fishing_progression_widgets': fishing_progression_ui.main,
       'gathering': gathering.main,

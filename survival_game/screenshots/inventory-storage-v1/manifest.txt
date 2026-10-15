@@ -1,0 +1,16 @@
+01-camp-storage.png
+02-packed-supplies.png
+03-quantity.png
+04-equipped-gear.png
+05-choose-axe.png
+06-over-capacity-departure.png
+07-field-backpack.png
+08-wreck-discovery.png
+09-full-backpack.png
+09b-new-battery.png
+10-final-selection.png
+11-confirm-left-items.png
+12-retained-result.png
+13-return-and-unload.png
+14-stored-after-return.png
+15-backpack-upgrade.png

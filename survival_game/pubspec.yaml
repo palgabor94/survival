@@ -38,6 +38,8 @@ dependencies:
   just_audio: ^0.10.6
 
 dev_dependencies:
+  # Native screenshot/test runner uses the version constrained by flutter_test.
+  test_api: any
   flutter_test:
     sdk: flutter
 

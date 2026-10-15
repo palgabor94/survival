@@ -1,4 +1,5 @@
 import 'rescue_progress.dart';
+import 'inventory_catalog.dart';
 import 'tool_catalog.dart';
 import 'survival_condition.dart';
 import 'fishing_catalog.dart';
@@ -29,6 +30,11 @@ enum SurvivalStat {
 /// A snapshot cannot be mutated by the UI or by content definitions.
 class RunState {
   RunState({
+    Map<String, int>? packResources,
+    Map<String, int> pendingResources = const {},
+    Set<String>? expeditionGear,
+    this.packTier = 0,
+    bool? legacyPack,
     this.equippedRod = 'basic_rod',
     this.equippedAxe = 'stone_axe',
     this.equippedSpear = 'stone_spear',
@@ -52,7 +58,19 @@ class RunState {
     Map<String, int> durability = const {},
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
-  }) : knownFish = Set.unmodifiable(knownFish),
+  }) : packResources = Map.unmodifiable(
+         packResources ??
+             (locationId == 'camp'
+                 ? <String, int>{}
+                 : resources ?? <String, int>{}),
+       ),
+       pendingResources = Map.unmodifiable(pendingResources),
+       expeditionGear = expeditionGear == null
+           ? null
+           : Set.unmodifiable(expeditionGear),
+       legacyPack =
+           legacyPack ?? (packResources == null && locationId != 'camp'),
+       knownFish = Set.unmodifiable(knownFish),
        conditions = List.unmodifiable(conditions),
        knownSpecies = Set.unmodifiable(knownSpecies),
        worldFlags = Set.unmodifiable(worldFlags),
@@ -72,6 +90,31 @@ class RunState {
          resources ?? {'wood': 2, 'stone': 0, 'fiber': 0},
        );
 
+  /// Resources is the conserved total; accessibility is always explicit.
+  final Map<String, int> packResources, pendingResources;
+  final Set<String>? expeditionGear;
+  final int packTier;
+  final bool legacyPack;
+  int get packCapacity => [8, 12, 16][packTier.clamp(0, 2)];
+  int get usedPackSlots => packSlots(packResources);
+  bool get inField => locationId != 'camp';
+  Map<String, int> get storedResources => positiveItems({
+    for (final e in resources.entries)
+      e.key:
+          e.value -
+          (packResources[e.key] ?? 0) -
+          (pendingResources[e.key] ?? 0),
+  });
+  Map<String, int> get availableResources =>
+      inField ? packResources : storedResources;
+  int availableResource(String id) => availableResources[id] ?? 0;
+  Set<String> get availableTools => inField && expeditionGear != null
+      ? {
+          ...expeditionGear!.where(tools.contains),
+          if (expeditionGear!.contains('machete') && tools.contains('machete'))
+            'stone_knife',
+        }
+      : tools;
   final String equippedRod, equippedAxe, equippedSpear;
   String? activeFieldTool(String family) {
     final selected = family == 'axe' ? equippedAxe : equippedSpear;
@@ -147,7 +190,7 @@ class RunState {
   int toolCondition(String id) =>
       tools.contains(id) ? (durability[id] ?? toolDurability[id] ?? 0) : 0;
   bool toolUsable(String id) =>
-      tools.contains(id) &&
+      availableTools.contains(id) &&
       (!toolDurability.containsKey(id) || toolCondition(id) > 0);
   final Map<SurvivalStat, int> stats;
   final Map<String, int> resources;
@@ -163,6 +206,12 @@ class RunState {
       : 'Dusk';
 
   RunState copyWith({
+    Map<String, int>? packResources,
+    Map<String, int>? pendingResources,
+    Set<String>? expeditionGear,
+    bool clearExpeditionGear = false,
+    int? packTier,
+    bool? legacyPack,
     String? equippedRod,
     String? equippedAxe,
     String? equippedSpear,
@@ -187,6 +236,13 @@ class RunState {
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
   }) => RunState(
+    packResources: packResources ?? this.packResources,
+    pendingResources: pendingResources ?? this.pendingResources,
+    expeditionGear: clearExpeditionGear
+        ? null
+        : expeditionGear ?? this.expeditionGear,
+    packTier: packTier ?? this.packTier,
+    legacyPack: legacyPack ?? this.legacyPack,
     equippedRod: equippedRod ?? this.equippedRod,
     equippedAxe: equippedAxe ?? this.equippedAxe,
     equippedSpear: equippedSpear ?? this.equippedSpear,
@@ -213,6 +269,11 @@ class RunState {
   );
 
   Map<String, dynamic> toJson() => {
+    'packResources': packResources,
+    'pendingResources': pendingResources,
+    'expeditionGear': expeditionGear?.toList(),
+    'packTier': packTier,
+    'legacyPack': legacyPack,
     'equippedRod': equippedRod,
     'equippedAxe': equippedAxe,
     'equippedSpear': equippedSpear,
@@ -239,6 +300,17 @@ class RunState {
   };
 
   factory RunState.fromJson(Map<String, dynamic> j) => RunState(
+    packResources: j.containsKey('packResources')
+        ? Map<String, int>.from(j['packResources'] as Map)
+        : null,
+    pendingResources: Map<String, int>.from(
+      j['pendingResources'] as Map? ?? {},
+    ),
+    expeditionGear: j['expeditionGear'] == null
+        ? null
+        : Set<String>.from(j['expeditionGear'] as List),
+    packTier: (j['packTier'] as int? ?? 0).clamp(0, 2),
+    legacyPack: j['legacyPack'] as bool?,
     equippedRod: j['equippedRod'] as String? ?? 'basic_rod',
     equippedAxe: j['equippedAxe'] as String? ?? 'stone_axe',
     equippedSpear: j['equippedSpear'] as String? ?? 'stone_spear',

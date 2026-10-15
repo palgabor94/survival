@@ -124,7 +124,10 @@ void main() {
     'selecting bait costs nothing; cast consumes only the selected bait and one durability',
     () {
       final game = fishingGame();
-      expect(game.travelTo('fishing_pond'), isTrue);
+      expect(
+        game.travelTo('fishing_pond', gear: {'river_rod', 'stone_knife'}),
+        isTrue,
+      );
       final before = game.state.toJson();
       expect(game.selectFishingBait('fruit_bait'), isTrue);
       expect(game.state.toJson(), before);

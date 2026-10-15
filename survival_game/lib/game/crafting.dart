@@ -145,9 +145,11 @@ class RecipeCatalog {
   }
 
   /// Sum of a bonus over owned items and every reached camp tier.
-  int bonus(RunState state, CampBonus bonus) => recipes
-      .where((r) => r.isOwnedBy(state))
-      .fold(0, (sum, r) => sum + (r.bonuses[bonus] ?? 0));
+  int bonus(RunState state, CampBonus bonus) => state.inField
+      ? 0
+      : recipes
+            .where((r) => r.isOwnedBy(state))
+            .fold(0, (sum, r) => sum + (r.bonuses[bonus] ?? 0));
 
   factory RecipeCatalog.fromJson(String source) => RecipeCatalog(
     (jsonDecode(source) as List)

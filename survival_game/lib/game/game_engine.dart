@@ -1,3 +1,4 @@
+import 'inventory_catalog.dart';
 import 'tool_catalog.dart';
 import 'dart:math';
 
@@ -91,7 +92,243 @@ class GameEngine {
 
   /// Daylight the pending event will spend once it is resolved.
   int get pendingCost => _pendingCost;
+  PackingDraft? _packingDraft;
+  PackingDraft? get packingDraft => _packingDraft;
+  Map<String, int> _lastPack = {};
+  bool _lastPackSaved = false;
+  Set<String>? _lastGear;
+  bool _returnAfterHaul = false;
+  Map<String, int>? _haulSelection;
+  Map<String, int> get haulSelection =>
+      Map.unmodifiable(_haulSelection ?? haulCandidate);
+  bool updateHaulSelection(Map<String, int> kept) {
+    if (!hasPendingHaul ||
+        kept.entries.any(
+          (e) => e.value < 0 || e.value > (haulCandidate[e.key] ?? 0),
+        )) {
+      return false;
+    }
+    _haulSelection = {...kept};
+    _changed();
+    return true;
+  }
+
+  bool get hasPendingHaul => state.pendingResources.isNotEmpty;
+  Map<String, int> get haulCandidate =>
+      mergeItems(state.packResources, state.pendingResources);
+
+  String? get packingNotice {
+    if (!_lastPackSaved) return null;
+    final missing = [
+      for (final e in _lastPack.entries)
+        if (e.value > (state.storedResources[e.key] ?? 0)) itemName(e.key),
+      for (final id in _lastGear ?? <String>{})
+        if (!state.toolUsable(id)) itemName(id),
+    ];
+    return missing.isEmpty
+        ? null
+        : 'Last loadout adjusted: ${missing.join(', ')} unavailable or insufficient.';
+  }
+
+  Set<String> get suggestedGear => _lastGear == null
+      ? {
+          if (state.activeFieldTool('axe') case final String id) id,
+          if (state.activeFieldTool('spear') case final String id) id,
+          if (fishingRods.keys.any(state.toolUsable)) activeFishingRod,
+          if (state.tools.contains('machete'))
+            'machete'
+          else if (state.tools.contains('stone_knife'))
+            'stone_knife',
+          if (state.tools.contains('torch')) 'torch',
+          if (state.availableTools.contains('leaf_rain_cape')) 'leaf_rain_cape',
+        }
+      : _lastGear!.where(state.toolUsable).toSet();
+  Map<String, int> recommendedPack(String destination) {
+    final requested = _lastPackSaved
+        ? _lastPack
+        : <String, int>{
+            if (state.resource('prepared_small_fish') > 0)
+              'prepared_small_fish': 2,
+            if (state.availableResource('herb') > 0) 'herb': 2,
+            if (state.availableResource('bandage') > 0) 'bandage': 1,
+            for (final id in fishingBaits.keys)
+              if (state.resource(id) > 0) id: 2,
+          };
+    final result = <String, int>{};
+    for (final e in requested.entries) {
+      final n = min(e.value, state.storedResources[e.key] ?? 0);
+      if (n > 0 && packSlots({...result, e.key: n}) <= state.packCapacity) {
+        result[e.key] = n;
+      }
+    }
+    return result;
+  }
+
+  bool beginPacking(String destination) {
+    if (_packingDraft != null ||
+        travelBlockReason(destination) != null ||
+        destination == 'camp') {
+      return false;
+    }
+    _packingDraft = PackingDraft(
+      destination,
+      recommendedPack(destination),
+      suggestedGear,
+    );
+    _changed();
+    return true;
+  }
+
+  bool updatePacking(Map<String, int> items, Set<String> gear) {
+    if (_packingDraft == null ||
+        items.entries.any(
+          (e) => e.value < 0 || e.value > (state.storedResources[e.key] ?? 0),
+        ) ||
+        !gear.every(state.tools.contains)) {
+      return false;
+    }
+    _packingDraft = PackingDraft(
+      _packingDraft!.destination,
+      positiveItems(items),
+      gear,
+    );
+    _changed();
+    return true;
+  }
+
+  void cancelPacking() {
+    _packingDraft = null;
+    _changed();
+  }
+
+  String? departureBlockReason(
+    String destination,
+    Map<String, int> items,
+    Set<String> gear,
+  ) {
+    final base = travelBlockReason(destination);
+    if (base != null) return base;
+    if (items.entries.any(
+      (e) => e.value < 0 || e.value > (state.storedResources[e.key] ?? 0),
+    )) {
+      return 'Not enough items in camp storage';
+    }
+    if (packSlots(items) > state.packCapacity) {
+      return 'Pack exceeds ${state.packCapacity} slots';
+    }
+    final allowed = {
+      ...fieldTools.keys,
+      ...fishingRods.keys,
+      'stone_knife',
+      'machete',
+      'torch',
+      'leaf_rain_cape',
+    };
+    if (!gear.every((id) => allowed.contains(id) && state.toolUsable(id))) {
+      return 'Choose working equipment you own';
+    }
+    for (final family in ['axe', 'spear', 'rod', 'blade']) {
+      final count = gear
+          .where(
+            (id) =>
+                (fieldTools[id]?.family ??
+                    (fishingRods.containsKey(id)
+                        ? 'rod'
+                        : {'stone_knife', 'machete'}.contains(id)
+                        ? 'blade'
+                        : id)) ==
+                family,
+          )
+          .length;
+      if (count > 1) return 'Only one $family can be equipped';
+    }
+    if (destination == 'fishing_pond' &&
+        (!gear.any(fishingRods.containsKey) ||
+            !items.entries.any(
+              (e) => fishingBaits.containsKey(e.key) && e.value > 0,
+            ))) {
+      return 'Pack a working rod and at least one bait';
+    }
+    final required = world.find(destination)?.requiresTool;
+    if (required != null && !gear.contains(required)) {
+      return 'Equip ${itemName(required)} for this route';
+    }
+    return null;
+  }
+
+  bool leaveCamp() {
+    final draft = _packingDraft;
+    if (draft == null) return false;
+    return travelTo(draft.destination, pack: draft.items, gear: draft.gear);
+  }
+
+  void _unloadPack() {
+    _state = state.copyWith(
+      locationId: 'camp',
+      packResources: {},
+      pendingResources: {},
+      clearExpeditionGear: true,
+      legacyPack: false,
+    );
+    _returnAfterHaul = false;
+  }
+
+  bool resolveHaul(Map<String, int> kept) {
+    if (!hasPendingHaul ||
+        kept.entries.any(
+          (e) => e.value < 0 || e.value > (haulCandidate[e.key] ?? 0),
+        ) ||
+        packSlots(kept) > state.packCapacity) {
+      return false;
+    }
+    final candidate = haulCandidate;
+    _haulSelection = null;
+    final discarded = {
+      for (final e in candidate.entries)
+        if (e.value > (kept[e.key] ?? 0)) e.key: e.value - (kept[e.key] ?? 0),
+    };
+    final total = {...state.resources};
+    for (final e in discarded.entries) {
+      total[e.key] = max(0, (total[e.key] ?? 0) - e.value);
+    }
+    final trip = _expedition;
+    if (trip != null) {
+      for (final e in discarded.entries) {
+        trip.loot[e.key] = max(0, (trip.loot[e.key] ?? 0) - e.value);
+      }
+    }
+    _state = state.copyWith(
+      resources: total,
+      packResources: positiveItems(kept),
+      pendingResources: {},
+    );
+    final report = _report;
+    if (report != null) {
+      final changes = {...report.changes};
+      for (final e in discarded.entries) {
+        changes[e.key] = (changes[e.key] ?? 0) - e.value;
+      }
+      changes.removeWhere((key, value) => value == 0);
+      _report = ActionReport.saved(
+        title: report.title,
+        body:
+            report.body +
+            (discarded.isEmpty
+                ? ''
+                : ' Left behind: ${discarded.entries.map((e) => '${e.value} ${itemName(e.key)}').join(', ')}.'),
+        changes: changes,
+        conditionChanges: report.conditionChanges,
+        catchRecord: report.catchRecord,
+        daySummary: report.daySummary,
+      );
+    }
+    if (_returnAfterHaul) _unloadPack();
+    _changed();
+    return true;
+  }
+
   bool get isBusy =>
+      hasPendingHaul ||
       _pendingEvent != null ||
       _report != null ||
       _fishing != null ||
@@ -106,6 +343,7 @@ class GameEngine {
       state.phase == RunPhase.day &&
       state.rescueStage != RescueStage.storm &&
       !isBusy &&
+      _packingDraft == null &&
       state.timeLeft >= action.cost;
 
   bool startAction(CampAction action) {
@@ -161,16 +399,31 @@ class GameEngine {
             ? 'Repair a fishing rod in the workshop.'
             : 'Craft a Basic Rod in the workshop.';
       }
-      if (!fishingBaits.keys.any((id) => state.resource(id) > 0)) {
+      if (!fishingBaits.keys.any((id) => state.availableResource(id) > 0)) {
         return 'Collect bait at the Riverbank first.';
       }
     }
     return null;
   }
 
-  bool travelTo(String id) {
-    if (id == 'camp' || travelBlockReason(id) != null) return false;
+  bool travelTo(String id, {Map<String, int>? pack, Set<String>? gear}) {
+    final selectedPack = positiveItems(pack ?? recommendedPack(id));
+    final selectedGear = gear ?? suggestedGear;
+    if (id == 'camp' ||
+        departureBlockReason(id, selectedPack, selectedGear) != null) {
+      return false;
+    }
     final location = world.find(id)!;
+    if (id != 'fishing_pond' && _expeditionPool(id, 0).isEmpty) return false;
+    _lastPack = {...selectedPack};
+    _lastPackSaved = true;
+    _lastGear = {...selectedGear};
+    _packingDraft = null;
+    _state = state.copyWith(
+      packResources: selectedPack,
+      expeditionGear: selectedGear,
+      legacyPack: false,
+    );
     if (id != 'fishing_pond') {
       if (_expeditionPool(id, 0).isEmpty) return false;
       _state = state.copyWith(locationId: id);
@@ -201,7 +454,7 @@ class GameEngine {
         );
         _fishing!.rodId = activeFishingRod;
         _fishing!.baitId = fishingBaits.keys.firstWhere(
-          (id) => state.resource(id) > 0,
+          (id) => state.availableResource(id) > 0,
         );
         _changed();
         _sound(GameSound.travel);
@@ -225,7 +478,7 @@ class GameEngine {
     if (session == null ||
         session.stage != FishingStage.ready ||
         !fishingBaits.containsKey(id) ||
-        state.resource(id) < 1) {
+        state.availableResource(id) < 1) {
       return false;
     }
     session.baitId = id;
@@ -266,7 +519,7 @@ class GameEngine {
     if (session == null ||
         session.stage != FishingStage.ready ||
         _castSpent ||
-        state.resource(session.baitId) < 1 ||
+        state.availableResource(session.baitId) < 1 ||
         !state.toolUsable(session.rodId)) {
       return false;
     }
@@ -301,7 +554,6 @@ class GameEngine {
       _state = state.copyWith(knownFish: {...state.knownFish, speciesId});
     }
     _state = state.copyWith(
-      locationId: 'camp',
       worldFlags: {...state.worldFlags}
         ..remove('trail_marker')
         ..remove('storm_crossing'),
@@ -334,8 +586,8 @@ class GameEngine {
     if (!canAct(CampAction.rest) || state.locationId != 'camp') {
       return 'Prepare at camp in daylight';
     }
-    if (state.resource(id) < 1) return 'No raw fish available';
-    if (state.resource('wood') < 1) return 'Need 1 wood';
+    if (state.availableResource(id) < 1) return 'No raw fish available';
+    if (state.availableResource('wood') < 1) return 'Need 1 wood';
     if (fishSpecies[id]!.requiresKnife &&
         !state.toolUsable('stone_knife') &&
         !state.toolUsable('machete')) {
@@ -487,7 +739,7 @@ class GameEngine {
   }
 
   bool pickGatheringPlant(String id) {
-    if (!(_gathering?.pick(id, state.tools) ?? false)) return false;
+    if (!(_gathering?.pick(id, state.availableTools) ?? false)) return false;
     _changed();
     return true;
   }
@@ -660,7 +912,10 @@ class GameEngine {
     if (recipe.isOwnedBy(state) && !canRepairTool(id)) {
       return recipe.kind == RecipeKind.campTier ? 'Built' : 'Already crafted';
     }
-    if (!state.isAlive || isBusy || state.locationId != 'camp') {
+    if (!state.isAlive ||
+        isBusy ||
+        _packingDraft != null ||
+        state.locationId != 'camp') {
       return 'Return to camp first';
     }
     if (state.phase != RunPhase.day) return 'Build in daylight';
@@ -682,8 +937,8 @@ class GameEngine {
     }
     final missing = [
       for (final e in craftCosts(id).entries)
-        if (state.resource(e.key) < e.value)
-          '${e.value - state.resource(e.key)} ${itemName(e.key).toLowerCase()}',
+        if (state.availableResource(e.key) < e.value)
+          '${e.value - state.availableResource(e.key)} ${itemName(e.key).toLowerCase()}',
     ];
     if (missing.isNotEmpty) return 'Need ${missing.join(', ')} more';
     if (state.timeLeft < recipe.timeCost) {
@@ -723,6 +978,9 @@ class GameEngine {
         _state = tool.family == 'axe'
             ? state.copyWith(equippedAxe: id)
             : state.copyWith(equippedSpear: id);
+      }
+      if (id == 'trail_backpack' || id == 'expedition_pack') {
+        _state = state.copyWith(packTier: id == 'trail_backpack' ? 1 : 2);
       }
       if (id == 'emergency_beacon') {
         _state = state.copyWith(
@@ -833,7 +1091,7 @@ class GameEngine {
         !state.isAlive ||
         state.rescued ||
         !canUseSupplies ||
-        state.resource(id) < 1) {
+        state.availableResource(id) < 1) {
       return false;
     }
     if (state.locationId != 'camp' &&
@@ -871,11 +1129,6 @@ class GameEngine {
       _state = state.copyWith(knownFish: {...state.knownFish, source});
     }
     _apply(consumeEffect(id));
-    final trip = _expedition;
-    if (trip != null && (trip.loot[id] ?? 0) > 0) {
-      trip.loot[id] = trip.loot[id]! - 1;
-      if (trip.loot[id] == 0) trip.loot.remove(id);
-    }
     _finish(
       id == 'herb'
           ? 'Herbal tea'
@@ -910,6 +1163,8 @@ class GameEngine {
       state.isAlive &&
       !state.rescued &&
       state.rescueStage != RescueStage.storm &&
+      !hasPendingHaul &&
+      _packingDraft == null &&
       _pendingEvent == null &&
       _report == null &&
       _fishing == null &&
@@ -924,7 +1179,7 @@ class GameEngine {
         state.locationId != 'camp' ||
         state.phase != RunPhase.day ||
         state.timeLeft < 1 ||
-        state.resource(id) < 1) {
+        state.availableResource(id) < 1) {
       return false;
     }
     final before = state;
@@ -948,22 +1203,14 @@ class GameEngine {
   bool chewHerbs() {
     final poison = state.condition(ConditionKind.poisoned);
     if (!canUseSupplies ||
-        state.resource('herb') < 1 ||
+        state.availableResource('herb') < 1 ||
         poison == null ||
         poison.remaining <= 1) {
       return false;
     }
     final before = state;
     _apply(EventEffect(resources: {'herb': -1}));
-    final trip = _expedition;
-    if (trip != null && (trip.loot['herb'] ?? 0) > 0) {
-      trip.loot['herb'] = trip.loot['herb']! - 1;
-      if (trip.loot['herb'] == 0) trip.loot.remove('herb');
-    }
-    _shortenCondition(
-      ConditionKind.poisoned,
-      min(poison.remaining - 1, poison.severity == 2 ? 1 : 2),
-    );
+    _shortenCondition(ConditionKind.poisoned, min(2, poison.remaining - 1));
     _finish(
       'Bitter leaf first aid',
       'The poison is weakened, but not cured. No daylight spent.',
@@ -975,7 +1222,7 @@ class GameEngine {
   bool dryByFire() {
     if (!canAct(CampAction.rest) ||
         state.locationId != 'camp' ||
-        state.resource('wood') < 1 ||
+        state.availableResource('wood') < 1 ||
         !state.hasCondition(ConditionKind.wet)) {
       return false;
     }
@@ -991,12 +1238,12 @@ class GameEngine {
   bool prepareRoots() {
     if (!canAct(CampAction.rest) ||
         state.locationId != 'camp' ||
-        state.resource('wood') < 1 ||
-        state.resource('ribbon_root') < 1) {
+        state.availableResource('wood') < 1 ||
+        state.availableResource('ribbon_root') < 1) {
       return false;
     }
     final before = state;
-    final portions = min(3, state.resource('ribbon_root'));
+    final portions = min(3, state.availableResource('ribbon_root'));
     _apply(EventEffect(resources: {'wood': -1, 'ribbon_root': -portions}));
     _spendTime(1, outdoor: false);
     if (state.isAlive) {
@@ -1048,7 +1295,9 @@ class GameEngine {
       ) &&
       (choice.extraTime == 0 ||
           state.timeLeft >= _pendingCost + choice.extraTime) &&
-      choice.requires.entries.every((r) => state.resource(r.key) >= r.value) &&
+      choice.requires.entries.every(
+        (r) => state.availableResource(r.key) >= r.value,
+      ) &&
       choice.requiresTools.every(state.satisfiesTool) &&
       choice.consumesTools.every(state.toolUsable) &&
       (choice.minigame != 'ruins_symbols' ||
@@ -1183,21 +1432,18 @@ class GameEngine {
       for (final e in effect.resources.entries) {
         if (e.value > 0 && state.isAlive) {
           trip.loot[e.key] = (trip.loot[e.key] ?? 0) + e.value;
-        } else if (e.value < 0 && trip.loot.containsKey(e.key)) {
-          // Spend gathered supplies first. A later lost pack must not remove
-          // supplies that were already spent, or dip into the camp's stock.
-          final remaining = max(0, trip.loot[e.key]! + e.value);
-          if (remaining == 0) {
-            trip.loot.remove(e.key);
-          } else {
-            trip.loot[e.key] = remaining;
-          }
         }
       }
       if (effect.dropLoot) {
+        final lost = state.legacyPack
+            ? {
+                for (final e in trip.loot.entries)
+                  e.key: min(e.value, state.packResources[e.key] ?? 0),
+              }
+            : Map<String, int>.of(state.packResources);
         _apply(
           EventEffect(
-            resources: {for (final e in trip.loot.entries) e.key: -e.value},
+            resources: {for (final e in lost.entries) e.key: -e.value},
           ),
         );
         trip.loot.clear();
@@ -1254,9 +1500,10 @@ class GameEngine {
   }
 
   bool continueFromReport() {
-    if (_report == null) return false;
+    if (_report == null || hasPendingHaul) return false;
     _report = null;
     if (state.rescued || !state.isAlive) {
+      _unloadPack();
       _state = state.copyWith(
         locationId: 'camp',
         worldFlags: {...state.worldFlags}
@@ -1297,6 +1544,7 @@ class GameEngine {
         return true;
       }
     }
+    _unloadPack();
     _state = state.copyWith(
       locationId: 'camp',
       worldFlags: {...state.worldFlags}
@@ -1327,6 +1575,8 @@ class GameEngine {
   }
 
   bool get canGoDeeper =>
+      !hasPendingHaul &&
+      !(state.legacyPack && state.usedPackSlots > state.packCapacity) &&
       _decisionPending &&
       _gathering == null &&
       _ruinsPuzzle == null &&
@@ -1369,12 +1619,13 @@ class GameEngine {
 
   /// Heads home with everything gathered on the trip.
   bool returnHome() {
-    if (!_decisionPending) return false;
+    if (!_decisionPending || hasPendingHaul) return false;
     final trip = _expedition!;
     final before = state;
     _decisionPending = false;
     _expedition = null;
     _followUp = false;
+    _unloadPack();
     _state = state.copyWith(
       locationId: 'camp',
       worldFlags: {...state.worldFlags}
@@ -1386,12 +1637,12 @@ class GameEngine {
         ..remove('trail_marker')
         ..remove('storm_crossing'),
     );
-    final haul = Map<String, int>.of(trip.loot);
+    final haul = positiveItems(trip.loot);
     _report = ActionReport.saved(
       title: haul.isEmpty ? 'Back at camp' : 'Home with the haul',
       body: haul.isEmpty
           ? 'You walk back along the trail with nothing to show for it, but alive.'
-          : 'You make it back to camp with everything you gathered.',
+          : 'Your new finds are safely stored at camp. Unused supplies were returned too; your backpack is empty.',
       changes: haul,
     );
     _journal.insert(
@@ -1493,8 +1744,9 @@ class GameEngine {
     return true;
   }
 
-  int get heldBeaconComponents =>
-      beaconComponents.keys.where((id) => state.resource(id) > 0).length;
+  int get heldBeaconComponents => beaconComponents.keys
+      .where((id) => state.availableResource(id) > 0)
+      .length;
 
   String? get activateBeaconBlockReason {
     if (!state.tools.contains('emergency_beacon')) {
@@ -1503,7 +1755,10 @@ class GameEngine {
     if (state.rescueStage != RescueStage.searching || state.rescued) {
       return 'Signal already sent';
     }
-    if (!state.isAlive || isBusy || state.locationId != 'camp') {
+    if (!state.isAlive ||
+        isBusy ||
+        _packingDraft != null ||
+        state.locationId != 'camp') {
       return 'Return to camp first';
     }
     if (state.phase != RunPhase.day) return 'Send the signal in daylight';
@@ -1582,6 +1837,12 @@ class GameEngine {
     _state = RunState(
       resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2},
     );
+    _packingDraft = null;
+    _haulSelection = null;
+    _lastPack = {};
+    _lastPackSaved = false;
+    _lastGear = null;
+    _returnAfterHaul = false;
     _fishing = null;
     _fishingBefore = null;
     _castSpent = false;
@@ -1743,7 +2004,7 @@ class GameEngine {
       final rain = outdoor && state.weather != 'Sunny';
       final delta = rain
           ? (state.weather == 'Storm' ? 3 : 2) -
-                (state.tools.contains('leaf_rain_cape') ? 1 : 0)
+                (state.availableTools.contains('leaf_rain_cape') ? 1 : 0)
           : -2;
       final exposure = max(0, state.exposure + delta);
       _state = state.copyWith(exposure: exposure >= 6 ? 0 : exposure);
@@ -1773,6 +2034,7 @@ class GameEngine {
   void _apply(EventEffect effect) {
     final stats = {...state.stats};
     final resources = {...state.resources};
+    final carried = {...state.packResources};
     for (final entry in effect.stats.entries) {
       var delta = entry.value;
       if (entry.key == SurvivalStat.health) {
@@ -1789,11 +2051,27 @@ class GameEngine {
       stats[entry.key] = (state.value(entry.key) + delta).clamp(0, 100);
     }
     for (final entry in effect.resources.entries) {
-      resources[entry.key] = max(0, state.resource(entry.key) + entry.value);
+      final delta = state.inField && entry.value < 0
+          ? -min(-entry.value, state.packResources[entry.key] ?? 0)
+          : entry.value;
+      resources[entry.key] = max(0, state.resource(entry.key) + delta);
+      if (state.inField) {
+        carried[entry.key] = max(0, (carried[entry.key] ?? 0) + delta);
+        if (delta < 0 && _expedition != null) {
+          _expedition!.loot[entry.key] = max(
+            0,
+            (_expedition!.loot[entry.key] ?? 0) + delta,
+          );
+        }
+      }
     }
+    _expedition?.loot.removeWhere((id, n) => n <= 0);
     _state = state.copyWith(
       stats: stats,
       resources: resources,
+      packResources: state.inField
+          ? positiveItems(carried)
+          : state.packResources,
       foundComponents: {
         ...state.foundComponents,
         for (final entry in effect.resources.entries)
@@ -1845,6 +2123,36 @@ class GameEngine {
         },
       );
     }
+    if (state.inField &&
+        state.isAlive &&
+        !state.legacyPack &&
+        state.usedPackSlots > state.packCapacity) {
+      final incoming = {
+        for (final e in state.packResources.entries)
+          if (e.value > (before.packResources[e.key] ?? 0))
+            e.key: e.value - (before.packResources[e.key] ?? 0),
+      };
+      if (incoming.isNotEmpty) {
+        _state = state.copyWith(
+          pendingResources: incoming,
+          packResources: positiveItems({
+            for (final e in state.packResources.entries)
+              e.key: e.value - (incoming[e.key] ?? 0),
+          }),
+        );
+      }
+    }
+    if (state.inField &&
+        _expedition == null &&
+        _fishing == null &&
+        _gathering == null &&
+        _ruinsPuzzle == null) {
+      if (hasPendingHaul) {
+        _returnAfterHaul = true;
+      } else {
+        _unloadPack();
+      }
+    }
     // Every resolved action is summarized, including the choice that ends a run.
     _report = ActionReport(
       title: title,
@@ -1876,10 +2184,16 @@ class GameEngine {
     }
   }
 
-  static const saveVersion = 1;
+  static const saveVersion = 2;
 
   Map<String, dynamic> toJson() => {
     'version': saveVersion,
+    'packingDraft': _packingDraft?.toJson(),
+    'lastPack': _lastPack,
+    'lastPackSaved': _lastPackSaved,
+    'lastGear': _lastGear?.toList(),
+    'returnAfterHaul': _returnAfterHaul,
+    'haulSelection': _haulSelection,
     'state': state.toJson(),
     'pendingEvent': _pendingEvent?.id,
     'pendingAction': _pendingAction?.name,
@@ -1917,7 +2231,7 @@ class GameEngine {
   /// save is from another version or cannot be read.
   bool restore(Map<String, dynamic> json) {
     try {
-      if (json['version'] != saveVersion) return false;
+      if (!{1, saveVersion}.contains(json['version'])) return false;
       final restored = RunState.fromJson(json['state'] as Map<String, dynamic>);
       final eventId = json['pendingEvent'] as String?;
       final events = catalog.events.where((e) => e.id == eventId);
@@ -1931,7 +2245,36 @@ class GameEngine {
         json['dayHighlights'] as List? ?? [],
       );
 
+      if (restored.resources.values.any((n) => n < 0) ||
+          restored.packResources.entries.any(
+            (e) =>
+                e.value < 0 ||
+                e.value + (restored.pendingResources[e.key] ?? 0) >
+                    restored.resource(e.key),
+          ) ||
+          restored.pendingResources.entries.any(
+            (e) =>
+                e.value < 0 ||
+                e.value + (restored.packResources[e.key] ?? 0) >
+                    restored.resource(e.key),
+          )) {
+        throw const FormatException('Invalid inventory allocation');
+      }
       _state = restored;
+      _packingDraft = json['packingDraft'] == null
+          ? null
+          : PackingDraft.fromJson(
+              Map<String, dynamic>.from(json['packingDraft'] as Map),
+            );
+      _lastPack = Map<String, int>.from(json['lastPack'] as Map? ?? {});
+      _lastPackSaved = json['lastPackSaved'] as bool? ?? _lastPack.isNotEmpty;
+      _lastGear = json['lastGear'] == null
+          ? null
+          : Set<String>.from(json['lastGear'] as List);
+      _returnAfterHaul = json['returnAfterHaul'] as bool? ?? false;
+      _haulSelection = json['haulSelection'] == null
+          ? null
+          : Map<String, int>.from(json['haulSelection'] as Map);
       _dayHighlights
         ..clear()
         ..addAll(dayHighlights);
@@ -2020,7 +2363,9 @@ class GameEngine {
           _fishing == null &&
           _ruinsPuzzle == null &&
           _gathering == null &&
-          _expedition == null) {
+          _expedition == null &&
+          !hasPendingHaul) {
+        _unloadPack();
         _state = state.copyWith(
           locationId: 'camp',
           worldFlags: {...state.worldFlags}

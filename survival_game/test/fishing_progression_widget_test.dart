@@ -63,7 +63,7 @@ void main() {
       final game = fishingGame();
       await showCamp(tester, game);
       await press(tester, 'open-inventory', settle: true);
-      await press(tester, 'inventory-tab-1', settle: true);
+      await press(tester, 'inventory-tab-0', settle: true);
       await press(tester, 'inventory-spiny_sunlurker', settle: true);
       await press(tester, 'consume-spiny_sunlurker', settle: true);
       expect(game.state.conditions, isEmpty);
@@ -80,7 +80,7 @@ void main() {
       final game = fishingGame();
       await showCamp(tester, game);
       await press(tester, 'open-inventory', settle: true);
-      await press(tester, 'inventory-tab-1', settle: true);
+      await press(tester, 'inventory-tab-0', settle: true);
       await press(tester, 'inventory-spiny_sunlurker', settle: true);
       await tester.tap(find.text('PREPARE SAFELY · 1 WOOD · 1 TIME'));
       await tester.pumpAndSettle();

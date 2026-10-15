@@ -412,5 +412,35 @@
     "requiresItems": [
       "hunting_spear"
     ]
+  },
+  {
+    "id": "trail_backpack",
+    "name": "Trail Backpack",
+    "kind": "camp_item",
+    "description": "Reinforced plant-fiber straps and hardwood supports.",
+    "effect": "Backpack capacity grows from 8 to 12 slots. Equipped gear uses separate slots.",
+    "costs": {
+      "fiber": 10,
+      "hardwood": 2
+    },
+    "timeCost": 1,
+    "minCampTier": 1
+  },
+  {
+    "id": "expedition_pack",
+    "name": "Expedition Pack",
+    "kind": "camp_item",
+    "description": "A durable expedition pack built around a salvaged frame.",
+    "effect": "Backpack capacity grows from 12 to 16 slots. Permanent for this run; does not wear out.",
+    "costs": {
+      "fiber": 8,
+      "hardwood": 4,
+      "metal_scrap": 2
+    },
+    "timeCost": 1,
+    "minCampTier": 2,
+    "requiresItems": [
+      "trail_backpack"
+    ]
   }
 ]

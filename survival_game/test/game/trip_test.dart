@@ -74,7 +74,7 @@ void main() {
 
   /// Walks the first step of the Riverbank and lands on the decision.
   void firstStop(GameEngine game) {
-    expect(game.travelTo('riverbank'), isTrue);
+    expect(game.travelTo('riverbank', pack: game.state.resources), isTrue);
     game.choose(game.visibleChoices.firstWhere(game.canChoose).id);
     game.continueFromReport();
     expect(game.awaitingExpeditionDecision, isTrue);

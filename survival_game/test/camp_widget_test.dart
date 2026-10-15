@@ -224,7 +224,7 @@ void main() {
     final game = testGame(state: stocked());
     await showCamp(tester, game);
     await tapKey(tester, 'open-inventory');
-    await tapKey(tester, 'inventory-tab-1');
+    await tapKey(tester, 'inventory-tab-0');
     await tapKey(tester, 'inventory-herb');
     await tapKey(tester, 'consume-herb');
     expect(findUiText('Herbal tea'), findsOneWidget);

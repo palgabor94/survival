@@ -161,14 +161,14 @@ class ResourceStrip extends StatelessWidget {
         children: [
           for (final id in ['wood', 'stone', 'fiber'])
             Semantics(
-              label: '$id: ${state.resource(id)}',
+              label: '$id: ${state.availableResource(id)}',
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CardArt(id, size: 19),
                   const SizedBox(width: 4),
                   Text(
-                    '${state.resource(id)}',
+                    '${state.availableResource(id)}',
                     style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,

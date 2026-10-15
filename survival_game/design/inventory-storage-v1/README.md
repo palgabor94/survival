@@ -1,3 +1,7 @@
+# Jóváhagyott koncepciók — a rendszer már bekötve
+
+2026-10-15: [Működés és validáció](IMPLEMENTATION_HU.md) · [Valódi gameplay screenshotok](../../screenshots/inventory-storage-v1/README.md). Az alábbi képsor az implementálás előtti látványterv archívuma.
+
 # Lost Canopy — hátizsák és tároló
 
 2026-10-15 · **Pontos terv és 10 UI-látványterv. Még nincs bekötve.**
@@ -37,7 +41,7 @@ A meglévő artokat és az elfogadott Flutter pergamenkomponenseket használtam;
 
 A kártyák ugyanazok a 112×172-es elemek, 3:2 képablakkal; a hosszabb adatok külön részleteken vannak. A kis ikonok háttere átlátszó. Jobb felső X, sötétzöld kijelölés, darabszám és helyjelző szövegesen is szerepel. Az elhagyás előtt külön tételes megerősítés kell; a normál indulás egyetlen főgomb, a teljes indulási összesítő opcionális.
 
-A képek **natív Flutterből kirajzolt statikus koncepciók**, nem működő gameplay screenshotok. Mind a tíz 390×844-es előnézet és két összesítő widgetkivétel nélkül kirajzolódott, a renderer Dart-elemzése tiszta. A mennyiségek és stack-számok a terv példáját követik. A működő játék készletlogikája nem változott, regressziós tesztet emiatt nem futtattam.
+A képek **natív Flutterből kirajzolt statikus koncepciók**, nem működő gameplay screenshotok. Mind a tíz 390×844-es előnézet és két összesítő widgetkivétel nélkül kirajzolódott, a renderer Dart-elemzése tiszta. A mennyiségek és stack-számok a terv példáját követik. A koncepciók készítésekor a működő játék készletlogikája még nem változott. Az azóta elkészült implementálás ellenőrzése a fent linkelt dokumentumban szerepel.
 
 Újrarajzolás az app könyvtárából:
 

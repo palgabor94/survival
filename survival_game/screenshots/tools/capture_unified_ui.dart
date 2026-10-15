@@ -1,5 +1,6 @@
 import 'package:survival_game/game/tool_catalog.dart';
 import 'package:survival_game/ui/tool_panels.dart';
+import 'package:survival_game/ui/inventory_panels.dart';
 import 'package:survival_game/ui/inventory_dialog.dart';
 import 'package:survival_game/audio/music_controller.dart';
 import 'package:survival_game/audio/sounds_controller.dart';
@@ -55,6 +56,8 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final inventoryProgression =
+      Platform.environment['LOST_CANOPY_CAPTURE_INVENTORY'] == '1';
   final toolProgression =
       Platform.environment['LOST_CANOPY_CAPTURE_TOOLS'] == '1';
   final sceneRevision =
@@ -225,7 +228,8 @@ Future<void> main() async {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (toolProgression ||
+        if (inventoryProgression ||
+            toolProgression ||
             minigames ||
             fishingTutorial ||
             sceneWidth ||
@@ -303,6 +307,129 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (inventoryProgression) {
+      const full = {
+        'prepared_small_fish': 2,
+        'herb': 3,
+        'bandage': 1,
+        'bait': 4,
+        'wood': 10,
+        'fiber': 8,
+        'stone': 6,
+      };
+      final g = game(
+        state: RunState(
+          day: 5,
+          campTier: 2,
+          tools: {
+            'stone_axe',
+            'salvage_axe',
+            'stone_spear',
+            'basic_rod',
+            'machete',
+            'torch',
+            'leaf_rain_cape',
+          },
+          resources: {
+            'wood': 50,
+            'stone': 50,
+            'fiber': 50,
+            'hardwood': 10,
+            'metal_scrap': 10,
+            'prepared_small_fish': 6,
+            'herb': 8,
+            'bandage': 3,
+            'bait': 12,
+          },
+        ),
+      );
+      await mount(Scaffold(body: InventoryDialog(game: g)));
+      await shot('01-camp-storage');
+      if (!g.beginPacking('plane_wreck')) throw StateError('Cannot pack');
+      g.updatePacking(full, g.suggestedGear);
+      await mount(PackingScreen(game: g));
+      await tap('packing-tab-1');
+      await shot('02-packed-supplies');
+      await tap('packing-item-stone');
+      await shot('03-quantity');
+      await tester.tap(find.byTooltip('Close').last);
+      await tester.pumpAndSettle();
+      await tap('packing-tab-2');
+      await shot('04-equipped-gear');
+      await tester.tap(find.textContaining('AXE:').last);
+      await tester.pumpAndSettle();
+      await shot('05-choose-axe');
+      await tester.tap(find.byTooltip('Close').last);
+      await tester.pumpAndSettle();
+      g.updatePacking({'stone': 50}, g.suggestedGear);
+      await mount(PackingScreen(game: g));
+      await shot('06-over-capacity-departure');
+      g.updatePacking(full, g.suggestedGear);
+      if (!g.leaveCamp()) throw StateError('Cannot depart');
+      await mount(Scaffold(body: InventoryDialog(game: g)));
+      await shot('07-field-backpack');
+      if (g.pendingEvent?.id != 'wreck_battery') {
+        throw StateError(
+          'Expected real wreck battery event: ${g.pendingEvent?.id}',
+        );
+      }
+      await mount(EventScene(game: g));
+      await shot('08-wreck-discovery');
+      if (!g.choose('recover') || !g.hasPendingHaul) {
+        throw StateError('Expected overflow from real battery salvage');
+      }
+      await mount(HaulResolutionScreen(game: g));
+      await shot('09-full-backpack');
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('haul-item-battery')),
+      );
+      await tester.pumpAndSettle();
+      await shot('09b-new-battery');
+      final keep = {...g.haulCandidate, 'stone': 5, 'metal_scrap': 0};
+      g.updateHaulSelection(keep);
+      await mount(HaulResolutionScreen(game: g));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('haul-item-battery')),
+      );
+      await tester.pumpAndSettle();
+      await shot('10-final-selection');
+      await tap('confirm-haul');
+      await shot('11-confirm-left-items');
+      await tap('confirm-discard');
+      await mount(
+        Scaffold(
+          body: OutcomeDialog(
+            report: g.report!,
+            nightNext: false,
+            state: g.state,
+          ),
+        ),
+      );
+      await shot('12-retained-result');
+      g.continueFromReport();
+      if (!g.returnHome()) throw StateError('Cannot return home');
+      await mount(
+        Scaffold(
+          body: OutcomeDialog(
+            report: g.report!,
+            nightNext: false,
+            state: g.state,
+          ),
+        ),
+      );
+      await shot('13-return-and-unload');
+      g.continueFromReport();
+      await mount(Scaffold(body: InventoryDialog(game: g)));
+      await shot('14-stored-after-return');
+      await mount(CraftScreen(game: g));
+      await tap('recipe-trail_backpack');
+      await shot('15-backpack-upgrade');
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
     }
 
     if (toolProgression) {

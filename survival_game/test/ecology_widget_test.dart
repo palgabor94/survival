@@ -41,7 +41,7 @@ void main() {
       final game = gatheringGame(state: supplies());
       await showCamp(tester, game);
       await press(tester, 'open-inventory', settle: true);
-      await press(tester, 'inventory-tab-1', settle: true);
+      await press(tester, 'inventory-tab-0', settle: true);
       final item = find.byKey(const ValueKey('inventory-mooncap'));
       await tester.ensureVisible(item);
       await tester.tap(item);
@@ -80,9 +80,14 @@ void main() {
     'calm expedition exposes Items and treatment preserves the trip',
     (tester) async {
       final game = gatheringGame(
-        state: supplies(
-          conditions: [const SurvivalCondition(ConditionKind.poisoned, 4)],
-        ).copyWith(locationId: 'riverbank'),
+        state:
+            supplies(
+              conditions: [const SurvivalCondition(ConditionKind.poisoned, 4)],
+            ).copyWith(
+              locationId: 'riverbank',
+              packResources: {'antidote': 1},
+              expeditionGear: {},
+            ),
       );
       final save = gatheringSave(game)
         ..['expedition'] = {

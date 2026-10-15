@@ -402,7 +402,7 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
                   ? 'Location locked'
                   : place.id == 'fishing_pond'
                   ? 'Go fishing'
-                  : 'Travel to ${place.name}',
+                  : 'Prepare pack · ${place.name}',
               art: _art(place.id),
               onTap: block != null
                   ? null

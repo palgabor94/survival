@@ -321,11 +321,17 @@ class _FishingScreenState extends State<FishingScreen>
                                     horizontal: large,
                                     tag: '1 BAIT',
                                     description:
-                                        widget.game.state.resource('bait') < 1
+                                        widget.game.state.availableResource(
+                                              'bait',
+                                            ) <
+                                            1
                                         ? 'Need 1 bait'
                                         : 'Watch for a bite',
                                     onTap:
-                                        widget.game.state.resource('bait') >= 1
+                                        widget.game.state.availableResource(
+                                              'bait',
+                                            ) >=
+                                            1
                                         ? _cast
                                         : null,
                                   ),

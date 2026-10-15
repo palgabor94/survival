@@ -52,6 +52,9 @@ Future<void> openMapAndSelect(WidgetTester tester, String id) async {
 Future<void> travelToPond(WidgetTester tester) async {
   await openMapAndSelect(tester, 'fishing_pond');
   await tapKey(tester, 'travel-destination');
+  if (find.byKey(const ValueKey('confirm-departure')).evaluate().isNotEmpty) {
+    await tapKey(tester, 'confirm-departure');
+  }
   expect(find.byType(FishingScreen), findsOneWidget);
 }
 
@@ -102,6 +105,9 @@ void main() {
     await openMapAndSelect(tester, 'riverbank');
     expect(findUiText('−8 Water'), findsOneWidget);
     await tapKey(tester, 'travel-destination');
+    if (find.byKey(const ValueKey('confirm-departure')).evaluate().isNotEmpty) {
+      await tapKey(tester, 'confirm-departure');
+    }
 
     expect(find.byType(ExploreMapScreen), findsNothing);
     expect(game.pendingEvent!.locations, contains('riverbank'));
@@ -165,6 +171,9 @@ void main() {
     );
     await tapKey(tester, 'map-node-camp');
     await tapKey(tester, 'travel-destination');
+    if (find.byKey(const ValueKey('confirm-departure')).evaluate().isNotEmpty) {
+      await tapKey(tester, 'confirm-departure');
+    }
     expect(find.byType(ExploreMapScreen), findsNothing);
     expect(game.state.timeLeft, 6);
     expect(tester.takeException(), isNull);
@@ -246,7 +255,7 @@ void main() {
     expect(game.state.locationId, 'camp');
 
     await tapKey(tester, 'open-inventory');
-    await tapKey(tester, 'inventory-tab-1');
+    await tapKey(tester, 'inventory-tab-0');
     await tapKey(tester, 'inventory-$fishId');
     await tapKey(tester, 'consume-$fishId');
     expect(findUiText('A meal beneath the canopy'), findsOneWidget);
@@ -449,6 +458,9 @@ void main() {
       expect(tester.takeException(), isNull);
       await tapKey(tester, 'map-node-camp');
       await tapKey(tester, 'travel-destination');
+      if (find.byKey(const ValueKey('confirm-departure')).evaluate().isNotEmpty) {
+        await tapKey(tester, 'confirm-departure');
+      }
 
       await tapKey(tester, 'open-inventory');
       expect(find.byType(InventoryDialog), findsOneWidget);

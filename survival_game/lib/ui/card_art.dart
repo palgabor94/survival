@@ -56,6 +56,9 @@ class CardArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if ({'trail_backpack', 'expedition_pack'}.contains(id)) {
+      return const CardArt('inventory');
+    }
     if (fieldTools.containsKey(id)) {
       return SizedBox.square(dimension: size, child: ToolArt(id, icon: true));
     }

@@ -97,6 +97,10 @@ class WorldCatalog {
 }
 
 String itemName(String id) =>
+    ({
+      'trail_backpack': 'Trail Backpack',
+      'expedition_pack': 'Expedition Pack',
+    }[id]) ??
     fieldTools[id]?.name ??
     fishSpecies[id]?.name ??
     fishingRods[id]?.name ??

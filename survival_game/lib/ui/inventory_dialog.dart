@@ -1,3 +1,6 @@
+import '../game/crafting.dart';
+import '../game/inventory_catalog.dart';
+import 'inventory_panels.dart';
 import '../game/tool_catalog.dart';
 import 'tool_art.dart';
 import 'tool_panels.dart';
@@ -21,7 +24,7 @@ class InventoryDialog extends StatefulWidget {
 }
 
 class _InventoryDialogState extends State<InventoryDialog> {
-  int tab = 0;
+  late int tab = widget.game.state.inField ? 1 : 0;
   String? selected;
   GameEngine get game => widget.game;
   Future<void> details(String id) async {
@@ -44,6 +47,7 @@ class _InventoryDialogState extends State<InventoryDialog> {
         command == 'roots' ||
         command == 'chew' ||
         command == 'workshop' ||
+        command == 'map' ||
         (command == 'consume:$id' && game.canConsume(id))) {
       Navigator.pop(context, command);
     }
@@ -81,26 +85,19 @@ class _InventoryDialogState extends State<InventoryDialog> {
   @override
   Widget build(BuildContext context) {
     final tools = game.recipes.crafts
-        .where((r) => r.isOwnedBy(game.state))
+        .where(
+          (r) =>
+              r.isOwnedBy(game.state) &&
+              (r.kind == RecipeKind.tool || r.id == 'leaf_rain_cape') &&
+              (!game.state.inField || game.state.availableTools.contains(r.id)),
+        )
         .toList();
+    final source = tab == 1
+        ? game.state.packResources
+        : game.state.storedResources;
     final items = tab == 2
         ? tools.map((r) => r.id).toList()
-        : tab == 1
-        ? GameEngine.consumables
-              .where(
-                (id) =>
-                    ['small_fish', 'raw_meat', 'herb'].contains(id) ||
-                    game.state.resource(id) > 0,
-              )
-              .toList()
-        : <String>{
-            'wood',
-            'stone',
-            'fiber',
-            'bait',
-            for (final id in game.state.resources.keys)
-              if (!GameEngine.consumables.contains(id)) id,
-          }.toList();
+        : source.entries.where((e) => e.value > 0).map((e) => e.key).toList();
     return Dialog(
       shape: const RoundedRectangleBorder(),
       elevation: 0,
@@ -151,11 +148,13 @@ class _InventoryDialogState extends State<InventoryDialog> {
                       if (i > 0) const SizedBox(width: 6),
                       Expanded(
                         child: parchmentButton(
-                          ['MATERIALS', 'FOOD', 'GEAR'][i],
-                          () => setState(() {
-                            tab = i;
-                            selected = null;
-                          }),
+                          ['STORAGE', 'BACKPACK', 'GEAR'][i],
+                          game.state.inField && i == 0
+                              ? null
+                              : () => setState(() {
+                                  tab = i;
+                                  selected = null;
+                                }),
                           secondary: tab != i,
                           key: ValueKey('inventory-tab-$i'),
                         ),
@@ -164,51 +163,77 @@ class _InventoryDialogState extends State<InventoryDialog> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(12),
-                child: ParchmentLabel(
-                  'Tap an item to view details.',
-                  size: 12,
-                  color: ParchmentColors.muted,
-                  align: TextAlign.center,
-                ),
-              ),
-              if (game.state.hasCondition(ConditionKind.wet))
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: parchmentButton(
-                    'DRY BY FIRE · 1 WOOD · 1 TIME',
-                    game.canAct(CampAction.rest) &&
-                            game.state.resource('wood') > 0
-                        ? dryDetails
-                        : null,
-                    secondary: true,
-                  ),
-                ),
               Flexible(
                 child: SingleChildScrollView(
                   key: const ValueKey('dialog-content-scroll'),
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-                  child: items.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: ParchmentLabel(
+                          'Tap an item to view details.',
+                          size: 12,
+                          color: ParchmentColors.muted,
+                          align: TextAlign.center,
+                        ),
+                      ),
+                      if (tab == 1)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: PackCapacity(
+                            used: game.state.usedPackSlots,
+                            maximum: game.state.packCapacity,
+                          ),
+                        ),
+                      if (tab == 0)
+                        const Padding(
+                          padding: EdgeInsets.all(12),
                           child: ParchmentLabel(
-                            'Nothing crafted yet.',
-                            align: TextAlign.center,
+                            'Safe at camp · unlimited storage',
+                            size: 12,
                             weight: FontWeight.w500,
                           ),
+                        ),
+                      if (game.state.hasCondition(ConditionKind.wet))
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: parchmentButton(
+                            'DRY BY FIRE · 1 WOOD · 1 TIME',
+                            game.canAct(CampAction.rest) &&
+                                    game.state.availableResource('wood') > 0
+                                ? dryDetails
+                                : null,
+                            secondary: true,
+                          ),
+                        ),
+
+                      if (items.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: ParchmentLabel(
+                            tab == 2
+                                ? 'Nothing equipped yet.'
+                                : 'No items here yet.',
+                            size: 13,
+                          ),
                         )
-                      : ParchmentCardGrid(
+                      else
+                        ParchmentCardGrid(
                           children: [
                             for (final id in items)
                               ParchmentCard(
                                 key: ValueKey('inventory-$id'),
                                 title:
-                                    game.recipes.find(id)?.name ?? itemName(id),
+                                    game.recipes.find(id)?.name ??
+                                    inventoryCardName(id),
                                 art: id,
                                 info: tab == 2
                                     ? 'View equipment'
-                                    : 'View details',
+                                    : tab == 1
+                                    ? '${source[id] ?? 0} carried · ${inventorySlotsLabel(packSlots({id: source[id] ?? 0}))}'
+                                    : '${source[id] ?? 0} stored',
                                 status: tab == 2
                                     ? (fieldTools.containsKey(id) &&
                                               game.state.activeFieldTool(
@@ -217,19 +242,28 @@ class _InventoryDialogState extends State<InventoryDialog> {
                                                   id
                                           ? 'EQUIPPED'
                                           : 'OWNED')
-                                    : '${game.state.resource(id)}',
+                                    : '${source[id] ?? 0}',
                                 selected: selected == id,
                                 onTap: () => details(id),
                               ),
                           ],
                         ),
+                    ],
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: parchmentButton(
-                  'OPEN WORKSHOP',
-                  () => Navigator.pop(context, 'workshop'),
+                  tab == 1 && !game.state.inField
+                      ? 'PREPARE PACK'
+                      : 'OPEN WORKSHOP',
+                  game.state.inField
+                      ? null
+                      : () => Navigator.pop(
+                          context,
+                          tab == 1 ? 'map' : 'workshop',
+                        ),
                   secondary: true,
                   key: const ValueKey('open-workshop'),
                 ),
@@ -328,7 +362,7 @@ class _ItemDetails extends StatelessWidget {
                           ),
                         if (recipe == null) ...[
                           ParchmentLabel(
-                            'IN STOCK · ${game.state.resource(id)}',
+                            'IN STOCK · ${game.state.availableResource(id)}',
                             size: 14,
                           ),
                           const SizedBox(height: 14),
@@ -363,7 +397,7 @@ class _ItemDetails extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: ParchmentLabel(
-                                game.state.resource(id) == 0
+                                game.state.availableResource(id) == 0
                                     ? 'No ${itemName(id).toLowerCase()} available.'
                                     : 'Cannot use this item right now.',
                                 size: 13,
@@ -376,7 +410,7 @@ class _ItemDetails extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (fieldTools.containsKey(id))
+                if (fieldTools.containsKey(id) && !game.state.inField)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -409,7 +443,7 @@ class _ItemDetails extends StatelessWidget {
                       ],
                     ),
                   ),
-                if (fishingRods.containsKey(id))
+                if (fishingRods.containsKey(id) && !game.state.inField)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: parchmentButton(
@@ -453,7 +487,7 @@ class _ItemDetails extends StatelessWidget {
                     game.state.condition(ConditionKind.poisoned) != null &&
                     game.state.condition(ConditionKind.poisoned)!.remaining >
                         1 &&
-                    game.state.resource('herb') > 0)
+                    game.state.availableResource('herb') > 0)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: parchmentButton(
@@ -474,7 +508,7 @@ class _ItemDetails extends StatelessWidget {
                               game.state.locationId == 'camp' &&
                               game.state.timeLeft > 0 &&
                               game.state.phase == RunPhase.day &&
-                              game.state.resource(id) > 0
+                              game.state.availableResource(id) > 0
                           ? () => Navigator.pop(context, 'study:$id')
                           : null,
                       secondary: true,
@@ -486,8 +520,8 @@ class _ItemDetails extends StatelessWidget {
                     child: parchmentButton(
                       'PREPARE UP TO 3 · 1 WOOD · 1 TIME',
                       game.canAct(CampAction.rest) &&
-                              game.state.resource(id) > 0 &&
-                              game.state.resource('wood') > 0
+                              game.state.availableResource(id) > 0 &&
+                              game.state.availableResource('wood') > 0
                           ? () => Navigator.pop(context, 'roots')
                           : null,
                       secondary: true,

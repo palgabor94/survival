@@ -69,7 +69,7 @@ A 200 seedelt menet stressztesztje a jelenlegi 37 eseménnyel és az új minijá
 
 Az első balanszlépés elkészült és újramért. Következő külön lépés a túl erős késői alvásgyógyítás és tea hangolása, majd a végső vihar feszültsége; ezek változatlanok. A növénygyűjtés hozamaránya is további vizsgálatot kér. Emberi játékosok és készülékes haptic/audio ellenőrzése szükséges, a botok nem adnak emberi sikerarányt.
 
-1. **Eszköz- és fegyverprogresszió:** a három bot elkészült; jobb fejszék és lándzsák maradtak, világos szereppel és előnyökkel.
+1. **Eszköz- és fegyverprogresszió:** a három bot elkészült; jobb fejszék és lándzsák maradtak, világos szereppel és előnyökkel. A [pontos mechanikai terv és 9 UI-koncepció](design/tool-progression-v1/README.md) elkészült; még nincs bekötve.
 2. **Új halak és zsákmány — elkészült:** öt faj, méret/ritkaság, három csali, három bot, veszélyes halak, biztonságos előkészítés és halfajnapló. [Bekötés és pontos szabályok](design/fishing-progression-v1/IMPLEMENTATION_HU.md) · [15 tényleges screenshot](screenshots/fishing-progression-v1/README.md).
 3. **Készlet és tárolás:** hordott slotok, tábori storage és megtelt hátizsák kezelése.
 4. **Menetösszesítő és meta:** vereségösszesítő, Survival XP, profil és perkek. Már 19 valódi tárgyrecept működik.

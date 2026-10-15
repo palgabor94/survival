@@ -1,0 +1,9 @@
+01-workshop-axes.png
+02-workshop-spears.png
+03-axe-crafting-details.png
+04-items-gear.png
+05-repair-confirmation.png
+06-chopping-loadout.png
+07-jaguar-encounter.png
+08-spear-decision-details.png
+09-chopping-outcome.png

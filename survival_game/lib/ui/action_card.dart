@@ -369,32 +369,46 @@ class _CardCarouselState extends State<CardCarousel> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.cards.length * (width + 8) - 8 > constraints.maxWidth)
-            PaperSurface(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: ParchmentLabel(
-                        'SWIPE FOR MORE',
-                        size: 10,
-                        color: ParchmentColors.muted,
-                      ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 4, bottom: 4),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: ParchmentLabel(
+                      'SWIPE FOR MORE',
+                      size: 11,
+                      color: ParchmentColors.cream,
                     ),
-                    IconButton(
-                      key: const ValueKey('choices-previous'),
-                      tooltip: 'Previous choices',
-                      onPressed: () => page(-width - 8),
-                      icon: const Icon(Icons.chevron_left_rounded),
+                  ),
+                  IconButton(
+                    key: const ValueKey('choices-previous'),
+                    tooltip: 'Previous choices',
+                    onPressed: () => page(-width - 8),
+                    constraints: const BoxConstraints(
+                      minWidth: 40,
+                      minHeight: 40,
                     ),
-                    IconButton(
-                      key: const ValueKey('choices-next'),
-                      tooltip: 'Next choices',
-                      onPressed: () => page(width + 8),
-                      icon: const Icon(Icons.chevron_right_rounded),
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.chevron_left_rounded,
+                      color: ParchmentColors.cream,
                     ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    key: const ValueKey('choices-next'),
+                    tooltip: 'Next choices',
+                    onPressed: () => page(width + 8),
+                    constraints: const BoxConstraints(
+                      minWidth: 40,
+                      minHeight: 40,
+                    ),
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(
+                      Icons.chevron_right_rounded,
+                      color: ParchmentColors.cream,
+                    ),
+                  ),
+                ],
               ),
             ),
           SizedBox(

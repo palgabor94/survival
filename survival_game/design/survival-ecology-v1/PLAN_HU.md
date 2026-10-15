@@ -1,6 +1,6 @@
 # Lost Canopy — a kiismerhető dzsungel
 
-Tervezési javaslat · 2026-10-15 · Még nincs implementálva vagy balanszteszttel igazolva.
+Elfogadott tervezési kiindulópont · 2026-10-15. Az első játszható implementáció azóta elkészült: [állapot és validáció](IMPLEMENTATION_HU.md). Az alábbi számok továbbra is a terv kiinduló balanszértékei, az emberi nehézség még mérendő.
 
 ## 1. Milyen élményt építünk?
 

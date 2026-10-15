@@ -20,4 +20,3 @@ Use case: stylized-concept. Create a NEW game INVENTORY ICON ATLAS on a genuinel
 
 Player reference: design/references/explorer_character_master_v1.png.
 Camera reference: design/jaguar-camp-style-test/jaguar_camp_style_v3.png.
-

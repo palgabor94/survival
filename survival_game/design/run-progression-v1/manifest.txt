@@ -1,0 +1,10 @@
+01-lost-journey.png
+02-rescued-journey.png
+03-xp-breakdown.png
+04-rank-unlocked.png
+05-player-profile.png
+06-journey-archive.png
+07-journey-details.png
+08-starting-options.png
+09-option-details.png
+10-new-journey.png

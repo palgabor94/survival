@@ -63,6 +63,8 @@ A 200 seedelt menet stressztesztje a jelenlegi 37 eseménnyel és az új minijá
 
 ## Következő mérföldkövek
 
+2026-10-15: elkészült a [kiismerhető dzsungel részletes mechanikai javaslata](design/survival-ecology-v1/PLAN_HU.md): tanulható növényfajok, élelem-előkészítés, négy státusz, időjárási kitettség, fáradtság, terepi/állatos események és kezelési receptek. Ez egyelőre terv, a benne szereplő új rendszerek és számszerű balanszértékek még nincsenek bekötve vagy igazolva.
+
 Az első balanszlépés elkészült és újramért. Következő külön lépés a túl erős késői alvásgyógyítás és tea hangolása, majd a végső vihar feszültsége; ezek változatlanok. A növénygyűjtés hozamaránya is további vizsgálatot kér. Emberi játékosok és készülékes haptic/audio ellenőrzése szükséges, a botok nem adnak emberi sikerarányt.
 
 1. **Eszközök és túlélés:** fejlettebb eszközök, nagyobb/ritka halak, Poisoned/Injured/Wet/Exhausted, hordott slotok és tábori storage.

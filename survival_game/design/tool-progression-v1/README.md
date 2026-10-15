@@ -27,6 +27,8 @@ A jobb balták a tartósság mellett kicsit szélesebb GOOD zónát és próbán
 
 A három egyforma kártya mindig rövid marad. Koppintásra jelennek meg a költségek és előnyök, majd külön Craft / Equip / Repair / Confirm művelet következik. Az esemény jutalma csak utólag jelenik meg. A 08-as terv sérült játékost szemléltet: 70% alap + 8 pont fegyver − 10 pont sérülés = 68% aktuális esély.
 
+2026-10-15-ös korrekció: az eredmény víz/étel sorai a kiemelt fogyást mutatják (−4 Water, −3 Food), alattuk külön a megmaradt értéket és progress bart. Az idő külön óraikonnal, hátralévő és elhasznált időként látszik; nincs három számból álló nyilas képlet.
+
 ## Grafika és ellenőrzés
 
 [Új, 9 cellás atlasz](assets/tools-atlas-v1.png) · [Built-in imagegen prompt, referencia és forrás](PROMPTS.md). A korábbi artok megmaradtak. Az atlasz csak tárgyakat tartalmaz; a hátterek a meglévő helyszínképek. A miniatűr rendszerikonok meglévő átlátszó ikonok; az új eszközök saját átlátszó kis ikonjai a bekötési körben készülnek.

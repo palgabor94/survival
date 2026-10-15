@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/ui/canopy_components.dart';
 import 'package:survival_game/ui/canopy_theme.dart';
+import 'package:survival_game/ui/card_art.dart';
 import 'package:survival_game/ui/parchment_components.dart';
 import 'package:survival_game/ui/scene_artwork.dart';
 import '../../screenshots/tools/capture_fonts.dart';
@@ -92,6 +93,43 @@ Widget tabs(bool axes) => Row(
     const SizedBox(width: 8),
     Expanded(child: button('SPEARS', secondary: axes)),
   ],
+);
+Widget spentStat(
+  String icon,
+  String label,
+  int spent,
+  int remaining,
+  Color color,
+) => Padding(
+  padding: const EdgeInsets.only(bottom: 12),
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      CardArt(icon, size: 28),
+      const SizedBox(width: 12),
+      Expanded(
+        child: col([
+          ParchmentLabel(
+            '−$spent $label',
+            size: 15,
+            color: ParchmentColors.rust,
+          ),
+          gap(3),
+          Text(
+            'Remaining: $remaining / 100',
+            style: const TextStyle(fontSize: 11, color: ink),
+          ),
+          gap(5),
+          LinearProgressIndicator(
+            value: remaining / 100,
+            minHeight: 5,
+            color: color,
+            backgroundColor: const Color(0xFFCDC098),
+          ),
+        ]),
+      ),
+    ],
+  ),
 );
 Widget scene(String asset, Widget heading, Widget footer) => Scaffold(
   backgroundColor: const Color(0xFF102A28),
@@ -409,9 +447,26 @@ final concepts = <String, Widget Function()>{
       title('TOOL CONDITION'),
       meter('Reinforced Axe · 14 → 13', 13, 16),
       gap(),
-      row('Water', '62 → 58 · −4', icon: 'water'),
-      row('Food', '57 → 54 · −3', icon: 'food'),
-      row('Daylight remaining', '3 / 6'),
+      title('SUPPLIES USED'),
+      spentStat('water', 'WATER', 4, 58, const Color(0xFF287E90)),
+      spentStat('food', 'FOOD', 3, 54, const Color(0xFF9C6338)),
+      const Divider(height: 16),
+      Row(
+        children: [
+          const Icon(Icons.schedule_rounded, size: 26, color: leaf),
+          const SizedBox(width: 12),
+          Expanded(
+            child: col([
+              const ParchmentLabel('3 / 6 TIME LEFT', size: 14),
+              gap(3),
+              const Text(
+                'This action used 1 time',
+                style: TextStyle(fontSize: 11, color: ink),
+              ),
+            ]),
+          ),
+        ],
+      ),
       gap(16),
       button('CONTINUE'),
     ]),

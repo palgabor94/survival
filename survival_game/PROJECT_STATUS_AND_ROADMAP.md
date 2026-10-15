@@ -1,6 +1,6 @@
 # Lost Canopy — állapot és további menetrend
 
-**Frissítve: 2026-10-14 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic és pergamentes felület. Az új, képen választható térkép be van kötve; 324 teszt sikeres.**
+**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 331 teszt sikeres.**
 
 Most már az új játéktól a sikeres befejezésig működik a lánc: táborfejlesztés → roncsalkatrészek → Machete → Ancient Ruins puzzle → Beacon Core → Rescue Base → Emergency Beacon → jeladás → végső vihar → RESCUED.
 
@@ -72,6 +72,8 @@ Az első balanszlépés elkészült és újramért. Következő külön lépés 
 Analitika és monetizáció külön termékdöntés után következik. A játék már nyerhető, de a starter kit teljes MVP-tartalma még nincs kész.
 
 ## Pergamentes UI és képen választható térkép (2026-10-14)
+
+2026-10-15: az elfogadott [napzáró terv](design/day-end-concept-v1/README.md) be van kötve az éjszaka és az alvás után. Három valódi napi történés, négy stat kis számmal és progress barral, nyersanyagkészlet, következő cél és Next day gomb jelenik meg. A napi napló és a függő összesítő menthető; folytatáskor nincs ismételt költség vagy napváltás. [Valódi screenshotok](screenshots/day-end-v1/README.md). A teljes tesztfutás 331/331 sikeres, benne mentés/folytatás, halálos éjszaka, kis kijelző, fekvő nézet és 2× betűméret.
 
 A Craft, Camp upgrade, Items, Camp menu, Journal, Guide és annak minijáték-útmutatói, az események és expedíciók döntési részletei, az eredmény-popup, a Beacon, a romos puzzle és a megmentés képernyője az elfogadott pergamentes rendszert használja. A HUD kerek statikonokat és külön mennyiségjelzőket kapott. A döntési kártyák egységes 112 × 172 méretűek, 3:2 képpel; a hosszú költségek és feltételek a koppintásra nyíló részletpanelen jelennek meg. A kártya megérintése még nem költ időt vagy nyersanyagot, ehhez a megerősítés szükséges.
 

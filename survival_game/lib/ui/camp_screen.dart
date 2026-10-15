@@ -29,6 +29,7 @@ import 'rescued_screen.dart';
 import 'gathering_screen.dart';
 import 'parchment_components.dart';
 import 'survival_guide_dialog.dart';
+import 'day_end_screen.dart';
 import '../game/crafting.dart';
 
 class CampScreen extends StatefulWidget {
@@ -72,24 +73,34 @@ class _CampScreenState extends State<CampScreen> {
     try {
       while (mounted) {
         if (game.report != null) {
-          await showDialog<void>(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => PopScope(
-              canPop: false,
-              child: OutcomeDialog(
-                report: game.report!,
-                state: game.state,
-                runEnded: game.state.phase == RunPhase.gameOver,
-                runRescued: game.state.rescued,
-                nightNext:
-                    game.state.timeLeft == 0 &&
-                    game.state.phase == RunPhase.day &&
-                    game.expedition == null,
-                expeditionNext: game.expedition != null && game.state.isAlive,
+          final summary = game.report!.daySummary;
+          if (summary != null) {
+            await Navigator.push<void>(
+              context,
+              MaterialPageRoute(
+                builder: (_) => DayEndScreen(game: game, summary: summary),
               ),
-            ),
-          );
+            );
+          } else {
+            await showDialog<void>(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => PopScope(
+                canPop: false,
+                child: OutcomeDialog(
+                  report: game.report!,
+                  state: game.state,
+                  runEnded: game.state.phase == RunPhase.gameOver,
+                  runRescued: game.state.rescued,
+                  nightNext:
+                      game.state.timeLeft == 0 &&
+                      game.state.phase == RunPhase.day &&
+                      game.expedition == null,
+                  expeditionNext: game.expedition != null && game.state.isAlive,
+                ),
+              ),
+            );
+          }
           if (!mounted) return;
           setState(game.continueFromReport);
 

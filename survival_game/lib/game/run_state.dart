@@ -168,11 +168,25 @@ class RunState {
   );
 }
 
+class DaySummary {
+  DaySummary({required this.day, required List<String> highlights})
+    : highlights = List.unmodifiable(highlights);
+  final int day;
+  final List<String> highlights;
+
+  Map<String, dynamic> toJson() => {'day': day, 'highlights': highlights};
+  factory DaySummary.fromJson(Map<String, dynamic> json) => DaySummary(
+    day: json['day'] as int,
+    highlights: List<String>.from(json['highlights'] as List),
+  );
+}
+
 class ActionReport {
   ActionReport.saved({
     required this.title,
     required this.body,
     required Map<String, int> changes,
+    this.daySummary,
   }) : changes = Map.unmodifiable(changes);
 
   ActionReport({
@@ -180,6 +194,7 @@ class ActionReport {
     required this.body,
     required RunState before,
     required RunState after,
+    this.daySummary,
   }) : changes = Map.unmodifiable({
          for (final stat in SurvivalStat.values)
            if (after.value(stat) != before.value(stat))
@@ -191,16 +206,21 @@ class ActionReport {
   final String title;
   final String body;
   final Map<String, int> changes;
+  final DaySummary? daySummary;
 
   Map<String, dynamic> toJson() => {
     'title': title,
     'body': body,
     'changes': changes,
+    if (daySummary != null) 'daySummary': daySummary!.toJson(),
   };
 
   factory ActionReport.fromJson(Map<String, dynamic> j) => ActionReport.saved(
     title: j['title'] as String,
     body: j['body'] as String,
     changes: Map<String, int>.from(j['changes'] as Map),
+    daySummary: j['daySummary'] == null
+        ? null
+        : DaySummary.fromJson(j['daySummary'] as Map<String, dynamic>),
   );
 }

@@ -68,6 +68,7 @@ class GameEngine {
   final List<String> _journal = [
     'Day 1 · You found a clearing. Make it through the night.',
   ];
+  final List<String> _dayHighlights = [];
   List<String> get journal => List.unmodifiable(_journal);
   bool _nightResolved = false;
   final Map<String, String> _lastEvent = {};
@@ -915,14 +916,23 @@ class GameEngine {
       _apply(EventEffect(stats: {SurvivalStat.water: dawnWater}));
     }
     _nightResolved = false;
+    final summary = state.isAlive
+        ? DaySummary(day: before.day, highlights: _dayHighlights)
+        : null;
+    _dayHighlights.clear();
     _finish(
-      state.rescueStage == RescueStage.storm
+      !state.isAlive
+          ? 'The night takes its toll'
+          : state.rescueStage == RescueStage.storm
           ? 'The rescue storm'
           : 'A new dawn',
-      state.rescueStage == RescueStage.storm
+      !state.isAlive
+          ? 'Your supplies ran out before dawn. This journey has come to an end.'
+          : state.rescueStage == RescueStage.storm
           ? 'A rescue team has your signal. Keep the beacon alive through the storm until they reach the clearing.'
           : 'You survived the night. A new day unfolds beneath the canopy.',
       before,
+      daySummary: summary,
     );
     return true;
   }
@@ -1032,6 +1042,7 @@ class GameEngine {
     _report = null;
     _nightResolved = false;
     _lastEvent.clear();
+    _dayHighlights.clear();
     _journal
       ..clear()
       ..add('Day 1 · You found a clearing. Make it through the night.');
@@ -1109,7 +1120,12 @@ class GameEngine {
     );
   }
 
-  void _finish(String title, String body, RunState before) {
+  void _finish(
+    String title,
+    String body,
+    RunState before, {
+    DaySummary? daySummary,
+  }) {
     if (!state.isAlive) {
       _state = state.copyWith(phase: RunPhase.gameOver);
       _expedition = null;
@@ -1122,7 +1138,18 @@ class GameEngine {
       body: body,
       before: before,
       after: state,
+      daySummary: daySummary,
     );
+    if (daySummary == null && before.day == state.day) {
+      _dayHighlights.add(title);
+      final place = world.find(before.locationId);
+      if (place != null && place.id != 'camp') {
+        _dayHighlights.add('Explored ${place.name}');
+      }
+      while (_dayHighlights.length > 50) {
+        _dayHighlights.removeAt(0);
+      }
+    }
     _journal.insert(0, 'Day ${before.day} · $title. $body');
     if (_journal.length > 30) _journal.removeLast();
     _changed();
@@ -1150,6 +1177,7 @@ class GameEngine {
     if (_expedition != null) 'expedition': _expedition!.toJson(),
     'lastEvent': _lastEvent,
     'journal': _journal,
+    'dayHighlights': List<String>.of(_dayHighlights),
     if (_fishing != null)
       'fishing': {'before': _fishingBefore!.toJson(), 'castSpent': _castSpent},
     if (_ruinsPuzzle != null)
@@ -1180,8 +1208,14 @@ class GameEngine {
       final puzzle = json['ruinsPuzzle'] as Map<String, dynamic>?;
       final gathering = json['gathering'] as Map<String, dynamic>?;
       final journal = List<String>.from(json['journal'] as List);
+      final dayHighlights = List<String>.from(
+        json['dayHighlights'] as List? ?? [],
+      );
 
       _state = restored;
+      _dayHighlights
+        ..clear()
+        ..addAll(dayHighlights);
       _pendingEvent = events.isEmpty ? null : events.first;
       _pendingAction = _pendingEvent == null || actionName == null
           ? null

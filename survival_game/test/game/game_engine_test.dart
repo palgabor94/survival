@@ -44,6 +44,75 @@ void main() {
     },
   );
 
+  test('day summary survives restore and acknowledges dawn exactly once', () {
+    final game = GameEngine(catalog, random: FixedRandom());
+    for (var i = 0; i < 6; i++) {
+      expect(game.startAction(CampAction.rest), isTrue);
+      game.continueFromReport();
+      if (i == 2) {
+        final midday = game.toJson();
+        expect(game.restore(midday), isTrue);
+        expect(game.toJson()['dayHighlights'], hasLength(3));
+      }
+    }
+    final choice = game.pendingEvent!.choices.firstWhere(game.canChoose);
+    game.choose(choice.id);
+    game.continueFromReport();
+    expect(game.sleep(), isTrue);
+    expect(game.report!.daySummary!.day, 1);
+    expect(game.report!.daySummary!.highlights, isNotEmpty);
+    expect(game.toJson()['dayHighlights'], isEmpty);
+    final saved = game.toJson();
+    final restored = GameEngine(catalog, random: FixedRandom());
+    expect(restored.restore(saved), isTrue);
+    expect(
+      restored.report!.daySummary!.toJson(),
+      game.report!.daySummary!.toJson(),
+    );
+    final dawn = restored.state.toJson();
+    expect(restored.sleep(), isFalse);
+    expect(restored.startAction(CampAction.rest), isFalse);
+    expect(restored.continueFromReport(), isTrue);
+    expect(restored.continueFromReport(), isFalse);
+    expect(restored.state.toJson(), dawn);
+    expect(restored.canAct(CampAction.rest), isTrue);
+    restored.restart();
+    expect(restored.toJson()['dayHighlights'], isEmpty);
+    expect(restored.report, isNull);
+  });
+
+  test('older saves without daily highlights remain readable', () {
+    final game = GameEngine(catalog, random: FixedRandom());
+    game.startAction(CampAction.rest);
+    final saved = game.toJson()..remove('dayHighlights');
+    final restored = GameEngine(catalog);
+    expect(restored.restore(saved), isTrue);
+    expect(restored.report!.daySummary, isNull);
+    expect(restored.toJson()['dayHighlights'], isEmpty);
+  });
+
+  test('fatal sleep produces a defeat report rather than a survived day', () {
+    final game = GameEngine(catalog);
+    final saved = game.toJson();
+    saved['state'] = RunState(
+      phase: RunPhase.night,
+      timeLeft: 0,
+      stats: {
+        SurvivalStat.health: 1,
+        SurvivalStat.water: 0,
+        SurvivalStat.food: 0,
+        SurvivalStat.sanity: 10,
+      },
+    ).toJson();
+    saved['nightResolved'] = true;
+    expect(game.restore(saved), isTrue);
+    expect(game.sleep(), isTrue);
+    expect(game.state.phase, RunPhase.gameOver);
+    expect(game.report!.daySummary, isNull);
+    expect(game.report!.body, isNot(contains('survived')));
+    expect(game.state.day, 1);
+  });
+
   test('all shipped events are valid and have an affordable fallback', () {
     expect(catalog.events, hasLength(37));
     for (final event in catalog.events) {

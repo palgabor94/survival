@@ -444,6 +444,62 @@ Future<void> main() async {
       return;
     }
 
+    if (Platform.environment['LOST_CANOPY_CAPTURE_DAY_END'] == '1') {
+      final engine = game();
+      if (!engine.craft('stone_axe')) {
+        throw StateError('Could not craft demo axe');
+      }
+      engine.continueFromReport();
+      if (!engine.travelTo('riverbank')) {
+        throw StateError('Could not reach river');
+      }
+      engine.choose(
+        engine.pendingEvent!.choices
+            .firstWhere((c) => engine.canChoose(c) && c.minigame == null)
+            .id,
+      );
+      engine.continueFromReport();
+      if (engine.awaitingExpeditionDecision) {
+        engine.returnHome();
+        engine.continueFromReport();
+      }
+      while (engine.canAct(CampAction.rest)) {
+        engine.startAction(CampAction.rest);
+        engine.continueFromReport();
+      }
+      if (engine.pendingEvent != null) {
+        engine.choose(
+          engine.pendingEvent!.choices.firstWhere(engine.canChoose).id,
+        );
+        engine.continueFromReport();
+      }
+      if (!engine.sleep() || engine.report?.daySummary == null) {
+        throw StateError('The demo day did not reach a saved summary');
+      }
+      final snapshot = engine.toJson();
+      await mount(LostCanopyApp(engine: engine), app: true);
+      await shot('01-day-3-survived-390x844');
+      await tap('continue-outcome');
+      await shot('02-next-day-4-camp');
+      final restored = game();
+      if (!restored.restore(snapshot)) {
+        throw StateError('Day end restore failed');
+      }
+      await binding.setSurfaceSize(const Size(320, 568));
+      tester.view.physicalSize = const Size(320, 568);
+      await mount(LostCanopyApp(engine: restored), app: true);
+      await shot('03-restored-day-end-320x568');
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('continue-outcome')),
+      );
+      await shot('04-restored-day-end-scrolled-320x568');
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      await tester.pumpWidget(const SizedBox.shrink());
+      return;
+    }
+
     if (Platform.environment['LOST_CANOPY_CAPTURE_GUIDE'] == '1') {
       final engine = game();
       final before = engine.state.toJson().toString();

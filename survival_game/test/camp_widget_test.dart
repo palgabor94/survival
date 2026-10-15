@@ -9,6 +9,7 @@ import 'package:survival_game/ui/craft_screen.dart';
 import 'package:survival_game/ui/action_card.dart';
 import 'package:survival_game/ui/event_scene.dart';
 import 'package:survival_game/ui/inventory_dialog.dart';
+import 'package:survival_game/ui/day_end_screen.dart';
 
 import 'expedition_widget_test.dart' show tapKey, confirmCard;
 import 'game/game_engine_test.dart' show FixedRandom;
@@ -46,6 +47,63 @@ Future<void> pumpApp(WidgetTester tester, RunStorage storage) async {
 }
 
 void main() {
+  for (final scenario in [
+    (const Size(390, 844), 1.0),
+    (const Size(320, 568), 1.0),
+    (const Size(844, 390), 1.0),
+    (const Size(375, 667), 2.0),
+  ]) {
+    testWidgets('saved day end fits ${scenario.$1}, text x${scenario.$2}', (
+      tester,
+    ) async {
+      final game = testGame(
+        state: stocked().copyWith(
+          day: 4,
+          resources: {
+            'wood': 9,
+            'stone': 1,
+            'fiber': 6,
+            'hardwood': 3,
+            'metal_scrap': 2,
+          },
+        ),
+      );
+      final saved = game.toJson();
+      saved['report'] = ActionReport.saved(
+        title: 'A new dawn',
+        body: 'You survived the night.',
+        changes: {},
+        daySummary: DaySummary(
+          day: 3,
+          highlights: ['Crafted: Stone Axe', 'Ripe fruit', 'Fire fed'],
+        ),
+      ).toJson();
+      expect(game.restore(saved), isTrue);
+      final before = game.state.toJson();
+      await showCamp(tester, game, size: scenario.$1, textScale: scenario.$2);
+      expect(find.byType(DayEndScreen), findsOneWidget);
+      expect(findUiText('DAY 3 SURVIVED'), findsOneWidget);
+      expect(findUiText('9 Wood'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsNWidgets(4));
+      final sizes = [
+        for (final stat in SurvivalStat.values)
+          tester.getSize(find.byKey(ValueKey('day-end-stat-${stat.name}'))),
+      ];
+      for (final size in sizes) {
+        expect(size, sizes.first);
+      }
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('continue-outcome')),
+      );
+      await tester.tap(find.byKey(const ValueKey('continue-outcome')));
+      await tester.pumpAndSettle();
+      expect(game.report, isNull);
+      expect(find.byType(DayEndScreen), findsNothing);
+      expect(game.state.toJson(), before);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('four material cards keep the same size in the last row', (
     tester,
   ) async {

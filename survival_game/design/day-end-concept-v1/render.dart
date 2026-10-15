@@ -120,7 +120,7 @@ class DayEndConcept extends StatelessWidget {
                           color: ParchmentColors.muted,
                         ),
                         const SizedBox(height: 5),
-                            const _ProgressLine('stone_axe', 'Crafted Stone Axe'),
+                        const _ProgressLine('stone_axe', 'Crafted Stone Axe'),
                         const _ProgressLine('water', 'Reached Riverbank'),
                         const _ProgressLine('wood', 'Gathered 2 Wood'),
                         const SizedBox(height: 12),
@@ -143,6 +143,20 @@ class DayEndConcept extends StatelessWidget {
                             Expanded(
                               child: _StatCell('sanity', '80', 'SANITY'),
                             ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        const ParchmentLabel(
+                          'CAMP MATERIALS',
+                          size: 10,
+                          color: ParchmentColors.muted,
+                        ),
+                        const SizedBox(height: 7),
+                        const Row(
+                          children: [
+                            Expanded(child: _MaterialCount('wood', '9 Wood')),
+                            Expanded(child: _MaterialCount('stone', '1 Stone')),
+                            Expanded(child: _MaterialCount('fiber', '6 Fiber')),
                           ],
                         ),
                         const SizedBox(height: 13),
@@ -206,12 +220,27 @@ class _ProgressLine extends StatelessWidget {
   );
 }
 
+class _MaterialCount extends StatelessWidget {
+  const _MaterialCount(this.art, this.label);
+  final String art, label;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      CardArt(art, size: 22),
+      const SizedBox(width: 5),
+      ParchmentLabel(label, size: 11),
+    ],
+  );
+}
+
 class _StatCell extends StatelessWidget {
   const _StatCell(this.art, this.value, this.label);
   final String art, value, label;
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
     decoration: BoxDecoration(
       color: const Color(0x55E0D3AF),
       border: Border.all(color: const Color(0xFFBAA981)),
@@ -219,8 +248,29 @@ class _StatCell extends StatelessWidget {
     ),
     child: Column(
       children: [
-        CardArt(art, size: 24),
-        ParchmentLabel(value, size: 15),
+        Row(
+          children: [
+            CardArt(art, size: 22),
+            const Spacer(),
+            ParchmentLabel(value, size: 11),
+          ],
+        ),
+        const SizedBox(height: 7),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(3),
+          child: LinearProgressIndicator(
+            value: double.parse(value) / 100,
+            minHeight: 5,
+            backgroundColor: const Color(0xFFD1C5A3),
+            color: switch (art) {
+              'health' => const Color(0xFFC14C3E),
+              'water' => const Color(0xFF298CA2),
+              'food' => const Color(0xFFA86A35),
+              _ => const Color(0xFF87639C),
+            },
+          ),
+        ),
+        const SizedBox(height: 6),
         ParchmentLabel(label, size: 8, color: ParchmentColors.muted),
       ],
     ),

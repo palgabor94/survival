@@ -11,35 +11,38 @@
         "label": "Pick the familiar berries",
         "description": "A small, dependable meal.",
         "effect": {
-          "stats": {
-            "food": 20
-          },
+          "stats": {},
           "resources": {
-            "fiber": 1
+            "fiber": 1,
+            "ember_berries": 2
           }
         },
-        "result": "You eat the ripe berries and keep a handful of useful fibers."
+        "result": "You pack two portions of ember berries and keep a handful of useful fibres."
       },
       {
         "id": "risk",
         "label": "Gather everything",
-        "description": "More food, if your instincts are right.",
+        "description": "Reach among the unfamiliar plants. Contact may be unsafe.",
         "successChance": 0.7,
         "effect": {
-          "stats": {
-            "food": 35
-          },
+          "stats": {},
           "resources": {
-            "fiber": 2
+            "fiber": 2,
+            "ember_berries": 3
           }
         },
         "result": "Your instincts were right. A generous meal awaits.",
         "failureEffect": {
           "stats": {
-            "food": 8,
-            "health": -16,
             "sanity": -5
-          }
+          },
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 1
+            }
+          ]
         },
         "failureResult": "The bitter fruit leaves you sick and shaken."
       },
@@ -51,15 +54,14 @@
           "stone_knife"
         ],
         "effect": {
-          "stats": {
-            "food": 16
-          },
+          "stats": {},
           "resources": {
             "herb": 2,
-            "fiber": 1
+            "fiber": 1,
+            "ribbon_root": 2
           }
         },
-        "result": "You cut starchy roots and bundle two healing herbs."
+        "result": "You bundle ribbon roots and healing herbs. Prepare the roots at camp."
       },
       {
         "id": "gather_plants",
@@ -228,10 +230,12 @@
           "stats": {
             "health": -18,
             "sanity": -8
-          }
+          },
+          "physicalDamage": true
         },
         "failureResult": "The branch snaps. You land hard, and the bag tumbles out of reach.",
-        "icon": "climb"
+        "icon": "climb",
+        "riskDomain": "physical"
       },
       {
         "id": "leave",
@@ -344,10 +348,12 @@
           "stats": {
             "health": -22,
             "sanity": -12
-          }
+          },
+          "physicalDamage": true
         },
         "failureResult": "A rope gives way. You scramble back, bruised and trembling.",
-        "icon": "cross"
+        "icon": "cross",
+        "riskDomain": "physical"
       },
       {
         "id": "salvage",
@@ -402,9 +408,15 @@
         "result": "The water is cool and clear. You feel your strength returning.",
         "failureEffect": {
           "stats": {
-            "water": 20,
-            "health": -20
-          }
+            "water": 20
+          },
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 1
+            }
+          ]
         },
         "failureResult": "The water eases your thirst, but soon your stomach cramps."
       },
@@ -596,7 +608,8 @@
             "health": -6,
             "sanity": -8,
             "water": 8
-          }
+          },
+          "physicalDamage": true
         },
         "result": "You save what rainwater you can, then curl up in the driest corner."
       }
@@ -754,9 +767,11 @@
             "sanity": -8
           },
           "dropLoot": true,
-          "endsExpedition": true
+          "endsExpedition": true,
+          "physicalDamage": true
         },
-        "failureResult": "The jaguar is faster. You stumble away bleeding, and your pack is left behind."
+        "failureResult": "The jaguar is faster. You stumble away bleeding, and your pack is left behind.",
+        "riskDomain": "physical"
       },
       {
         "id": "meat",
@@ -836,9 +851,11 @@
           "stats": {
             "health": -14,
             "sanity": -6
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "It strikes before you can breathe. The bite burns."
+        "failureResult": "It strikes before you can breathe. The bite burns.",
+        "riskDomain": "physical"
       },
       {
         "id": "treat",
@@ -910,9 +927,11 @@
           "stats": {
             "health": -20,
             "sanity": -6
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "It hits you low and you go down. By the time you stand, it is gone."
+        "failureResult": "It hits you low and you go down. By the time you stand, it is gone.",
+        "riskDomain": "physical"
       },
       {
         "id": "climb",
@@ -931,9 +950,11 @@
             "health": -12,
             "sanity": -4
           },
-          "dropLoot": true
+          "dropLoot": true,
+          "physicalDamage": true
         },
-        "failureResult": "The branch gives. You land hard, and your pack tumbles into the mud and is gone."
+        "failureResult": "The branch gives. You land hard, and your pack tumbles into the mud and is gone.",
+        "riskDomain": "physical"
       },
       {
         "id": "fish",
@@ -1138,10 +1159,10 @@
             "food": 6
           },
           "resources": {
-          "small_fish": 1
+            "small_fish": 1
           }
         },
-      "result": "You keep one slippery fish before the others scatter.",
+        "result": "You keep one slippery fish before the others scatter.",
         "failureEffect": {
           "stats": {
             "sanity": -4,
@@ -1306,9 +1327,11 @@
           "stats": {
             "health": -16,
             "sanity": -6
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "Something gives. You scrape out bruised, with nothing to show."
+        "failureResult": "Something gives. You scrape out bruised, with nothing to show.",
+        "riskDomain": "physical"
       },
       {
         "id": "strip",
@@ -1445,9 +1468,11 @@
           "stats": {
             "health": -8,
             "sanity": -3
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "A hidden splinter catches your arm. You squeeze out with nothing new to carry."
+        "failureResult": "A hidden splinter catches your arm. You squeeze out with nothing new to carry.",
+        "riskDomain": "physical"
       },
       {
         "id": "hunt_minigame",
@@ -1561,9 +1586,11 @@
           "stats": {
             "health": -8,
             "water": -5
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "You slip between the roots. The bait drifts away while you scramble back onto the bank."
+        "failureResult": "You slip between the roots. The bait drifts away while you scramble back onto the bank.",
+        "riskDomain": "physical"
       },
       {
         "id": "stones",
@@ -1638,9 +1665,11 @@
             "sanity": -8
           },
           "dropLoot": true,
-          "endsExpedition": true
+          "endsExpedition": true,
+          "physicalDamage": true
         },
-        "failureResult": "The jaws snap past the spear. You flee toward camp, wounded, leaving the haul behind."
+        "failureResult": "The jaws snap past the spear. You flee toward camp, wounded, leaving the haul behind.",
+        "riskDomain": "physical"
       },
       {
         "id": "roots",
@@ -1659,9 +1688,11 @@
             "health": -12,
             "water": -5
           },
-          "dropLoot": true
+          "dropLoot": true,
+          "physicalDamage": true
         },
-        "failureResult": "A wet root gives way. You recover your footing, but your gathered supplies sink into the water."
+        "failureResult": "A wet root gives way. You recover your footing, but your gathered supplies sink into the water.",
+        "riskDomain": "physical"
       },
       {
         "id": "retreat",
@@ -1711,9 +1742,11 @@
           "stats": {
             "health": -6,
             "sanity": -3
-          }
+          },
+          "physicalDamage": true
         },
-        "failureResult": "A gust clears the smoke. A few stings send you ducking beneath the branch."
+        "failureResult": "A gust clears the smoke. A few stings send you ducking beneath the branch.",
+        "riskDomain": "physical"
       },
       {
         "id": "cover",
@@ -1809,9 +1842,11 @@
           "stats": {
             "health": -6
           },
-          "dropLoot": true
+          "dropLoot": true,
+          "physicalDamage": true
         },
-        "failureResult": "A sharp bite makes you let go. The monkeys scatter with everything gathered on this trip."
+        "failureResult": "A sharp bite makes you let go. The monkeys scatter with everything gathered on this trip.",
+        "riskDomain": "physical"
       },
       {
         "id": "recover",
@@ -1834,7 +1869,8 @@
           },
           "dropLoot": true
         },
-        "failureResult": "The strap slips out of your hands. Your haul disappears into the canopy."
+        "failureResult": "The strap slips out of your hands. Your haul disappears into the canopy.",
+        "riskDomain": "physical"
       },
       {
         "id": "leave",
@@ -2227,7 +2263,8 @@
           "stats": {
             "health": -8,
             "sanity": -5
-          }
+          },
+          "physicalDamage": true
         },
         "result": "You stand in the cold water and lift the pack until the clearing drains.",
         "icon": "search",
@@ -2283,7 +2320,8 @@
           "stats": {
             "health": -10,
             "sanity": -4
-          }
+          },
+          "physicalDamage": true
         },
         "result": "You drag the branch free. A sharp limb catches your arm, but the signal stays on.",
         "icon": "health"
@@ -2337,10 +2375,687 @@
           "stats": {
             "health": -8,
             "sanity": -3
-          }
+          },
+          "physicalDamage": true
         },
         "result": "You step into the wind and wave until the crew sees you. At last, help reaches the clearing.",
         "icon": "retreat"
+      }
+    ]
+  },
+  {
+    "id": "ecology_dew",
+    "title": "Rain held in leaves",
+    "description": "Yellow teardrop fruits hang in broad leaf cups.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "riverbank",
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "gather",
+        "label": "Gather fruit",
+        "description": "Gather fruit",
+        "effect": {
+          "resources": {
+            "dew_fruit": 1
+          }
+        },
+        "result": "You collect one dew fruit.",
+        "icon": "dew_fruit"
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_nuts",
+    "title": "A hard shell",
+    "description": "Hexagonal nuts lie on dry forest floor.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "riverbank",
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "gather",
+        "label": "Gather nuts",
+        "description": "Gather nuts",
+        "effect": {
+          "resources": {
+            "iron_nut": 2
+          }
+        },
+        "result": "You pack two hard-shelled iron nuts.",
+        "icon": "iron_nut"
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_roots",
+    "title": "Striped roots",
+    "description": "Purple-striped roots twist between the mangroves.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "mangrove_shallows"
+    ],
+    "choices": [
+      {
+        "id": "gather",
+        "label": "Dig up roots",
+        "description": "Dig up roots",
+        "effect": {
+          "resources": {
+            "ribbon_root": 2
+          }
+        },
+        "result": "You gather two roots. Prepare them at camp.",
+        "icon": "ribbon_root"
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_hive",
+    "title": "Honey in the hollow",
+    "description": "Amber honey drips from a trunk alive with insects.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "riverbank",
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "smoke",
+        "label": "Smoke the hollow",
+        "description": "Smoke the hollow",
+        "effect": {
+          "resources": {
+            "wild_honey": 1
+          }
+        },
+        "result": "The smoke lets you gather honey safely.",
+        "requiresTools": [
+          "torch"
+        ],
+        "icon": "torch",
+        "consumesTools": [
+          "torch"
+        ]
+      },
+      {
+        "id": "reach",
+        "label": "Reach inside",
+        "description": "Reach inside",
+        "effect": {
+          "resources": {
+            "wild_honey": 1
+          }
+        },
+        "result": "You recover some wild honey.",
+        "icon": "wild_honey",
+        "successChance": 0.65,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "stats": {
+            "health": -6
+          },
+          "physicalDamage": true,
+          "conditions": [
+            {
+              "kind": "injured",
+              "remaining": 3,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "Stings drive you back. You are hurt."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_frog",
+    "title": "The leaves have a guardian",
+    "description": "A brightly patterned frog sits on medicinal leaves. Avoid touching its skin.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "mangrove_shallows"
+    ],
+    "choices": [
+      {
+        "id": "knife",
+        "label": "Cut distant stems",
+        "description": "Cut distant stems",
+        "effect": {
+          "resources": {
+            "herb": 2
+          }
+        },
+        "result": "You complete the action.",
+        "requiresTools": [
+          "stone_knife"
+        ],
+        "icon": "stone_knife",
+        "successChance": 0.85,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "Your hand brushes the frog. Poison takes hold."
+      },
+      {
+        "id": "reach",
+        "label": "Reach for the herbs",
+        "description": "Reach for the herbs",
+        "effect": {
+          "resources": {
+            "herb": 2
+          }
+        },
+        "result": "You complete the action.",
+        "icon": "herb",
+        "successChance": 0.5,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "stats": {
+            "health": -4
+          },
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 2
+            }
+          ]
+        },
+        "failureResult": "The frog touches your hand. A stronger poison takes hold."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "minDay": 3,
+    "background": "assets/art/ecology_frog_encounter_v1.png"
+  },
+  {
+    "id": "ecology_spores",
+    "title": "Movement in the rotten log",
+    "description": "Pale caps and waxy beetles crowd a rotten hollow.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "riverbank",
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "mask",
+        "label": "Make a leaf mask",
+        "description": "Make a leaf mask",
+        "effect": {
+          "resources": {
+            "fiber": -1,
+            "herb": 1
+          }
+        },
+        "result": "You complete the action.",
+        "requires": {
+          "fiber": 1
+        },
+        "icon": "fiber"
+      },
+      {
+        "id": "open",
+        "label": "Pry it open",
+        "description": "Pry it open",
+        "effect": {
+          "resources": {
+            "herb": 2
+          }
+        },
+        "result": "You complete the action.",
+        "icon": "herb",
+        "successChance": 0.6,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "A cloud of spores catches your breath."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_pool",
+    "title": "Dark water under roots",
+    "description": "Still, cloudy water fills a hollow between the roots.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "mangrove_shallows",
+      "riverbank"
+    ],
+    "choices": [
+      {
+        "id": "drink",
+        "label": "Drink the water",
+        "description": "Drink the water",
+        "effect": {
+          "stats": {
+            "water": 20
+          },
+          "conditions": [
+            {
+              "kind": "poisoned",
+              "remaining": 4,
+              "severity": 1
+            }
+          ]
+        },
+        "result": "The water quenches your thirst, but makes you ill.",
+        "icon": "water"
+      },
+      {
+        "id": "boil",
+        "label": "Boil it safely",
+        "description": "Boil it safely",
+        "effect": {
+          "resources": {
+            "wood": -1
+          },
+          "stats": {
+            "water": 28
+          }
+        },
+        "result": "You complete the action.",
+        "requires": {
+          "wood": 1
+        },
+        "extraTime": 1,
+        "sheltered": true,
+        "icon": "firewood"
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_thorns",
+    "title": "A sharp green corridor",
+    "description": "Orange ribbed fruit grows beyond a wall of thorns.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "cut",
+        "label": "Clear with machete",
+        "description": "Clear with machete",
+        "effect": {
+          "resources": {
+            "canopy_fig": 1
+          }
+        },
+        "result": "You complete the action.",
+        "requiresTools": [
+          "machete"
+        ],
+        "icon": "machete"
+      },
+      {
+        "id": "detour",
+        "label": "Take the detour",
+        "description": "Take the detour",
+        "effect": {
+          "resources": {
+            "canopy_fig": 1
+          }
+        },
+        "result": "You complete the action.",
+        "extraTime": 1,
+        "icon": "trail"
+      },
+      {
+        "id": "force",
+        "label": "Push through",
+        "description": "Push through",
+        "effect": {
+          "resources": {
+            "canopy_fig": 1
+          }
+        },
+        "result": "You complete the action.",
+        "icon": "canopy_fig",
+        "successChance": 0.7,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "stats": {
+            "health": -8
+          },
+          "physicalDamage": true,
+          "conditions": [
+            {
+              "kind": "injured",
+              "remaining": 6,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "Thorns cut deeply. You retreat empty-handed."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/bamboo_grove_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_crossing",
+    "title": "The slippery bank",
+    "description": "The bank drops into muddy water. Rain makes the jump harder.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "riverbank",
+      "mangrove_shallows"
+    ],
+    "choices": [
+      {
+        "id": "line",
+        "label": "Rig a handline",
+        "description": "Rig a handline",
+        "effect": {
+          "resources": {
+            "fiber": -2
+          }
+        },
+        "result": "You complete the action.",
+        "requires": {
+          "fiber": 2
+        },
+        "icon": "fiber"
+      },
+      {
+        "id": "detour",
+        "label": "Walk around",
+        "description": "Walk around",
+        "effect": {},
+        "result": "You complete the action.",
+        "extraTime": 1,
+        "icon": "trail"
+      },
+      {
+        "id": "jump",
+        "label": "Jump across",
+        "description": "Jump across",
+        "effect": {},
+        "result": "You complete the action.",
+        "icon": "trail",
+        "weatherChances": {
+          "Sunny": 0.85,
+          "Light rain": 0.7,
+          "Storm": 0.55
+        },
+        "successChance": 0.85,
+        "riskDomain": "physical",
+        "failureEffect": {
+          "stats": {
+            "health": -8
+          },
+          "physicalDamage": true,
+          "conditions": [
+            {
+              "kind": "wet",
+              "remaining": 3,
+              "severity": 1
+            },
+            {
+              "kind": "injured",
+              "remaining": 3,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "You slip into the water and hurt your leg."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_wading",
+    "title": "Ripples at your feet",
+    "description": "Small leeches move in the dark shallows.",
+    "trigger": "explore",
+    "scene": "explore",
+    "locations": [
+      "mangrove_shallows"
+    ],
+    "choices": [
+      {
+        "id": "shallow",
+        "label": "Find shallow ground",
+        "description": "Find shallow ground",
+        "effect": {},
+        "result": "You complete the action.",
+        "extraTime": 1,
+        "icon": "trail"
+      },
+      {
+        "id": "wade",
+        "label": "Wade quickly",
+        "description": "Wade quickly",
+        "effect": {
+          "conditions": [
+            {
+              "kind": "wet",
+              "remaining": 3,
+              "severity": 1
+            }
+          ]
+        },
+        "result": "You complete the action.",
+        "icon": "water",
+        "successChance": 0.65,
+        "riskDomain": "environment",
+        "failureEffect": {
+          "stats": {
+            "health": -2,
+            "sanity": -3
+          },
+          "conditions": [
+            {
+              "kind": "injured",
+              "remaining": 3,
+              "severity": 1
+            },
+            {
+              "kind": "wet",
+              "remaining": 3,
+              "severity": 1
+            }
+          ]
+        },
+        "failureResult": "Leeches leave small wounds on your legs."
+      },
+      {
+        "id": "leave",
+        "label": "Leave it alone",
+        "description": "Leave it alone",
+        "effect": {},
+        "result": "You leave the danger undisturbed.",
+        "icon": "back"
+      }
+    ],
+    "background": "assets/art/riverbank_camp_style_v2.png"
+  },
+  {
+    "id": "ecology_thunder",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "Thunder beyond the trees",
+    "description": "The wind carries a storm through the canopy. The next crossing could be dangerous.",
+    "locations": [
+      "bamboo_grove",
+      "ancient_ruins"
+    ],
+    "choices": [
+      {
+        "id": "cover",
+        "label": "Wait under cover",
+        "description": "One extra sheltered time.",
+        "extraTime": 1,
+        "sheltered": true,
+        "effect": {},
+        "result": "You wait under broad leaves until the worst has passed.",
+        "icon": "shelter"
+      },
+      {
+        "id": "proceed",
+        "label": "Press on",
+        "description": "The next crossing will face storm conditions.",
+        "effect": {
+          "flags": [
+            "storm_crossing"
+          ]
+        },
+        "result": "You press on as the storm closes in. Be careful at the next crossing.",
+        "icon": "trail"
+      },
+      {
+        "id": "leave",
+        "label": "Keep to the known trail",
+        "description": "Avoid the danger.",
+        "effect": {},
+        "result": "You stay on the route you know.",
+        "icon": "back"
+      }
+    ]
+  },
+  {
+    "id": "ecology_marker",
+    "trigger": "explore",
+    "scene": "explore",
+    "title": "The striped hunter\u2019s trail",
+    "description": "Tracks split between identical trees. Blue wax berries could mark a safe way back.",
+    "locations": [
+      "riverbank",
+      "bamboo_grove"
+    ],
+    "choices": [
+      {
+        "id": "mark",
+        "label": "Mark the trail",
+        "description": "Use wax berries and fibre to protect against getting lost once.",
+        "requires": {
+          "wax_berries": 1,
+          "fiber": 1
+        },
+        "effect": {
+          "resources": {
+            "wax_berries": -1,
+            "fiber": -1
+          },
+          "flags": [
+            "trail_marker"
+          ]
+        },
+        "result": "A bright trail mark will guide you through the next wrong turn. It lasts until you return home.",
+        "icon": "wax_berries"
+      },
+      {
+        "id": "leave",
+        "label": "Keep to the known trail",
+        "description": "Avoid the danger.",
+        "effect": {},
+        "result": "You stay on the route you know.",
+        "icon": "back"
       }
     ]
   }

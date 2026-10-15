@@ -34,9 +34,9 @@ void main() {
     expect(game.state.timeLeft, 6);
     await press(tester, 'gathering-start');
     await tester.pump(const Duration(milliseconds: 100));
-    await press(tester, 'plant-berries');
+    await press(tester, 'plant-ember_berries');
     await press(tester, 'plant-fiber');
-    expect(game.gathering!.picked, {'berries', 'fiber'});
+    expect(game.gathering!.picked, {'ember_berries', 'fiber'});
     expect(game.state.resource('fiber'), 20);
     await press(tester, 'gathering-finish', settle: true);
     expect(game.gathering, isNull);
@@ -210,8 +210,8 @@ void main() {
           if (kind == GatheringKind.foraging) {
             await press(tester, 'plants-next');
             await tester.pump(const Duration(milliseconds: 300));
-            await press(tester, 'plant-unknown_plant');
-            expect(game.gathering!.picked, contains('unknown_plant'));
+            await press(tester, 'plant-herb');
+            expect(game.gathering!.picked, contains('herb'));
           }
           await press(tester, 'gathering-pause', settle: true);
           expect(

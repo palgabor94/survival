@@ -36,6 +36,8 @@ import 'package:survival_game/ui/camp_widgets.dart';
 import 'package:survival_game/ui/camp_character.dart';
 
 import 'capture_fonts.dart';
+import 'package:survival_game/ui/day_end_screen.dart';
+import 'package:survival_game/ui/event_dialog.dart';
 
 /// Actual Flutter screens rendered at phone size. This is an image exporter,
 /// not the gameplay test suite. Seeded states make the gallery reproducible.
@@ -292,6 +294,111 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (Platform.environment['LOST_CANOPY_CAPTURE_ECOLOGY'] == '1') {
+      final state = RunState(
+        day: 5,
+        campTier: 1,
+        weather: 'Light rain',
+        conditions: [
+          const SurvivalCondition(ConditionKind.poisoned, 4),
+          const SurvivalCondition(ConditionKind.injured, 6),
+          const SurvivalCondition(ConditionKind.wet, 3),
+          const SurvivalCondition(ConditionKind.exhausted, 4),
+        ],
+        tools: {'stone_knife', 'stone_axe', 'stone_spear'},
+        resources: {
+          'wood': 14,
+          'stone': 4,
+          'fiber': 12,
+          'herb': 3,
+          'charcoal': 2,
+          'antidote': 1,
+          'bandage': 2,
+          'ember_berries': 3,
+          'dew_fruit': 2,
+          'ribbon_root': 3,
+          'mooncap': 1,
+        },
+        stats: {
+          SurvivalStat.health: 72,
+          SurvivalStat.water: 56,
+          SurvivalStat.food: 61,
+          SurvivalStat.sanity: 68,
+        },
+      );
+      await mount(CampScreen(engine: game(state: state)));
+      await shot('01-camp-conditions');
+      await tester.tap(find.byKey(const ValueKey('condition-poisoned')));
+      await tester.pumpAndSettle();
+      await shot('02-poison-details');
+      await mount(CampScreen(engine: game(state: state)));
+      await tap('open-inventory');
+      await tap('inventory-tab-1');
+      await shot('03-food-and-treatment-items');
+      await tap('inventory-dew_fruit');
+      await shot('04-species-details');
+      await mount(CraftScreen(game: game(state: state)));
+      await shot('05-survival-workshop');
+      await tester.ensureVisible(find.byKey(const ValueKey('recipe-antidote')));
+      await tester.pumpAndSettle();
+      await shot('05b-survival-recipes');
+      await tap('recipe-antidote');
+      await shot('05c-antidote-recipe-details');
+      final encounter = game(state: state);
+      final save = encounter.toJson()
+        ..['pendingEvent'] = 'ecology_frog'
+        ..['pendingCost'] = 0;
+      encounter.restore(save);
+      await mount(EventScene(game: encounter));
+      await shot('06-frog-encounter');
+      final treated = game(state: state);
+      treated.consume('antidote');
+      await mount(
+        Scaffold(
+          body: OutcomeDialog(
+            report: treated.report!,
+            state: treated.state,
+            nightNext: false,
+          ),
+        ),
+      );
+      await shot('07-antidote-outcome');
+      final forage = game(state: state);
+      forage.openGathering(GatheringKind.foraging);
+      await mount(GatheringScreen(game: forage), settle: false);
+      await shot('08-foraging-ready');
+      final night = game(
+        state: state.copyWith(phase: RunPhase.night, timeLeft: 0),
+      );
+      final nightSave = night.toJson()
+        ..['nightResolved'] = true
+        ..['dayHighlights'] = [
+          'Explored Riverbank',
+          'Crafted: Antidote',
+          'Gathered from the grove',
+        ];
+      night.restore(nightSave);
+      night.sleep();
+      await mount(
+        DayEndScreen(game: night, summary: night.report!.daySummary!),
+      );
+      await shot('09-day-end-conditions');
+      await mount(CampScreen(engine: game(state: state)));
+      await tap('camp-menu');
+      await tap('menu-journal');
+      await shot('10-jungle-knowledge');
+      await mount(CampScreen(engine: game(state: state)));
+      await tap('open-inventory');
+      await tester.tap(find.text('DRY BY FIRE · 1 WOOD · 1 TIME'));
+      await tester.pumpAndSettle();
+      await shot('11-dry-by-fire-confirmation');
+      await tester.pumpWidget(const SizedBox.shrink());
+      File(
+        '${directory.path}/manifest.txt',
+      ).writeAsStringSync('${files.join('\n')}\n');
+      return;
     }
 
     if (itemsRefresh) {

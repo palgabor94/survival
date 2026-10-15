@@ -1,3 +1,4 @@
+import 'ecology_catalog.dart';
 import 'dart:convert';
 
 import 'run_state.dart';
@@ -93,23 +94,29 @@ class WorldCatalog {
   );
 }
 
-String itemName(String id) => switch (id) {
-  'small_fish' => 'Small Fish',
-  'basic_rod' => 'Basic Rod',
-  'bait' => 'Bait',
-  'herb' => 'Herb',
-  'hardwood' => 'Hardwood',
-  'metal_scrap' => 'Metal Scrap',
-  'raw_meat' => 'Raw Meat',
-  'machete' => 'Machete',
-  'emergency_beacon' => 'Emergency Beacon',
-  'battery' => 'Battery',
-  'wire' => 'Wire',
-  'metal_parts' => 'Metal Parts',
-  'radio_module' => 'Radio Module',
-  'beacon_core' => 'Beacon Core',
-  'wood' => 'Wood',
-  'fiber' => 'Fiber',
-  'stone' => 'Stone',
-  _ => id.replaceAll('_', ' '),
-};
+String itemName(String id) =>
+    jungleFoods[id]?.name ??
+    switch (id) {
+      'antidote' => 'Antidote',
+      'bandage' => 'Bandage',
+      'charcoal' => 'Charcoal',
+      'leaf_rain_cape' => 'Leaf Rain Cape',
+      'small_fish' => 'Small Fish',
+      'basic_rod' => 'Basic Rod',
+      'bait' => 'Bait',
+      'herb' => 'Herb',
+      'hardwood' => 'Hardwood',
+      'metal_scrap' => 'Metal Scrap',
+      'raw_meat' => 'Raw Meat',
+      'machete' => 'Machete',
+      'emergency_beacon' => 'Emergency Beacon',
+      'battery' => 'Battery',
+      'wire' => 'Wire',
+      'metal_parts' => 'Metal Parts',
+      'radio_module' => 'Radio Module',
+      'beacon_core' => 'Beacon Core',
+      'wood' => 'Wood',
+      'fiber' => 'Fiber',
+      'stone' => 'Stone',
+      _ => id.replaceAll('_', ' '),
+    };

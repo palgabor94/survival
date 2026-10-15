@@ -8,10 +8,18 @@ class EventEffect {
   EventEffect({
     Map<SurvivalStat, int> stats = const {},
     Map<String, int> resources = const {},
+    Set<String> flags = const {},
+    List<SurvivalCondition> conditions = const [],
+    this.physicalDamage = false,
     this.dropLoot = false,
     this.endsExpedition = false,
-  }) : stats = Map.unmodifiable(stats),
+  }) : flags = Set.unmodifiable(flags),
+       conditions = List.unmodifiable(conditions),
+       stats = Map.unmodifiable(stats),
        resources = Map.unmodifiable(resources);
+  final Set<String> flags;
+  final List<SurvivalCondition> conditions;
+  final bool physicalDamage;
   final Map<SurvivalStat, int> stats;
   final Map<String, int> resources;
 
@@ -27,6 +35,12 @@ class EventEffect {
         SurvivalStat.values.byName(entry.key): entry.value as int,
     },
     resources: Map<String, int>.from(json['resources'] as Map? ?? {}),
+    flags: Set<String>.from(json['flags'] as List? ?? []),
+    conditions: [
+      for (final c in json['conditions'] as List? ?? [])
+        SurvivalCondition.fromJson(Map<String, dynamic>.from(c as Map)),
+    ],
+    physicalDamage: json['physicalDamage'] as bool? ?? false,
     dropLoot: json['dropLoot'] as bool? ?? false,
     endsExpedition: json['endsExpedition'] as bool? ?? false,
   );
@@ -48,6 +62,11 @@ class EventChoice {
     required this.description,
     required this.effect,
     required this.result,
+    Map<String, double> weatherChances = const {},
+    Set<String> consumesTools = const {},
+    this.riskDomain = 'none',
+    this.extraTime = 0,
+    this.sheltered = false,
     this.successChance = 1,
     this.failureEffect,
     this.failureResult,
@@ -58,7 +77,9 @@ class EventChoice {
     this.icon,
     this.cardImage,
     this.minigame,
-  }) : requires = Map.unmodifiable(requires),
+  }) : weatherChances = Map.unmodifiable(weatherChances),
+       consumesTools = Set.unmodifiable(consumesTools),
+       requires = Map.unmodifiable(requires),
        requiresTools = Set.unmodifiable(requiresTools),
        requiresStats = Map.unmodifiable(requiresStats),
        showWhenBelow = Map.unmodifiable(showWhenBelow);
@@ -67,6 +88,11 @@ class EventChoice {
   final String description;
   final EventEffect effect;
   final String result;
+  final Map<String, double> weatherChances;
+  final Set<String> consumesTools;
+  final String riskDomain;
+  final int extraTime;
+  final bool sheltered;
   final double successChance;
   final EventEffect? failureEffect;
   final String? failureResult;
@@ -105,6 +131,15 @@ class EventChoice {
     description: json['description'] as String,
     effect: EventEffect.fromJson(json['effect'] as Map<String, dynamic>),
     result: json['result'] as String,
+    weatherChances: {
+      for (final e
+          in (json['weatherChances'] as Map<String, dynamic>? ?? {}).entries)
+        e.key: (e.value as num).toDouble(),
+    },
+    consumesTools: Set<String>.from(json['consumesTools'] as List? ?? []),
+    riskDomain: json['riskDomain'] as String? ?? 'none',
+    extraTime: json['extraTime'] as int? ?? 0,
+    sheltered: json['sheltered'] as bool? ?? false,
     successChance: (json['successChance'] as num? ?? 1).toDouble(),
     failureEffect: json['failureEffect'] == null
         ? null
@@ -211,7 +246,16 @@ class EventCatalog {
             GatheringKind.fromId(choice.minigame) == null) {
           throw FormatException('Unknown minigame: ${choice.minigame}');
         }
-        if (choice.successChance < 0 ||
+        if (choice.extraTime < 0 ||
+            choice.extraTime > RunState.dayLength ||
+            !{
+              'physical',
+              'mental',
+              'environment',
+              'none',
+            }.contains(choice.riskDomain) ||
+            choice.weatherChances.values.any((v) => v < 0 || v > 1) ||
+            choice.successChance < 0 ||
             choice.successChance > 1 ||
             (choice.isRisky &&
                 (choice.failureEffect == null ||

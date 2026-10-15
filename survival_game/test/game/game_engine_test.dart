@@ -114,7 +114,7 @@ void main() {
   });
 
   test('all shipped events are valid and have an affordable fallback', () {
-    expect(catalog.events, hasLength(37));
+    expect(catalog.events, hasLength(49));
     for (final event in catalog.events) {
       expect(event.choices.any((c) => c.requires.isEmpty), isTrue);
     }
@@ -128,12 +128,14 @@ void main() {
     expect(game.choose('missing'), isFalse);
     expect(game.choose('gather'), isTrue);
     expect(game.state.timeLeft, 5);
-    expect(game.state.value(SurvivalStat.food), 92);
+    expect(game.state.value(SurvivalStat.food), 72);
+    expect(game.state.resource('ember_berries'), 2);
     expect(game.state.value(SurvivalStat.water), 76);
     expect(game.state.resource('fiber'), 1);
     expect(game.choose('gather'), isFalse);
     expect(game.startAction(CampAction.rest), isFalse);
-    expect(game.report!.changes['Food'], 17);
+    expect(game.report!.changes['Food'], -3);
+    expect(game.report!.changes['ember_berries'], 2);
     game.continueFromReport();
     expect(game.canAct(CampAction.rest), isTrue);
   });
@@ -205,7 +207,8 @@ void main() {
       closeTo(.55, .001),
     );
     anxious.choose('risk');
-    expect(anxious.state.value(SurvivalStat.health), 84);
+    expect(anxious.state.value(SurvivalStat.health), 100);
+    expect(anxious.state.hasCondition(ConditionKind.poisoned), isTrue);
     expect(anxious.state.value(SurvivalStat.sanity), 15);
   });
 

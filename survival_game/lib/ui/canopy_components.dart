@@ -1,3 +1,4 @@
+import 'condition_strip.dart';
 import 'package:flutter/material.dart';
 import '../feedback/haptics_scope.dart';
 
@@ -114,6 +115,10 @@ class CanopyHud extends StatelessWidget {
         ],
         const SizedBox(height: 4),
         ResourceStrip(state: state),
+        if (state.conditions.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          ConditionStrip(state: state),
+        ],
       ],
     );
     return large

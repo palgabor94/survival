@@ -53,7 +53,11 @@ void resolveGatheringForSimulation(GameEngine game) {
   if (session.paused) game.pauseGathering(false);
   if (session.active) {
     if (session.kind == GatheringKind.foraging) {
-      for (final plant in ['berries', 'fiber', 'herb']) {
+      for (final plant in [
+        session.ecology ? 'ember_berries' : 'berries',
+        'fiber',
+        'herb',
+      ]) {
         game.pickGatheringPlant(plant);
       }
     } else {
@@ -299,8 +303,8 @@ void main() {
       final game = gatheringGame(state: RunState());
       game.openGathering(GatheringKind.foraging);
       expect(game.beginGathering(), isTrue);
-      expect(game.pickGatheringPlant('berries'), isTrue);
-      expect(game.pickGatheringPlant('berries'), isFalse);
+      expect(game.pickGatheringPlant('ember_berries'), isTrue);
+      expect(game.pickGatheringPlant('ember_berries'), isFalse);
       expect(game.pickGatheringPlant('fiber'), isTrue);
       expect(game.pickGatheringPlant('herb'), isFalse);
       expect(game.pickGatheringPlant('mushroom'), isFalse);
@@ -308,7 +312,8 @@ void main() {
       expect(game.pickGatheringPlant('invented'), isFalse);
       expect(game.finishGathering(), isTrue);
       expect(game.state.resource('fiber'), 2);
-      expect(game.state.value(SurvivalStat.food), 79);
+      expect(game.state.value(SurvivalStat.food), 72);
+      expect(game.state.resource('ember_berries'), 1);
     },
   );
   test('foraging timeout and exit keep picks; a fourth plant is refused', () {
@@ -316,7 +321,7 @@ void main() {
       final game = gatheringGame();
       game.openGathering(GatheringKind.foraging);
       game.beginGathering();
-      for (final id in ['berries', 'fiber', 'herb']) {
+      for (final id in ['ember_berries', 'fiber', 'herb']) {
         expect(game.pickGatheringPlant(id), isTrue);
       }
       expect(game.pickGatheringPlant('mushroom'), isFalse);
@@ -333,13 +338,13 @@ void main() {
       final game = gatheringGame();
       game.openGathering(GatheringKind.foraging);
       game.beginGathering();
-      game.pickGatheringPlant('mushroom');
+      game.pickGatheringPlant('mooncap');
       game.tickGathering(2.5);
       final copy = gatheringGame(seed: 99);
       expect(copy.restore(gatheringSave(game)), isTrue);
       expect(copy.gathering!.paused, isTrue);
       expect(copy.gathering!.elapsed, 2.5);
-      expect(copy.gathering!.picked, {'mushroom'});
+      expect(copy.gathering!.picked, {'mooncap'});
       expect(copy.gathering!.mushroomSafe, game.gathering!.mushroomSafe);
       expect(copy.beginGathering(), isFalse);
       copy.finishGathering();
@@ -352,25 +357,36 @@ void main() {
       expect(reportCopy.finishGathering(), isFalse);
     },
   );
-  test('safe herbs from two picks stack regardless of selection order', () {
-    for (final picks in [
-      ['herb', 'unknown_plant'],
-      ['unknown_plant', 'herb'],
-    ]) {
-      final game = gatheringGame();
-      game.openGathering(GatheringKind.foraging);
-      game.gathering!.unknownSafe = true;
-      game.beginGathering();
-      for (final id in picks) {
-        game.pickGatheringPlant(id);
+  void restoreLegacyForage(GameEngine game) {
+    final save = gatheringSave(game);
+    (save['gathering']['session'] as Map).remove('ecology');
+    expect(game.restore(save), isTrue);
+  }
+
+  test(
+    'legacy safe herbs from two picks stack regardless of selection order',
+    () {
+      for (final picks in [
+        ['herb', 'unknown_plant'],
+        ['unknown_plant', 'herb'],
+      ]) {
+        final game = gatheringGame();
+        game.openGathering(GatheringKind.foraging);
+        restoreLegacyForage(game);
+        game.gathering!.unknownSafe = true;
+        game.beginGathering();
+        for (final id in picks) {
+          game.pickGatheringPlant(id);
+        }
+        game.finishGathering();
+        expect(game.state.resource('herb'), 3);
       }
-      game.finishGathering();
-      expect(game.state.resource('herb'), 3);
-    }
-  });
+    },
+  );
   test('dangerous plants show damage only in the final actual outcome', () {
     final game = gatheringGame();
     game.openGathering(GatheringKind.foraging);
+    restoreLegacyForage(game);
     game.gathering!.unknownSafe = false;
     game.beginGathering();
     game.pickGatheringPlant('unknown_plant');

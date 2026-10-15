@@ -1,3 +1,4 @@
+import 'parchment_components.dart';
 import 'package:flutter/material.dart';
 
 import '../game/game_engine.dart';
@@ -50,6 +51,12 @@ class ExpeditionScene extends StatelessWidget {
       beforeCards: CampPanel(
         child: Column(
           children: [
+            parchmentButton(
+              'USE ITEMS',
+              () => Navigator.pop(context, 'items'),
+              secondary: true,
+            ),
+            const SizedBox(height: 8),
             if (loot.isNotEmpty)
               Wrap(
                 alignment: WrapAlignment.center,

@@ -10,6 +10,7 @@ import 'rescue_progress.dart';
 import 'ruins_puzzle.dart';
 import 'gathering_session.dart';
 import 'game_sound.dart';
+import 'ecology_catalog.dart';
 
 /// Synchronous transactions: a decision can only resolve once, and no time
 /// passes while a player is reading an event or its outcome.
@@ -23,7 +24,9 @@ class GameEngine {
   }) : world = world ?? WorldCatalog([]),
        recipes = recipes ?? RecipeCatalog([]),
        _random = random ?? Random(),
-       _state = initialState ?? RunState();
+       _state =
+           initialState ??
+           RunState(resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2});
   final EventCatalog catalog;
   final WorldCatalog world;
   final RecipeCatalog recipes;
@@ -66,7 +69,7 @@ class GameEngine {
   ActionReport? _report;
   ActionReport? get report => _report;
   final List<String> _journal = [
-    'Day 1 · You found a clearing. Make it through the night.',
+    'Day 1 · You found a clearing and 2 medicinal herbs. Gathering stores food: use Items to study, prepare or eat it.',
   ];
   final List<String> _dayHighlights = [];
   List<String> get journal => List.unmodifiable(_journal);
@@ -107,13 +110,16 @@ class GameEngine {
     if (!canAct(action)) return false;
     if (action == CampAction.rest) {
       final before = state;
-      _spendTime(action.cost);
+      _spendTime(action.cost, outdoor: false);
       // Rest cannot revive a survivor lost to dehydration or starvation.
       if (state.isAlive) {
         _apply(
           EventEffect(stats: {SurvivalStat.health: 8, SurvivalStat.sanity: 12}),
         );
       }
+      _shortenCondition(ConditionKind.exhausted, 2);
+      _shortenCondition(ConditionKind.injured, 1);
+      _state = state.copyWith(strain: max(0, state.strain - 3));
       _finish(
         'A moment of quiet',
         'You rest beside the fire. The jungle can wait.',
@@ -185,7 +191,10 @@ class GameEngine {
       } else {
         _fishingBefore = before;
         _castSpent = false;
-        _fishing = FishingSession(random: _random);
+        _fishing = FishingSession(
+          random: _random,
+          zoneScale: before.hasCondition(ConditionKind.exhausted) ? .9 : 1,
+        );
         _changed();
         _sound(GameSound.travel);
       }
@@ -220,7 +229,12 @@ class GameEngine {
         ? (session.quality == CatchQuality.perfect ? 2 : 1)
         : 0;
     if (caught) _apply(EventEffect(resources: {'small_fish': count}));
-    _state = state.copyWith(locationId: 'camp');
+    _state = state.copyWith(
+      locationId: 'camp',
+      worldFlags: {...state.worldFlags}
+        ..remove('trail_marker')
+        ..remove('storm_crossing'),
+    );
     _fishing = null;
     _fishingBefore = null;
     final baitSpent = _castSpent;
@@ -266,7 +280,13 @@ class GameEngine {
   /// The ready screen reserves an activity; START spends its time once.
   bool openGathering(GatheringKind kind) {
     if (!canAct(CampAction.forage) || state.locationId != 'camp') return false;
-    _gathering = GatheringSession(kind, random: _random);
+    _gathering = GatheringSession(
+      kind,
+      random: _random,
+      day: state.day,
+      ecology: true,
+      windowScale: state.timingScale,
+    );
     _gatheringBefore = state;
     _gatheringSource = null;
     _gatheringCost = 1;
@@ -282,6 +302,7 @@ class GameEngine {
       return false;
     }
     session.start();
+    if (session.kind != GatheringKind.foraging) _addStrain(1);
     _spendTime(_gatheringCost);
     _pendingCost = 0;
     if (!state.isAlive) {
@@ -391,6 +412,10 @@ class GameEngine {
           );
         case GatheringKind.foraging:
           for (final plant in session.picked) {
+            if (session.ecology && jungleFoods.containsKey(plant)) {
+              resources[plant] = 1;
+              continue;
+            }
             switch (plant) {
               case 'berries':
                 stats[SurvivalStat.food] = (stats[SurvivalStat.food] ?? 0) + 7;
@@ -504,6 +529,9 @@ class GameEngine {
         return 'Needs ${recipes.find(item)?.name ?? itemName(item)}';
       }
     }
+    if (state.value(SurvivalStat.water) < recipe.waterCost) {
+      return 'Need ${recipe.waterCost} water for the recipe';
+    }
     final missing = [
       for (final e in recipe.costs.entries)
         if (state.resource(e.key) < e.value)
@@ -524,14 +552,19 @@ class GameEngine {
     _apply(
       EventEffect(
         resources: {for (final e in recipe.costs.entries) e.key: -e.value},
+        stats: {SurvivalStat.water: -recipe.waterCost},
       ),
     );
-    _spendTime(recipe.timeCost);
+    _spendTime(recipe.timeCost, outdoor: false);
     final upgrade = recipe.kind == RecipeKind.campTier;
     if (state.isAlive) {
-      _state = upgrade
-          ? state.copyWith(campTier: recipe.tier)
-          : state.copyWith(tools: {...state.tools, recipe.id});
+      if (recipe.outputs.isNotEmpty) {
+        _apply(EventEffect(resources: recipe.outputs));
+      } else {
+        _state = upgrade
+            ? state.copyWith(campTier: recipe.tier)
+            : state.copyWith(tools: {...state.tools, recipe.id});
+      }
       if (RunState.toolDurability.containsKey(id)) {
         _state = state.copyWith(
           durability: {...state.durability, id: RunState.toolDurability[id]!},
@@ -558,7 +591,22 @@ class GameEngine {
   }
 
   /// Items eaten or used from the inventory without spending daylight.
-  static const consumables = {'small_fish', 'raw_meat', 'herb'};
+  static const consumables = {
+    'small_fish',
+    'raw_meat',
+    'herb',
+    'ember_berries',
+    'dew_fruit',
+    'canopy_fig',
+    'iron_nut',
+    'wild_honey',
+    'ribbon_root',
+    'wax_berries',
+    'mooncap',
+    'cooked_root',
+    'antidote',
+    'bandage',
+  };
 
   EventEffect consumeEffect(String id) => switch (id) {
     'small_fish' => EventEffect(
@@ -573,6 +621,23 @@ class GameEngine {
       stats: {SurvivalStat.health: 15, SurvivalStat.sanity: 6},
       resources: {'herb': -1},
     ),
+    'antidote' => EventEffect(resources: {'antidote': -1}),
+    'bandage' => EventEffect(
+      stats: {SurvivalStat.health: 4},
+      resources: {'bandage': -1},
+    ),
+    _ when jungleFoods.containsKey(id) => EventEffect(
+      stats: jungleFoods[id]!.nutrition,
+      resources: {id: -1},
+      conditions: [
+        if (jungleFoods[id]!.poison > 0)
+          SurvivalCondition(
+            ConditionKind.poisoned,
+            4,
+            severity: jungleFoods[id]!.poison,
+          ),
+      ],
+    ),
     _ => throw ArgumentError.value(id, 'id', 'Not a consumable'),
   };
 
@@ -580,45 +645,204 @@ class GameEngine {
     if (!consumables.contains(id) ||
         !state.isAlive ||
         state.rescued ||
-        isBusy ||
-        state.locationId != 'camp' ||
+        !canUseSupplies ||
         state.resource(id) < 1) {
       return false;
     }
+    if (id == 'antidote') return state.hasCondition(ConditionKind.poisoned);
+    if (id == 'bandage') return state.hasCondition(ConditionKind.injured);
+    if (jungleFoods[id]?.requiresKnife ?? false) {
+      if (state.locationId != 'camp' ||
+          !(state.toolUsable('stone_knife') || state.toolUsable('machete'))) {
+        return false;
+      }
+    }
     // Only worth using while at least one restored stat is below full.
-    return consumeEffect(
-      id,
-    ).stats.entries.any((e) => e.value > 0 && state.value(e.key) < 100);
+    return consumeEffect(id).stats.entries.any(
+      (e) =>
+          e.value > 0 &&
+          state.value(e.key) < 100 &&
+          !(e.key == SurvivalStat.health &&
+              state.hasCondition(ConditionKind.poisoned)),
+    );
   }
 
   bool consume(String id) {
     if (!canConsume(id)) return false;
     final before = state;
+    if (id == 'antidote') _removeCondition(ConditionKind.poisoned);
+    if (id == 'bandage') _removeCondition(ConditionKind.injured);
+    if (jungleFoods.containsKey(id)) {
+      _state = state.copyWith(knownSpecies: {...state.knownSpecies, id});
+    }
     _apply(consumeEffect(id));
-    _finish(id == 'herb' ? 'Herbal tea' : 'A meal by the fire', switch (id) {
-      'small_fish' =>
-        'You cook one small fish over the campfire and eat it. No daylight spent.',
-      'raw_meat' =>
-        'You roast the meat until the fat spits and eat it. No daylight spent.',
-      _ =>
-        'You steep the herbs in hot water. Warmth spreads through your body.',
-    }, before);
+    final trip = _expedition;
+    if (trip != null && (trip.loot[id] ?? 0) > 0) {
+      trip.loot[id] = trip.loot[id]! - 1;
+      if (trip.loot[id] == 0) trip.loot.remove(id);
+    }
+    _finish(
+      id == 'herb'
+          ? 'Herbal tea'
+          : id == 'antidote'
+          ? 'Poison treated'
+          : id == 'bandage'
+          ? 'Injury treated'
+          : 'A meal beneath the canopy',
+      switch (id) {
+        'antidote' =>
+          'The poison is cleared. Lost health must recover separately.',
+        'bandage' => 'You dress the wound. The injury is cleared.',
+        _ when jungleFoods.containsKey(id) =>
+          'You eat one portion of ${jungleFoods[id]!.name.toLowerCase()}. ${jungleFoods[id]!.description}',
+        'small_fish' =>
+          'You cook one small fish over the campfire and eat it. No daylight spent.',
+        'raw_meat' =>
+          'You roast the meat until the fat spits and eat it. No daylight spent.',
+        _ =>
+          'You steep the herbs in hot water. Warmth spreads through your body.',
+      },
+      before,
+    );
     return true;
   }
 
-  double chanceFor(EventChoice choice) =>
-      (choice.successChance -
-              (choice.isRisky && state.value(SurvivalStat.sanity) < 25
-                  ? .15
-                  : 0))
-          .clamp(0, 1);
+  bool get canUseSupplies =>
+      state.isAlive &&
+      !state.rescued &&
+      state.rescueStage != RescueStage.storm &&
+      _pendingEvent == null &&
+      _report == null &&
+      _fishing == null &&
+      _ruinsPuzzle == null &&
+      _gathering == null &&
+      (state.locationId == 'camp' || _decisionPending);
+
+  bool studySpecies(String id) {
+    if (!jungleFoods.containsKey(id) ||
+        state.knownSpecies.contains(id) ||
+        !canUseSupplies ||
+        state.locationId != 'camp' ||
+        state.phase != RunPhase.day ||
+        state.timeLeft < 1 ||
+        state.resource(id) < 1) {
+      return false;
+    }
+    final before = state;
+    _apply(EventEffect(resources: {id: -1}));
+    _spendTime(1, outdoor: false);
+    if (state.isAlive) {
+      _state = state.copyWith(knownSpecies: {...state.knownSpecies, id});
+    }
+    _finish(
+      state.isAlive
+          ? 'Species studied: ${jungleFoods[id]!.name}'
+          : 'An unfinished study',
+      state.isAlive
+          ? jungleFoods[id]!.description
+          : 'Your strength gives out before the study is complete.',
+      before,
+    );
+    return true;
+  }
+
+  bool chewHerbs() {
+    final poison = state.condition(ConditionKind.poisoned);
+    if (!canUseSupplies ||
+        state.resource('herb') < 1 ||
+        poison == null ||
+        poison.remaining <= 1) {
+      return false;
+    }
+    final before = state;
+    _apply(EventEffect(resources: {'herb': -1}));
+    final trip = _expedition;
+    if (trip != null && (trip.loot['herb'] ?? 0) > 0) {
+      trip.loot['herb'] = trip.loot['herb']! - 1;
+      if (trip.loot['herb'] == 0) trip.loot.remove('herb');
+    }
+    _shortenCondition(
+      ConditionKind.poisoned,
+      min(poison.remaining - 1, poison.severity == 2 ? 1 : 2),
+    );
+    _finish(
+      'Bitter leaf first aid',
+      'The poison is weakened, but not cured. No daylight spent.',
+      before,
+    );
+    return true;
+  }
+
+  bool dryByFire() {
+    if (!canAct(CampAction.rest) ||
+        state.locationId != 'camp' ||
+        state.resource('wood') < 1 ||
+        !state.hasCondition(ConditionKind.wet)) {
+      return false;
+    }
+    final before = state;
+    _removeCondition(ConditionKind.wet);
+    _state = state.copyWith(exposure: 0);
+    _apply(EventEffect(resources: {'wood': -1}));
+    _spendTime(1, outdoor: false);
+    _finish('Dry by the fire', 'Your clothes are dry again.', before);
+    return true;
+  }
+
+  bool prepareRoots() {
+    if (!canAct(CampAction.rest) ||
+        state.locationId != 'camp' ||
+        state.resource('wood') < 1 ||
+        state.resource('ribbon_root') < 1) {
+      return false;
+    }
+    final before = state;
+    final portions = min(3, state.resource('ribbon_root'));
+    _apply(EventEffect(resources: {'wood': -1, 'ribbon_root': -portions}));
+    _spendTime(1, outdoor: false);
+    if (state.isAlive) {
+      _apply(EventEffect(resources: {'cooked_root': portions}));
+      _state = state.copyWith(
+        knownSpecies: {...state.knownSpecies, 'ribbon_root', 'cooked_root'},
+      );
+    }
+    _finish(
+      state.isAlive ? 'Roots prepared' : 'An unfinished meal',
+      state.isAlive
+          ? 'You carefully prepare the roots over the fire. They are now safe to eat.'
+          : 'Your strength gives out before the roots are ready.',
+      before,
+    );
+    return true;
+  }
+
+  double chanceFor(EventChoice choice) {
+    if (!choice.isRisky) return 1;
+    final penalty = choice.riskDomain == 'physical'
+        ? min(.25, state.physicalPenalty)
+        : 0;
+    final weather =
+        state.worldFlags.contains('storm_crossing') &&
+            _pendingEvent?.id == 'ecology_crossing'
+        ? 'Storm'
+        : state.weather;
+    final base = choice.weatherChances[weather] ?? choice.successChance;
+    return (base - penalty - (state.value(SurvivalStat.sanity) < 25 ? .15 : 0))
+        .clamp(.1, .95);
+  }
 
   bool canChoose(EventChoice choice) =>
       state.isAlive &&
       (_pendingEvent?.choices.contains(choice) ?? false) &&
       choice.isVisible(state) &&
+      !choice.effect.flags.any(
+        (flag) => flag == 'trail_marker' && state.worldFlags.contains(flag),
+      ) &&
+      (choice.extraTime == 0 ||
+          state.timeLeft >= _pendingCost + choice.extraTime) &&
       choice.requires.entries.every((r) => state.resource(r.key) >= r.value) &&
       choice.requiresTools.every(state.toolUsable) &&
+      choice.consumesTools.every(state.toolUsable) &&
       (choice.minigame != 'ruins_symbols' ||
           state.timeLeft >= _pendingCost + 1) &&
       (GatheringKind.fromId(choice.minigame) == null ||
@@ -642,7 +866,13 @@ class GameEngine {
       _gatheringSource = _pendingEvent;
       _gatheringBefore = before;
       _gatheringCost = max(1, _pendingCost);
-      _gathering = GatheringSession(gatheringKind, random: _random);
+      _gathering = GatheringSession(
+        gatheringKind,
+        random: _random,
+        day: state.day,
+        ecology: true,
+        windowScale: state.timingScale,
+      );
       _pendingEvent = null;
       _changed();
       return true;
@@ -668,8 +898,51 @@ class GameEngine {
     final rescueTrial = _pendingEvent!.trigger == 'rescue';
     final success = !choice.isRisky || _random.nextDouble() < chanceFor(choice);
     final eventTitle = _pendingEvent!.title;
-    final effect = success ? choice.effect : choice.failureEffect!;
-    _apply(effect);
+    final protected =
+        state.worldFlags.contains('trail_marker') &&
+        _pendingEvent!.id.contains('lost');
+    final effect = protected
+        ? EventEffect()
+        : success
+        ? choice.effect
+        : choice.failureEffect!;
+    if (protected || _pendingEvent!.id == 'ecology_crossing') {
+      _state = state.copyWith(
+        worldFlags: {...state.worldFlags}
+          ..remove(protected ? 'trail_marker' : 'storm_crossing'),
+      );
+    }
+    // Pay supplies first, then advance time, then resolve the outcome. An
+    // event reward must not revive a survivor who died reaching it.
+    _apply(
+      EventEffect(
+        resources: {
+          for (final e in effect.resources.entries)
+            if (e.value < 0) e.key: e.value,
+        },
+      ),
+    );
+    if (_pendingCost + choice.extraTime > 0) {
+      if (_pendingCost > 0) _spendTime(_pendingCost);
+      if (choice.extraTime > 0 && state.isAlive) {
+        _spendTime(choice.extraTime, outdoor: !choice.sheltered);
+      }
+    }
+    if (state.isAlive) {
+      _apply(
+        EventEffect(
+          stats: effect.stats,
+          resources: {
+            for (final e in effect.resources.entries)
+              if (e.value > 0) e.key: e.value,
+          },
+          physicalDamage: effect.physicalDamage,
+        ),
+      );
+    }
+    _state = state.copyWith(
+      tools: {...state.tools}..removeAll(choice.consumesTools),
+    );
     final wearNotes = [
       for (final tool in choice.requiresTools)
         if (RunState.toolDurability.containsKey(tool)) _wearTool(tool, 1),
@@ -677,7 +950,7 @@ class GameEngine {
     final trip = _expedition;
     if (trip != null) {
       for (final e in effect.resources.entries) {
-        if (e.value > 0) {
+        if (e.value > 0 && state.isAlive) {
           trip.loot[e.key] = (trip.loot[e.key] ?? 0) + e.value;
         } else if (e.value < 0 && trip.loot.containsKey(e.key)) {
           // Spend gathered supplies first. A later lost pack must not remove
@@ -703,13 +976,21 @@ class GameEngine {
         _followUp = false;
       }
     }
-    if ((effect.stats[SurvivalStat.water] ?? 0) > 0) {
+    if (state.isAlive && (effect.stats[SurvivalStat.water] ?? 0) > 0) {
       final filtered = recipes.bonus(state, CampBonus.waterGain);
       if (filtered > 0) {
         _apply(EventEffect(stats: {SurvivalStat.water: filtered}));
       }
     }
-    if (_pendingCost > 0) _spendTime(_pendingCost);
+
+    if (state.isAlive) {
+      _state = state.copyWith(
+        worldFlags: {...state.worldFlags, ...effect.flags},
+      );
+      for (final condition in effect.conditions) {
+        _addCondition(condition);
+      }
+    }
     if (rescueTrial && state.isAlive) {
       _state = state.copyWith(rescueStep: state.rescueStep + 1);
       if (state.rescueStep == rescueEventIds.length) {
@@ -722,7 +1003,16 @@ class GameEngine {
     _pendingAction = null;
     _finish(
       eventTitle,
-      [success ? choice.result : choice.failureResult!, ...wearNotes].join(' '),
+      [
+        !state.isAlive
+            ? 'Your strength gives out before you can complete the action.'
+            : protected
+            ? 'Your trail marker guides you back to the route.'
+            : success
+            ? choice.result
+            : choice.failureResult!,
+        ...wearNotes,
+      ].join(' '),
       before,
     );
     if (choice.requiresTools.contains('stone_axe') &&
@@ -736,7 +1026,12 @@ class GameEngine {
     if (_report == null) return false;
     _report = null;
     if (state.rescued || !state.isAlive) {
-      _state = state.copyWith(locationId: 'camp');
+      _state = state.copyWith(
+        locationId: 'camp',
+        worldFlags: {...state.worldFlags}
+          ..remove('trail_marker')
+          ..remove('storm_crossing'),
+      );
       _changed();
       return true;
     }
@@ -771,7 +1066,12 @@ class GameEngine {
         return true;
       }
     }
-    _state = state.copyWith(locationId: 'camp');
+    _state = state.copyWith(
+      locationId: 'camp',
+      worldFlags: {...state.worldFlags}
+        ..remove('trail_marker')
+        ..remove('storm_crossing'),
+    );
     if (state.isAlive && state.timeLeft == 0 && state.phase == RunPhase.day) {
       _state = state.copyWith(phase: RunPhase.night);
       _nightResolved = false;
@@ -809,6 +1109,7 @@ class GameEngine {
   bool goDeeper() {
     if (!canGoDeeper) return false;
     final trip = _expedition!;
+    _addStrain(1);
     final chance = nextEncounterChance;
     trip.depth++;
     _decisionPending = false;
@@ -843,7 +1144,17 @@ class GameEngine {
     _decisionPending = false;
     _expedition = null;
     _followUp = false;
-    _state = state.copyWith(locationId: 'camp');
+    _state = state.copyWith(
+      locationId: 'camp',
+      worldFlags: {...state.worldFlags}
+        ..remove('trail_marker')
+        ..remove('storm_crossing'),
+    );
+    _state = state.copyWith(
+      worldFlags: {...state.worldFlags}
+        ..remove('trail_marker')
+        ..remove('storm_crossing'),
+    );
     final haul = Map<String, int>.of(trip.loot);
     _report = ActionReport.saved(
       title: haul.isEmpty ? 'Back at camp' : 'Home with the haul',
@@ -874,15 +1185,29 @@ class GameEngine {
         },
       ),
     );
+    if (state.campTier >= 2) _removeCondition(ConditionKind.wet);
+    final poisonedOvernight = state.hasCondition(ConditionKind.poisoned);
+    final injuredOvernight = state.hasCondition(ConditionKind.injured);
+    for (var i = 0; i < 2 && state.isAlive; i++) {
+      _conditionTick();
+    }
+    _removeCondition(ConditionKind.exhausted);
+    _state = state.copyWith(strain: 0);
     _applyDeprivation();
     if (state.isAlive) {
-      if (state.value(SurvivalStat.water) > 0 &&
+      if (!poisonedOvernight &&
+          state.value(SurvivalStat.water) > 0 &&
           state.value(SurvivalStat.food) > 0) {
         _apply(
           EventEffect(
             stats: {
               SurvivalStat.health:
-                  10 + recipes.bonus(state, CampBonus.sleepHealth),
+                  ((10 + recipes.bonus(state, CampBonus.sleepHealth)) /
+                          (injuredOvernight &&
+                                  !state.hasCondition(ConditionKind.injured)
+                              ? 2
+                              : 1))
+                      .floor(),
             },
           ),
         );
@@ -898,7 +1223,7 @@ class GameEngine {
         day: state.day + 1,
         timeLeft: RunState.dayLength,
         phase: RunPhase.day,
-        weather: _random.nextBool() ? 'Sunny' : 'Light rain',
+        weather: _nextWeather(),
       );
       if (state.rescueStage == RescueStage.signalSent) {
         _state = state.copyWith(
@@ -1023,7 +1348,9 @@ class GameEngine {
   }
 
   void restart() {
-    _state = RunState();
+    _state = RunState(
+      resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2},
+    );
     _fishing = null;
     _fishingBefore = null;
     _castSpent = false;
@@ -1045,7 +1372,9 @@ class GameEngine {
     _dayHighlights.clear();
     _journal
       ..clear()
-      ..add('Day 1 · You found a clearing. Make it through the night.');
+      ..add(
+        'Day 1 · You found a clearing and 2 medicinal herbs. Gathering stores food: use Items to study, prepare or eat it.',
+      );
     _changed();
   }
 
@@ -1074,18 +1403,129 @@ class GameEngine {
     final preferred = pool.where((e) => e.priority == priority).toList();
     final fresh = preferred.where((e) => e.id != _lastEvent[trigger]).toList();
     final candidates = fresh.isEmpty ? preferred : fresh;
-    final event = candidates[_random.nextInt(candidates.length)];
+    double weight(GameEvent event) => state.weather == 'Sunny'
+        ? 1
+        : event.id == 'ecology_dew'
+        ? 1.5
+        : ['ecology_nuts', 'ecology_hive'].contains(event.id)
+        ? .5
+        : 1;
+    GameEvent event;
+    if (candidates.every((candidate) => weight(candidate) == 1)) {
+      event = candidates[_random.nextInt(candidates.length)];
+    } else {
+      var draw =
+          _random.nextDouble() *
+          candidates.fold<double>(0, (total, event) => total + weight(event));
+      event = candidates.last;
+      for (final candidate in candidates) {
+        draw -= weight(candidate);
+        if (draw < 0) {
+          event = candidate;
+          break;
+        }
+      }
+    }
     _lastEvent[trigger] = event.id;
     return event;
   }
 
-  void _spendTime(int cost) {
-    _state = state.copyWith(timeLeft: state.timeLeft - cost);
-    for (var tick = 0; tick < cost && state.isAlive; tick++) {
-      _apply(
-        EventEffect(stats: {SurvivalStat.water: -4, SurvivalStat.food: -3}),
+  String _nextWeather() {
+    final roll = _random.nextDouble();
+    if (state.weather == 'Storm') return roll < 2 / 3 ? 'Sunny' : 'Light rain';
+    if (state.day + 1 <= 3) return roll < .7 ? 'Sunny' : 'Light rain';
+    return roll < .6
+        ? 'Sunny'
+        : roll < .9
+        ? 'Light rain'
+        : 'Storm';
+  }
+
+  void _removeCondition(ConditionKind kind) => _state = state.copyWith(
+    conditions: [
+      for (final c in state.conditions)
+        if (c.kind != kind) c,
+    ],
+  );
+  void _shortenCondition(ConditionKind kind, int amount) =>
+      _state = state.copyWith(
+        conditions: [
+          for (final c in state.conditions)
+            if (c.kind != kind)
+              c
+            else if (c.remaining > amount)
+              c.withRemaining(c.remaining - amount),
+        ],
       );
-      _applyDeprivation();
+  void _addCondition(SurvivalCondition condition) {
+    final old = state.condition(condition.kind);
+    _removeCondition(condition.kind);
+    _state = state.copyWith(
+      conditions: [
+        ...state.conditions,
+        SurvivalCondition(
+          condition.kind,
+          max(condition.remaining, old?.remaining ?? 0),
+          severity: max(condition.severity, old?.severity ?? 1),
+        ),
+      ],
+    );
+  }
+
+  void _addStrain(int amount) {
+    final strain = state.strain + amount;
+    _state = state.copyWith(strain: strain >= 6 ? 0 : strain);
+    if (strain >= 6) {
+      _addCondition(const SurvivalCondition(ConditionKind.exhausted, 4));
+    }
+  }
+
+  void _conditionTick({bool daytime = false}) {
+    final poison = state.condition(ConditionKind.poisoned)?.severity ?? 0;
+    final wet = state.hasCondition(ConditionKind.wet) ? 1 : 0;
+    final tired = state.hasCondition(ConditionKind.exhausted) ? 1 : 0;
+    _apply(
+      EventEffect(
+        stats: {
+          SurvivalStat.health: -2 * poison,
+          SurvivalStat.water: -(daytime ? 4 : 0) - min(4, poison + tired),
+          SurvivalStat.food: -(daytime ? 3 : 0) - min(3, wet + tired),
+          SurvivalStat.sanity: -min(2, wet),
+        },
+      ),
+    );
+    if (daytime) _applyDeprivation();
+    _state = state.copyWith(
+      conditions: [
+        for (final c in state.conditions)
+          if (c.remaining > 1) c.withRemaining(c.remaining - 1),
+      ],
+    );
+  }
+
+  void _spendTime(int cost, {bool outdoor = true}) {
+    _state = state.copyWith(timeLeft: max(0, state.timeLeft - cost));
+    for (var tick = 0; tick < cost && state.isAlive; tick++) {
+      final wasWet = state.hasCondition(ConditionKind.wet);
+      _conditionTick(daytime: true);
+      if (!state.isAlive) break;
+      final rain = outdoor && state.weather != 'Sunny';
+      final delta = rain
+          ? (state.weather == 'Storm' ? 3 : 2) -
+                (state.tools.contains('leaf_rain_cape') ? 1 : 0)
+          : -2;
+      final exposure = max(0, state.exposure + delta);
+      _state = state.copyWith(exposure: exposure >= 6 ? 0 : exposure);
+      if (exposure >= 6 || (wasWet && rain)) {
+        _addCondition(const SurvivalCondition(ConditionKind.wet, 3));
+      }
+      _addStrain(
+        (outdoor ? 1 : 0) +
+            (state.value(SurvivalStat.water) <= 15 ||
+                    state.value(SurvivalStat.food) <= 15
+                ? 1
+                : 0),
+      );
     }
   }
 
@@ -1103,7 +1543,19 @@ class GameEngine {
     final stats = {...state.stats};
     final resources = {...state.resources};
     for (final entry in effect.stats.entries) {
-      stats[entry.key] = (state.value(entry.key) + entry.value).clamp(0, 100);
+      var delta = entry.value;
+      if (entry.key == SurvivalStat.health) {
+        if (delta > 0 && state.hasCondition(ConditionKind.poisoned)) {
+          delta = 0;
+        } else if (delta > 0 && state.hasCondition(ConditionKind.injured)) {
+          delta = delta ~/ 2;
+        } else if (delta < 0 &&
+            effect.physicalDamage &&
+            state.hasCondition(ConditionKind.injured)) {
+          delta = -(delta.abs() * 1.2).ceil();
+        }
+      }
+      stats[entry.key] = (state.value(entry.key) + delta).clamp(0, 100);
     }
     for (final entry in effect.resources.entries) {
       resources[entry.key] = max(0, state.resource(entry.key) + entry.value);
@@ -1118,6 +1570,11 @@ class GameEngine {
             entry.key,
       },
     );
+    if (state.isAlive) {
+      for (final condition in effect.conditions) {
+        _addCondition(condition);
+      }
+    }
   }
 
   void _finish(
@@ -1131,6 +1588,30 @@ class GameEngine {
       _expedition = null;
       _decisionPending = false;
       _followUp = false;
+    }
+    if (before.exposure < 3 &&
+        state.exposure >= 3 &&
+        !state.worldFlags.contains('rain_explained')) {
+      body +=
+          ' Your clothes are getting soaked. A leaf rain cape slows exposure; a campfire dries wet clothes.';
+      _state = state.copyWith(
+        worldFlags: {...state.worldFlags, 'rain_explained'},
+      );
+    }
+    final firstConditions = state.conditions
+        .where((c) => !state.worldFlags.contains('learned_${c.kind.name}'))
+        .toList();
+    if (firstConditions.isNotEmpty) {
+      body = [
+        body,
+        for (final c in firstConditions) '${c.label}: ${c.description}',
+      ].join(' ');
+      _state = state.copyWith(
+        worldFlags: {
+          ...state.worldFlags,
+          for (final c in firstConditions) 'learned_${c.kind.name}',
+        },
+      );
     }
     // Every resolved action is summarized, including the choice that ends a run.
     _report = ActionReport(
@@ -1179,7 +1660,11 @@ class GameEngine {
     'journal': _journal,
     'dayHighlights': List<String>.of(_dayHighlights),
     if (_fishing != null)
-      'fishing': {'before': _fishingBefore!.toJson(), 'castSpent': _castSpent},
+      'fishing': {
+        'before': _fishingBefore!.toJson(),
+        'castSpent': _castSpent,
+        'zoneScale': _fishing!.zoneScale,
+      },
     if (_ruinsPuzzle != null)
       'ruinsPuzzle': {
         'session': _ruinsPuzzle!.toJson(),
@@ -1280,7 +1765,13 @@ class GameEngine {
           fishing['before'] as Map<String, dynamic>,
         );
         _castSpent = fishing['castSpent'] as bool;
-        _fishing = FishingSession(random: _random);
+        _fishing = FishingSession(
+          random: _random,
+          zoneScale: (fishing['zoneScale'] as num? ?? 1).toDouble().clamp(
+            .9,
+            1,
+          ),
+        );
         // A cast interrupted by closing the app is lost, like letting go.
         if (_castSpent) finishFishing(abandon: true);
       }
@@ -1290,7 +1781,12 @@ class GameEngine {
           _ruinsPuzzle == null &&
           _gathering == null &&
           _expedition == null) {
-        _state = state.copyWith(locationId: 'camp');
+        _state = state.copyWith(
+          locationId: 'camp',
+          worldFlags: {...state.worldFlags}
+            ..remove('trail_marker')
+            ..remove('storm_crossing'),
+        );
       }
       if (state.rescueStage == RescueStage.storm &&
           !state.rescued &&

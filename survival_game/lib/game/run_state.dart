@@ -1,4 +1,6 @@
 import 'rescue_progress.dart';
+import 'survival_condition.dart';
+export 'survival_condition.dart';
 
 enum RunPhase { day, night, gameOver, rescued }
 
@@ -25,6 +27,11 @@ enum SurvivalStat {
 /// A snapshot cannot be mutated by the UI or by content definitions.
 class RunState {
   RunState({
+    this.exposure = 0,
+    this.strain = 0,
+    List<SurvivalCondition> conditions = const [],
+    Set<String> worldFlags = const {},
+    Set<String> knownSpecies = const {'ember_berries'},
     this.day = 1,
     this.timeLeft = dayLength,
     this.phase = RunPhase.day,
@@ -39,7 +46,10 @@ class RunState {
     Map<String, int> durability = const {},
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
-  }) : foundComponents = Set.unmodifiable(foundComponents),
+  }) : conditions = List.unmodifiable(conditions),
+       knownSpecies = Set.unmodifiable(knownSpecies),
+       worldFlags = Set.unmodifiable(worldFlags),
+       foundComponents = Set.unmodifiable(foundComponents),
        tools = Set.unmodifiable(tools),
        durability = Map.unmodifiable(durability),
        stats = Map.unmodifiable(
@@ -55,6 +65,30 @@ class RunState {
          resources ?? {'wood': 2, 'stone': 0, 'fiber': 0},
        );
 
+  final List<SurvivalCondition> conditions;
+  final Set<String> worldFlags;
+  final Set<String> knownSpecies;
+  final int exposure, strain;
+  SurvivalCondition? condition(ConditionKind kind) {
+    for (final c in conditions) {
+      if (c.kind == kind) return c;
+    }
+    return null;
+  }
+
+  bool hasCondition(ConditionKind kind) => condition(kind) != null;
+  double get physicalPenalty =>
+      ((condition(ConditionKind.poisoned)?.severity ?? 0) == 2
+          ? .15
+          : hasCondition(ConditionKind.poisoned)
+          ? .1
+          : 0) +
+      (hasCondition(ConditionKind.injured) ? .1 : 0) +
+      (hasCondition(ConditionKind.exhausted) ? .1 : 0);
+  double get timingScale =>
+      ((hasCondition(ConditionKind.injured) ? .9 : 1.0) *
+              (hasCondition(ConditionKind.exhausted) ? .85 : 1.0))
+          .clamp(.75, 1);
   static const dayLength = 6;
   final int day;
   final int timeLeft;
@@ -91,6 +125,11 @@ class RunState {
       : 'Dusk';
 
   RunState copyWith({
+    List<SurvivalCondition>? conditions,
+    Set<String>? worldFlags,
+    Set<String>? knownSpecies,
+    int? exposure,
+    int? strain,
     int? day,
     int? timeLeft,
     RunPhase? phase,
@@ -106,6 +145,11 @@ class RunState {
     Map<SurvivalStat, int>? stats,
     Map<String, int>? resources,
   }) => RunState(
+    conditions: conditions ?? this.conditions,
+    worldFlags: worldFlags ?? this.worldFlags,
+    knownSpecies: knownSpecies ?? this.knownSpecies,
+    exposure: exposure ?? this.exposure,
+    strain: strain ?? this.strain,
     day: day ?? this.day,
     timeLeft: timeLeft ?? this.timeLeft,
     phase: phase ?? this.phase,
@@ -123,6 +167,11 @@ class RunState {
   );
 
   Map<String, dynamic> toJson() => {
+    'conditions': conditions.map((c) => c.toJson()).toList(),
+    'worldFlags': worldFlags.toList()..sort(),
+    'knownSpecies': knownSpecies.toList()..sort(),
+    'exposure': exposure,
+    'strain': strain,
     'day': day,
     'timeLeft': timeLeft,
     'phase': phase.name,
@@ -140,6 +189,16 @@ class RunState {
   };
 
   factory RunState.fromJson(Map<String, dynamic> j) => RunState(
+    conditions: [
+      for (final c in j['conditions'] as List? ?? [])
+        SurvivalCondition.fromJson(Map<String, dynamic>.from(c as Map)),
+    ],
+    worldFlags: Set<String>.from(j['worldFlags'] as List? ?? []),
+    knownSpecies: Set<String>.from(
+      j['knownSpecies'] as List? ?? ['ember_berries'],
+    ),
+    exposure: (j['exposure'] as int? ?? 0).clamp(0, 6),
+    strain: (j['strain'] as int? ?? 0).clamp(0, 6),
     day: j['day'] as int,
     timeLeft: (j['timeLeft'] as int).clamp(0, dayLength),
     phase: RunPhase.values.byName(j['phase'] as String),
@@ -187,6 +246,7 @@ class ActionReport {
     required this.body,
     required Map<String, int> changes,
     this.daySummary,
+    this.conditionChanges = const [],
   }) : changes = Map.unmodifiable(changes);
 
   ActionReport({
@@ -195,7 +255,17 @@ class ActionReport {
     required RunState before,
     required RunState after,
     this.daySummary,
-  }) : changes = Map.unmodifiable({
+  }) : conditionChanges = List.unmodifiable([
+         for (final c in after.conditions)
+           if (before.condition(c.kind) == null)
+             '${c.label} acquired · ${c.remaining} time'
+           else if (before.condition(c.kind)!.remaining != c.remaining ||
+               before.condition(c.kind)!.severity != c.severity)
+             '${c.label} · ${c.remaining} time remaining',
+         for (final c in before.conditions)
+           if (!after.hasCondition(c.kind)) '${c.label} cleared',
+       ]),
+       changes = Map.unmodifiable({
          for (final stat in SurvivalStat.values)
            if (after.value(stat) != before.value(stat))
              stat.label: after.value(stat) - before.value(stat),
@@ -207,11 +277,13 @@ class ActionReport {
   final String body;
   final Map<String, int> changes;
   final DaySummary? daySummary;
+  final List<String> conditionChanges;
 
   Map<String, dynamic> toJson() => {
     'title': title,
     'body': body,
     'changes': changes,
+    'conditionChanges': conditionChanges,
     if (daySummary != null) 'daySummary': daySummary!.toJson(),
   };
 
@@ -219,6 +291,7 @@ class ActionReport {
     title: j['title'] as String,
     body: j['body'] as String,
     changes: Map<String, int>.from(j['changes'] as Map),
+    conditionChanges: List<String>.from(j['conditionChanges'] as List? ?? []),
     daySummary: j['daySummary'] == null
         ? null
         : DaySummary.fromJson(j['daySummary'] as Map<String, dynamic>),

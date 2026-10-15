@@ -655,10 +655,10 @@ class _ReelMeter extends StatelessWidget {
               Positioned(
                 left:
                     8 +
-                    (session.target - FishingSession.zoneHalfWidth) * travel,
+                    (session.target - session.effectiveZoneHalfWidth) * travel,
                 top: 4,
                 bottom: 4,
-                width: FishingSession.zoneHalfWidth * 2 * travel,
+                width: session.effectiveZoneHalfWidth * 2 * travel,
                 child: Container(
                   key: const ValueKey('fishing-fish-zone'),
                   decoration: BoxDecoration(

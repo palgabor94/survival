@@ -101,8 +101,8 @@ void main() {
       await controller.initialize();
       game.openGathering(GatheringKind.foraging);
       game.beginGathering();
-      game.pickGatheringPlant('berries');
-      game.pickGatheringPlant('berries');
+      game.pickGatheringPlant('ember_berries');
+      game.pickGatheringPlant('ember_berries');
       game.finishGathering(leave: true);
       game.finishGathering(leave: true);
       await controller.settled;

@@ -1,8 +1,10 @@
+import '../game/run_state.dart';
 import 'package:flutter/material.dart';
 import '../game/crafting.dart';
 import '../game/game_engine.dart';
 import '../game/world_catalog.dart';
 import 'card_art.dart';
+import 'ecology_art.dart';
 import 'card_illustration.dart';
 import 'parchment_components.dart';
 
@@ -288,13 +290,20 @@ class _CraftDetails extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 14, 10, 10),
                   child: Row(
                     children: [
-                      Image.asset(
-                        cardIllustrationFor(recipe.id) ??
-                            'assets/art/card_trail_scene_v1.png',
-                        width: 64,
-                        height: 48,
-                        fit: BoxFit.cover,
-                      ),
+                      if (hasEcologyArt(recipe.id))
+                        SizedBox(
+                          width: 64,
+                          height: 48,
+                          child: EcologyArt(recipe.id),
+                        )
+                      else
+                        Image.asset(
+                          cardIllustrationFor(recipe.id) ??
+                              'assets/art/card_trail_scene_v1.png',
+                          width: 64,
+                          height: 48,
+                          fit: BoxFit.cover,
+                        ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: ParchmentLabel(
@@ -355,6 +364,11 @@ class _CraftDetails extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+                        if (recipe.waterCost > 0)
+                          ParchmentLabel(
+                            'Water ${game.state.value(SurvivalStat.water)} / ${recipe.waterCost} · recipe ingredient',
+                            size: 14,
                           ),
                         const Divider(color: Color(0xFFB7A981)),
                         Row(

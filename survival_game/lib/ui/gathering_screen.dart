@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 
 import '../game/game_engine.dart';
 import '../game/gathering_session.dart';
+import '../game/ecology_catalog.dart';
 import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'action_card.dart';
@@ -399,7 +400,7 @@ class _GatheringScreenState extends State<GatheringScreen>
                 Expanded(
                   child: Text(
                     reason ??
-                        '${session.kind == GatheringKind.foraging ? 'Gather by hand · knife opens more plants' : '${itemName(session.kind.art)} · ${game.state.toolCondition(session.kind.art)}/${RunState.toolDurability[session.kind.art]}'}\nStart uses ${game.gatheringCost} time.',
+                        '${session.kind == GatheringKind.foraging ? 'Gather by hand · knife opens more plants' : '${itemName(session.kind.art)} · ${game.state.toolCondition(session.kind.art)}/${RunState.toolDurability[session.kind.art]}'}\nStart uses ${game.gatheringCost} time.${session.kind != GatheringKind.foraging && session.windowScale < 1 ? '\nConditions narrow the timing zone for this attempt.' : ''}',
                     style: const TextStyle(fontSize: 12, height: 1.3),
                   ),
                 ),
@@ -534,7 +535,12 @@ class _GatheringScreenState extends State<GatheringScreen>
                   child: SizedBox(
                     height: 35,
                     width: double.infinity,
-                    child: CustomPaint(painter: _TimingPainter(session.marker)),
+                    child: CustomPaint(
+                      painter: _TimingPainter(
+                        session.marker,
+                        session.windowScale,
+                      ),
+                    ),
                   ),
                 ),
             ],
@@ -643,10 +649,10 @@ class _GatheringScreenState extends State<GatheringScreen>
         child: ListView.separated(
           controller: _plants,
           scrollDirection: Axis.horizontal,
-          itemCount: GatheringSession.plants.length,
+          itemCount: session.availablePlants.length,
           separatorBuilder: (_, _) => const SizedBox(width: 10),
           itemBuilder: (context, index) {
-            final id = GatheringSession.plants[index];
+            final id = session.availablePlants[index];
             final selected = session.picked.contains(id);
             final block = GatheringSession.plantBlock(id, game.state.tools);
             final full = session.picked.length >= 3;
@@ -654,13 +660,15 @@ class _GatheringScreenState extends State<GatheringScreen>
               width: width,
               child: ActionCard(
                 key: ValueKey('plant-$id'),
-                title: switch (id) {
-                  'berries' => 'Berries',
-                  'fiber' => 'Fiber',
-                  'herb' => 'Herb',
-                  'mushroom' => 'Mushrooms',
-                  _ => 'Unknown plant',
-                },
+                title:
+                    jungleFoods[id]?.name ??
+                    switch (id) {
+                      'berries' => 'Berries',
+                      'fiber' => 'Fiber',
+                      'herb' => 'Herb',
+                      'mushroom' => 'Mushrooms',
+                      _ => 'Unknown plant',
+                    },
                 art: id == 'berries' ? 'forage' : id,
                 image: id == 'mushroom' || id == 'unknown_plant'
                     ? 'assets/art/${id}_card_scene_v1.png'
@@ -690,7 +698,8 @@ class _GatheringScreenState extends State<GatheringScreen>
 }
 
 class _TimingPainter extends CustomPainter {
-  const _TimingPainter(this.marker);
+  const _TimingPainter(this.marker, this.scale);
+  final double scale;
   final double marker;
   @override
   void paint(Canvas canvas, Size size) {
@@ -703,13 +712,23 @@ class _TimingPainter extends CustomPainter {
     );
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * .32, 3, size.width * .36, 14),
+        Rect.fromLTWH(
+          size.width * (.5 - .18 * scale),
+          3,
+          size.width * .36 * scale,
+          14,
+        ),
         const Radius.circular(4),
       ),
       Paint()..color = CanopyColors.leaf,
     );
     canvas.drawRect(
-      Rect.fromLTWH(size.width * .44, 3, size.width * .12, 14),
+      Rect.fromLTWH(
+        size.width * (.5 - .06 * scale),
+        3,
+        size.width * .12 * scale,
+        14,
+      ),
       Paint()..color = CanopyColors.gold,
     );
     canvas.drawLine(
@@ -736,5 +755,5 @@ class _TimingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TimingPainter oldDelegate) =>
-      oldDelegate.marker != marker;
+      oldDelegate.marker != marker || oldDelegate.scale != scale;
 }

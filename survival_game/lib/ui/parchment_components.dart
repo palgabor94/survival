@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'card_illustration.dart';
 import 'card_art.dart';
+import 'ecology_art.dart';
 
 abstract final class ParchmentColors {
   static const ink = Color(0xFF203B31),
@@ -163,12 +164,14 @@ class ParchmentCard extends StatelessWidget {
                   aspectRatio: 1.5,
                   child:
                       artWidget ??
-                      Image.asset(
-                        image ??
-                            cardIllustrationFor(art) ??
-                            'assets/art/card_trail_scene_v1.png',
-                        fit: BoxFit.cover,
-                      ),
+                      (hasEcologyArt(art) && image == null
+                          ? EcologyArt(art)
+                          : Image.asset(
+                              image ??
+                                  cardIllustrationFor(art) ??
+                                  'assets/art/card_trail_scene_v1.png',
+                              fit: BoxFit.cover,
+                            )),
                 ),
                 SizedBox(
                   height: 22 * scale,

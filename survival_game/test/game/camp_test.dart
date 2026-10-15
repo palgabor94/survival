@@ -15,6 +15,8 @@ import 'game_engine_test.dart' show FixedRandom;
 /// Like [FixedRandom], but every coin flip lands on rain.
 class RainyRandom extends FixedRandom {
   @override
+  double nextDouble() => .8;
+  @override
   bool nextBool() => false;
 }
 

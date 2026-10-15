@@ -64,7 +64,16 @@ class OutcomeDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          if (report.changes.isEmpty)
+          for (final change in report.conditionChanges)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ParchmentLabel(
+                change,
+                size: 12,
+                color: ParchmentColors.rust,
+              ),
+            ),
+          if (report.changes.isEmpty && report.conditionChanges.isEmpty)
             const ParchmentLabel(
               'No change to your stats or supplies.',
               size: 12,

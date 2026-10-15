@@ -211,5 +211,70 @@
       "sleepHealth": 6,
       "sleepSanity": 5
     }
+  },
+  {
+    "id": "charcoal",
+    "name": "Charcoal",
+    "kind": "camp_item",
+    "costs": {
+      "wood": 1
+    },
+    "outputs": {
+      "charcoal": 2
+    },
+    "waterCost": 0,
+    "minCampTier": 0,
+    "timeCost": 1,
+    "description": "Slow-burn wood into clean charcoal.",
+    "effect": "Makes 2 portions for antidotes."
+  },
+  {
+    "id": "antidote",
+    "name": "Antidote",
+    "kind": "camp_item",
+    "costs": {
+      "herb": 1,
+      "charcoal": 1
+    },
+    "outputs": {
+      "antidote": 1
+    },
+    "waterCost": 6,
+    "minCampTier": 0,
+    "timeCost": 1,
+    "description": "Prepare a charcoal and herb remedy.",
+    "effect": "Clears poison; does not restore lost health."
+  },
+  {
+    "id": "bandage",
+    "name": "Bandage",
+    "kind": "camp_item",
+    "costs": {
+      "fiber": 2,
+      "herb": 1
+    },
+    "outputs": {
+      "bandage": 1
+    },
+    "waterCost": 0,
+    "minCampTier": 0,
+    "timeCost": 1,
+    "description": "Wrap clean plant fibres around a herbal dressing.",
+    "effect": "Treats injury, then restores a little health."
+  },
+  {
+    "id": "leaf_rain_cape",
+    "name": "Leaf Rain Cape",
+    "kind": "camp_item",
+    "costs": {
+      "fiber": 6,
+      "wood": 1
+    },
+    "outputs": {},
+    "waterCost": 0,
+    "minCampTier": 1,
+    "timeCost": 1,
+    "description": "Layer broad leaves over a fibre frame.",
+    "effect": "Reduces rain exposure; does not protect against wading."
   }
 ]

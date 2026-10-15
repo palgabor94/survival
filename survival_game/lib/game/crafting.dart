@@ -37,17 +37,22 @@ class Recipe {
     required this.effect,
     required Map<String, int> costs,
     required this.timeCost,
+    Map<String, int> outputs = const {},
+    this.waterCost = 0,
     this.minCampTier = 0,
     this.tier,
     Set<String> requiresItems = const {},
     Map<CampBonus, int> bonuses = const {},
-  }) : costs = Map.unmodifiable(costs),
+  }) : outputs = Map.unmodifiable(outputs),
+       costs = Map.unmodifiable(costs),
        requiresItems = Set.unmodifiable(requiresItems),
        bonuses = Map.unmodifiable(bonuses);
 
   final String id, name, description, effect;
   final RecipeKind kind;
   final Map<String, int> costs;
+  final Map<String, int> outputs;
+  final int waterCost;
   final int timeCost;
   final int minCampTier;
 
@@ -56,7 +61,9 @@ class Recipe {
   final Set<String> requiresItems;
   final Map<CampBonus, int> bonuses;
 
-  bool isOwnedBy(RunState state) => kind == RecipeKind.campTier
+  bool isOwnedBy(RunState state) => outputs.isNotEmpty
+      ? false
+      : kind == RecipeKind.campTier
       ? state.campTier >= tier!
       : state.tools.contains(id);
 
@@ -72,6 +79,8 @@ class Recipe {
     description: j['description'] as String,
     effect: j['effect'] as String,
     costs: Map<String, int>.from(j['costs'] as Map),
+    outputs: Map<String, int>.from(j['outputs'] as Map? ?? {}),
+    waterCost: j['waterCost'] as int? ?? 0,
     timeCost: j['timeCost'] as int,
     minCampTier: j['minCampTier'] as int? ?? 0,
     tier: j['tier'] as int?,
@@ -88,6 +97,8 @@ class RecipeCatalog {
     final ids = <String>{};
     for (final recipe in recipes) {
       if (!ids.add(recipe.id) ||
+          recipe.waterCost < 0 ||
+          recipe.outputs.values.any((v) => v <= 0) ||
           recipe.timeCost < 0 ||
           recipe.timeCost > RunState.dayLength ||
           recipe.costs.values.any((v) => v <= 0) ||

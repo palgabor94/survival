@@ -1,8 +1,10 @@
+import '../game/ecology_catalog.dart';
 import 'package:flutter/material.dart';
 import '../game/game_engine.dart';
 import '../game/run_state.dart';
 import '../game/world_catalog.dart';
 import 'card_art.dart';
+import 'canopy_components.dart';
 import 'parchment_components.dart';
 
 class InventoryDialog extends StatefulWidget {
@@ -27,10 +29,43 @@ class _InventoryDialogState extends State<InventoryDialog> {
       builder: (context) => _ItemDetails(game: game, id: id),
     );
     if (!mounted || command == null) return;
-    if (command == 'workshop' ||
+    if (command.startsWith('study:') ||
+        command == 'dry' ||
+        command == 'roots' ||
+        command == 'chew' ||
+        command == 'workshop' ||
         (command == 'consume:$id' && game.canConsume(id))) {
       Navigator.pop(context, command);
     }
+  }
+
+  Future<void> dryDetails() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => CanopyDialog(
+        title: 'Dry by the fire',
+        art: 'firewood',
+        subtitle: 'RECOVERY',
+        actions: [
+          parchmentButton(
+            'DRY CLOTHES · 1 TIME',
+            () => Navigator.pop(context, true),
+            key: const ValueKey('confirm-dry-fire'),
+          ),
+        ],
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ParchmentLabel(
+              'Use 1 wood and 1 daylight at camp. Wet is removed before time passes. Other active conditions still take their normal time cost.',
+              size: 14,
+              weight: FontWeight.w500,
+            ),
+          ],
+        ),
+      ),
+    );
+    if (mounted && confirmed == true) Navigator.pop(context, 'dry');
   }
 
   @override
@@ -41,7 +76,13 @@ class _InventoryDialogState extends State<InventoryDialog> {
     final items = tab == 2
         ? tools.map((r) => r.id).toList()
         : tab == 1
-        ? GameEngine.consumables.toList()
+        ? GameEngine.consumables
+              .where(
+                (id) =>
+                    ['small_fish', 'raw_meat', 'herb'].contains(id) ||
+                    game.state.resource(id) > 0,
+              )
+              .toList()
         : <String>{
             'wood',
             'stone',
@@ -122,6 +163,18 @@ class _InventoryDialogState extends State<InventoryDialog> {
                   align: TextAlign.center,
                 ),
               ),
+              if (game.state.hasCondition(ConditionKind.wet))
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: parchmentButton(
+                    'DRY BY FIRE · 1 WOOD · 1 TIME',
+                    game.canAct(CampAction.rest) &&
+                            game.state.resource('wood') > 0
+                        ? dryDetails
+                        : null,
+                    secondary: true,
+                  ),
+                ),
               Flexible(
                 child: SingleChildScrollView(
                   key: const ValueKey('dialog-content-scroll'),
@@ -253,7 +306,17 @@ class _ItemDetails extends StatelessWidget {
                           ),
                           const SizedBox(height: 14),
                           ParchmentLabel(
-                            consumable ? effect! : _description(id),
+                            jungleFoods.containsKey(id)
+                                ? (game.state.knownSpecies.contains(id)
+                                      ? jungleFoods[id]!.description
+                                      : 'Unstudied species. Its properties are consistent, but you have not identified it yet.')
+                                : consumable
+                                ? (id == 'antidote'
+                                      ? 'Clears poison. Does not restore lost health.'
+                                      : id == 'bandage'
+                                      ? 'Clears injury, then restores a little health.'
+                                      : effect!)
+                                : _description(id),
                             size: 14,
                             weight: FontWeight.w500,
                           ),
@@ -282,12 +345,60 @@ class _ItemDetails extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (id == 'herb' &&
+                    game.state.condition(ConditionKind.poisoned) != null &&
+                    game.state.condition(ConditionKind.poisoned)!.remaining >
+                        1 &&
+                    game.state.resource('herb') > 0)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: parchmentButton(
+                      'CHEW BITTER LEAVES · USE 1',
+                      game.canUseSupplies
+                          ? () => Navigator.pop(context, 'chew')
+                          : null,
+                      secondary: true,
+                    ),
+                  ),
+                if (jungleFoods.containsKey(id) &&
+                    !game.state.knownSpecies.contains(id))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: parchmentButton(
+                      'STUDY SAMPLE · 1 TIME',
+                      game.canUseSupplies &&
+                              game.state.locationId == 'camp' &&
+                              game.state.timeLeft > 0 &&
+                              game.state.phase == RunPhase.day &&
+                              game.state.resource(id) > 0
+                          ? () => Navigator.pop(context, 'study:$id')
+                          : null,
+                      secondary: true,
+                    ),
+                  ),
+                if (id == 'ribbon_root')
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: parchmentButton(
+                      'PREPARE UP TO 3 · 1 WOOD · 1 TIME',
+                      game.canAct(CampAction.rest) &&
+                              game.state.resource(id) > 0 &&
+                              game.state.resource('wood') > 0
+                          ? () => Navigator.pop(context, 'roots')
+                          : null,
+                      secondary: true,
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: consumable
                       ? parchmentButton(
                           id == 'herb'
                               ? 'BREW TEA · USE 1'
+                              : id == 'antidote' || id == 'bandage'
+                              ? 'USE TREATMENT · 1'
+                              : jungleFoods.containsKey(id)
+                              ? 'EAT · USE 1'
                               : 'COOK & EAT · USE 1',
                           canUse
                               ? () => Navigator.pop(context, 'consume:$id')

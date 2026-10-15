@@ -27,11 +27,34 @@ enum TimingQuality { miss, good, perfect }
 /// A bounded, serializable attempt. Rewards are committed by GameEngine only.
 /// Random plant safety is drawn once, then saved; reopening cannot reroll it.
 class GatheringSession {
-  GatheringSession(this.kind, {Random? random}) {
+  GatheringSession(
+    this.kind, {
+    Random? random,
+    this.day = 1,
+    this.ecology = false,
+    this.windowScale = 1,
+  }) {
     final source = random ?? Random();
     mushroomSafe = source.nextDouble() >= .25;
     unknownSafe = source.nextDouble() >= .65;
   }
+  final int day;
+  final bool ecology;
+  final double windowScale;
+  List<String> get availablePlants => ecology
+      ? ecologyPlants.where((id) => day >= 3 || id != 'mooncap').toList()
+      : plants;
+  static const ecologyPlants = [
+    'ember_berries',
+    'dew_fruit',
+    'fiber',
+    'herb',
+    'ribbon_root',
+    'wax_berries',
+    'mooncap',
+    'canopy_fig',
+    'iron_nut',
+  ];
   final GatheringKind kind;
   GatheringStage stage = GatheringStage.ready;
   bool paused = false;
@@ -57,9 +80,9 @@ class GatheringSession {
 
   TimingQuality get currentQuality {
     final distance = (marker - .5).abs();
-    return distance <= .06
+    return distance <= .06 * windowScale
         ? TimingQuality.perfect
-        : distance <= .18
+        : distance <= .18 * windowScale
         ? TimingQuality.good
         : TimingQuality.miss;
   }
@@ -101,17 +124,18 @@ class GatheringSession {
     'unknown_plant',
   ];
   static String? plantBlock(String id, Set<String> tools) => switch (id) {
-    'herb' || 'mushroom' =>
+    'herb' || 'mushroom' || 'ribbon_root' || 'mooncap' =>
       tools.contains('stone_knife') || tools.contains('machete')
           ? null
           : 'Knife required',
-    'unknown_plant' => tools.contains('machete') ? null : 'Machete required',
+    'unknown_plant' ||
+    'canopy_fig' => tools.contains('machete') ? null : 'Machete required',
     _ => null,
   };
   bool pick(String id, Set<String> tools) {
     if (!active ||
         kind != GatheringKind.foraging ||
-        !plants.contains(id) ||
+        !availablePlants.contains(id) ||
         plantBlock(id, tools) != null ||
         _picked.length >= 3 ||
         _picked.contains(id)) {
@@ -130,6 +154,9 @@ class GatheringSession {
   }
 
   Map<String, dynamic> toJson() => {
+    'day': day,
+    'ecology': ecology,
+    'windowScale': windowScale,
     'kind': kind.name,
     'stage': stage.name,
     'elapsed': elapsed,
@@ -147,6 +174,9 @@ class GatheringSession {
     final session = GatheringSession(
       GatheringKind.values.byName(json['kind'] as String),
       random: Random(0),
+      day: json['day'] as int? ?? 1,
+      ecology: json['ecology'] as bool? ?? false,
+      windowScale: (json['windowScale'] as num? ?? 1).toDouble().clamp(.75, 1),
     );
     session.stage = GatheringStage.values.byName(json['stage'] as String);
     session.elapsed = (json['elapsed'] as num).toDouble().clamp(
@@ -173,7 +203,7 @@ class GatheringSession {
     session._picked.addAll(List<String>.from(json['picked'] as List));
     if (session._hits.length > 3 ||
         session._picked.length > 3 ||
-        !session._picked.every(plants.contains)) {
+        !session._picked.every(session.availablePlants.contains)) {
       throw const FormatException('Invalid gathering progress');
     }
     return session;

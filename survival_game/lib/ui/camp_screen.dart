@@ -1,3 +1,4 @@
+import '../game/ecology_catalog.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -175,6 +176,20 @@ class _CampScreenState extends State<CampScreen> {
             ),
           );
           if (!mounted || decision == null) return;
+          if (decision == 'items') {
+            final command = await showDialog<String>(
+              context: context,
+              builder: (context) => InventoryDialog(game: game),
+            );
+            if (!mounted) return;
+            setState(() {
+              if (command?.startsWith('consume:') ?? false) {
+                game.consume(command!.substring(8));
+              }
+              if (command == 'chew') game.chewHerbs();
+            });
+            continue;
+          }
           setState(() {
             if (decision == 'deeper') {
               game.goDeeper();
@@ -438,6 +453,14 @@ class _CampScreenState extends State<CampScreen> {
     if (!mounted || command == null) return;
     if (command == 'workshop') {
       await _showWorkshop();
+    } else if (command == 'dry') {
+      _run(game.dryByFire);
+    } else if (command == 'roots') {
+      _run(game.prepareRoots);
+    } else if (command == 'chew') {
+      _run(game.chewHerbs);
+    } else if (command.startsWith('study:')) {
+      _run(() => game.studySpecies(command.substring(6)));
     } else if (command.startsWith('consume:')) {
       _run(() => game.consume(command.substring('consume:'.length)));
     }
@@ -644,6 +667,24 @@ class _CampScreenState extends State<CampScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const ParchmentLabel('JUNGLE KNOWLEDGE', size: 14),
+            const SizedBox(height: 8),
+            for (final id in game.state.knownSpecies)
+              if (jungleFoods.containsKey(id))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ParchmentLabel(
+                    '${jungleFoods[id]!.name}: ${jungleFoods[id]!.description}',
+                    size: 12,
+                    weight: FontWeight.w500,
+                  ),
+                ),
+            const ParchmentLabel(
+              'Gathering stores food. Use Items to study, prepare or eat it. Antidotes clear poison; bandages treat injuries. Rain exposure and fatigue build only when time passes.',
+              size: 12,
+              weight: FontWeight.w500,
+            ),
+            const SizedBox(height: 12),
             if (next != null) ...[
               ParchmentLabel('Build ${next.name}', size: 14),
               const SizedBox(height: 5),

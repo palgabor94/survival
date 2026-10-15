@@ -35,6 +35,8 @@ import '../../test/game/rescue_test.dart' as rescue;
 import '../../test/rescue_widget_test.dart' as rescue_ui;
 import '../../test/camp_backdrop_test.dart' as camp_art;
 import '../../test/game/gathering_test.dart' as gathering;
+import '../../test/game/ecology_test.dart' as ecology;
+import '../../test/ecology_widget_test.dart' as ecology_ui;
 import '../../test/gathering_widget_test.dart' as gathering_ui;
 import '../../test/music_test.dart' as music;
 import '../../test/sounds_test.dart' as sounds;
@@ -50,6 +52,8 @@ Future<void> main() async {
   final declarer = Declarer(collectTraces: true, noRetry: true);
   declarer.declare(() {
     final files = <String, void Function()>{
+      'ecology': ecology.main,
+      'ecology_widgets': ecology_ui.main,
       'game_engine': engine.main,
       'camp_logic': camp_logic.main,
       'card_logic': card_logic.main,

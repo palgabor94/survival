@@ -1,3 +1,4 @@
+import 'condition_strip.dart';
 import 'package:flutter/material.dart';
 
 import '../game/game_engine.dart';
@@ -160,6 +161,10 @@ class DayEndScreen extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 12),
+                                  if (state.conditions.isNotEmpty) ...[
+                                    ConditionStrip(state: state),
+                                    const SizedBox(height: 10),
+                                  ],
                                   const ParchmentLabel(
                                     'CAMP MATERIALS',
                                     size: 10,

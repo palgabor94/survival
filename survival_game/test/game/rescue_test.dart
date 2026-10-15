@@ -544,6 +544,12 @@ void main() {
           final food = [
             'small_fish',
             'raw_meat',
+            'ember_berries',
+            'dew_fruit',
+            'canopy_fig',
+            'cooked_root',
+            'iron_nut',
+            'wild_honey',
           ].where(game.canConsume).toList();
           if (food.isNotEmpty) {
             game.consume(food.first);

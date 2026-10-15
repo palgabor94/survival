@@ -138,6 +138,11 @@ class EventScene extends StatelessWidget {
   Widget _choiceCard(BuildContext context, EventChoice choice) {
     final usable = game.canChoose(choice);
     final requirements = <String>[
+      if (choice.extraTime > 0) '+${choice.extraTime} extra time',
+      if (choice.isRisky &&
+          choice.riskDomain == 'physical' &&
+          game.state.physicalPenalty > 0)
+        'Weakened by current conditions',
       for (final id in choice.requiresTools)
         '${game.state.tools.contains(id) && !game.state.toolUsable(id) ? 'Repair' : 'Needs'} ${game.recipes.find(id)?.name ?? itemName(id)}',
       for (final r in choice.requires.entries)
@@ -185,7 +190,7 @@ class EventScene extends StatelessWidget {
                 'bait' => 'bait',
                 'health' => 'health',
                 'sanity' => 'sanity',
-                _ => null,
+                _ => choice.icon,
               },
         image: choice.cardImage,
         tone: !usable

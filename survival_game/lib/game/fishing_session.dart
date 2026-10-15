@@ -7,11 +7,13 @@ enum CatchQuality { missed, good, perfect }
 /// Simulation is independent of frame rate and Flutter. Time only advances
 /// through update; callers pause updates while backgrounded or showing a dialog.
 class FishingSession {
-  FishingSession({Random? random}) {
+  FishingSession({Random? random, this.zoneScale = 1}) {
     final rng = random ?? Random();
     _biteDelay = 1.4 + rng.nextDouble() * 1.4;
     _wavePhase = rng.nextDouble() * pi * 2;
   }
+  final double zoneScale;
+  double get effectiveZoneHalfWidth => zoneHalfWidth * zoneScale;
   FishingStage stage = FishingStage.ready;
   CatchQuality quality = CatchQuality.missed;
   late final double _biteDelay, _wavePhase;
@@ -28,7 +30,7 @@ class FishingSession {
   static const double reelDuration = 8;
   bool get complete =>
       stage == FishingStage.caught || stage == FishingStage.escaped;
-  bool get inZone => (cursor - target).abs() <= zoneHalfWidth;
+  bool get inZone => (cursor - target).abs() <= effectiveZoneHalfWidth;
   double get remaining => stage == FishingStage.bite
       ? max(0, biteWindow - _phaseTime)
       : max(0, reelDuration - _phaseTime);

@@ -104,6 +104,11 @@ void main() {
 
     expect(find.byType(ExploreMapScreen), findsNothing);
     expect(game.pendingEvent!.locations, contains('riverbank'));
+    final save = game.toJson()..['pendingEvent'] = 'river_supplies';
+    expect(game.restore(save), isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await showCamp(tester, game);
+    await tester.pumpAndSettle();
     final choice = find.byKey(
       ValueKey('choice-${game.pendingEvent!.choices.first.id}'),
     );
@@ -240,7 +245,7 @@ void main() {
     await tapKey(tester, 'inventory-tab-1');
     await tapKey(tester, 'inventory-small_fish');
     await tapKey(tester, 'consume-small_fish');
-    expect(findUiText('A meal by the fire'), findsOneWidget);
+    expect(findUiText('A meal beneath the canopy'), findsOneWidget);
     expect(game.state.value(SurvivalStat.food), 50 - 6 + 25);
     expect(game.state.resource('small_fish'), caught - 1);
     expect(game.state.timeLeft, 4);

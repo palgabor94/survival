@@ -100,7 +100,9 @@ class SkillGuideDialog extends StatelessWidget {
         [
           'Start one attempt for 1 daylight.',
           'Choose up to three different plants before time runs out.',
-          'Some plants need a knife or machete. You learn what you gathered after the attempt.',
+          'Gathering stores portions in Items; it does not feed you immediately. Eat later at camp or a calm expedition stop.',
+          'Species always have the same properties. Study an unknown sample at camp for 1 time. Ember berries are safe; some roots need preparation.',
+          'Antidotes clear poison. Bandages clear injury. Rest helps fatigue; shelter and a campfire dry wet clothes.',
         ],
       ),
       'hunting' => (

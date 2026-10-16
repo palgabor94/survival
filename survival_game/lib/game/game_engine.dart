@@ -48,11 +48,13 @@ class GameEngine {
   void beginJourney() {
     if (journeyStarted) return;
     journeyStarted = true;
+    _measure('run_started', {});
     _changed();
   }
 
   void decideFirstRunGuide(bool accept) {
     if (!tutorial.welcomePending || profile.firstRunGuideHandled) return;
+    _measure('tutorial_decision', {'accepted': accept ? 1 : 0});
     profile.firstRunGuideHandled = true;
     tutorial.accepted = accept;
     tutorial.skipped = !accept;
@@ -65,6 +67,7 @@ class GameEngine {
   }
 
   void skipGuide() {
+    _measure('tutorial_skipped', {});
     tutorial.skipped = true;
     profile.firstRunGuideHandled = true;
     _changed();
@@ -152,6 +155,14 @@ class GameEngine {
       stats: Map.unmodifiable(state.stats),
       xpBefore: profile.xp,
     );
+    _measure('run_ended', {
+      'outcome': result,
+      'nights': metrics.nights,
+      'fish_caught': metrics.fishCaught,
+      'crafted': metrics.crafted,
+      'fatal_location': metrics.fatalLocation ?? state.locationId,
+      'conditions': state.conditions.map((c) => c.kind.name).join(','),
+    });
     if (profile.record(completedRun!) && !metrics.legacyEnded) {
       rankNoticePending =
           rankFor(completedRun!.xpAfter) > rankFor(completedRun!.xpBefore);
@@ -191,6 +202,23 @@ class GameEngine {
 
   /// Called after every completed transaction, e.g. to autosave the run.
   void Function()? onChanged;
+  final _telemetryListeners = <void Function(String, Map<String, Object>)>[];
+  void addTelemetryListener(
+    void Function(String, Map<String, Object>) listener,
+  ) => _telemetryListeners.add(listener);
+  void removeTelemetryListener(
+    void Function(String, Map<String, Object>) listener,
+  ) => _telemetryListeners.remove(listener);
+  void _measure(String name, Map<String, Object> values) {
+    for (final listener in List.of(_telemetryListeners)) {
+      try {
+        listener(name, values);
+      } catch (_) {
+        /* Never affect a transaction. */
+      }
+    }
+  }
+
   final _listeners = <void Function()>[];
   void addListener(void Function() listener) => _listeners.add(listener);
   void removeListener(void Function() listener) => _listeners.remove(listener);
@@ -514,6 +542,7 @@ class GameEngine {
 
   bool startAction(CampAction action) {
     if (!canAct(action)) return false;
+    _measure('action_started', {'action': action.name});
     if (action == CampAction.rest) {
       final before = state;
       _spendTime(action.cost, outdoor: false);
@@ -581,6 +610,11 @@ class GameEngine {
     }
     final location = world.find(id)!;
     if (id != 'fishing_pond' && _expeditionPool(id, 0).isEmpty) return false;
+    _measure('travel_started', {
+      'destination': id,
+      'pack_slots': selectedPack.values.fold<int>(0, (a, b) => a + b),
+      'gear_count': selectedGear.length,
+    });
     tutorial.learn('pack');
     _visit(id);
     _lastPack = {...selectedPack};
@@ -699,6 +733,7 @@ class GameEngine {
       day: state.day,
     );
     if (!session.cast()) return false;
+    _measure('fishing_cast', {'bait': session.baitId, 'rod': session.rodId});
     _apply(EventEffect(resources: {session.baitId: -1}));
     _wearTool(session.rodId, 1);
     _castSpent = true;
@@ -713,6 +748,13 @@ class GameEngine {
     if (!session.complete) return false;
     final before = _fishingBefore!;
     final caught = session.quality != CatchQuality.missed && _castSpent;
+    _measure('fishing_result', {
+      'caught': caught ? 1 : 0,
+      'release': release ? 1 : 0,
+      'abandon': abandon ? 1 : 0,
+      'quality': session.quality.name,
+      'fish': session.catchRecord?.speciesId ?? 'none',
+    });
     final record = caught ? session.catchRecord : null;
     // Legacy interrupted sessions may lack a species record.
     final speciesId = record?.speciesId ?? 'small_fish';
@@ -911,6 +953,10 @@ class GameEngine {
 
   bool strikeGathering() {
     if (!(_gathering?.strike() ?? false)) return false;
+    _measure('gathering_strike', {
+      'kind': _gathering!.kind.name,
+      'quality': _gathering!.lastQuality?.name ?? 'none',
+    });
     _changed();
     if (_gathering!.kind == GatheringKind.chopping &&
         _gathering!.lastQuality != TimingQuality.miss) {
@@ -921,6 +967,7 @@ class GameEngine {
 
   bool pickGatheringPlant(String id) {
     if (!(_gathering?.pick(id, state.availableTools) ?? false)) return false;
+    _measure('plant_picked', {'plant': id});
     _changed();
     return true;
   }
@@ -1134,6 +1181,10 @@ class GameEngine {
 
   bool craft(String id) {
     if (craftBlockReason(id) != null) return false;
+    _measure('craft_started', {
+      'recipe': id,
+      'repair': canRepairTool(id) ? 1 : 0,
+    });
     final recipe = recipes.find(id)!;
     final before = state;
     final repairing = canRepairTool(id);
@@ -1316,6 +1367,7 @@ class GameEngine {
 
   bool consume(String id) {
     if (!canConsume(id)) return false;
+    _measure('item_consumed', {'item': id});
     final before = state;
     if (id == 'antidote') _removeCondition(ConditionKind.poisoned);
     if (id == 'bandage') _removeCondition(ConditionKind.injured);
@@ -1521,6 +1573,10 @@ class GameEngine {
     final matches = _pendingEvent!.choices.where((c) => c.id == choiceId);
     if (matches.isEmpty || !canChoose(matches.first)) return false;
     final choice = matches.first;
+    _measure('choice_confirmed', {
+      'event': _pendingEvent!.id,
+      'choice': choiceId,
+    });
     final before = state;
     final gatheringKind = GatheringKind.fromId(choice.minigame);
     if (gatheringKind != null) {
@@ -1815,6 +1871,10 @@ class GameEngine {
   /// Presses on: a step deeper costs 1 time and may meet a danger first.
   bool goDeeper() {
     if (!canGoDeeper) return false;
+    _measure('expedition_deeper', {
+      'depth': _expedition!.depth + 1,
+      'risk_percent': (nextEncounterChance * 100).round(),
+    });
     final trip = _expedition!;
     _addStrain(1);
     final chance = nextEncounterChance;
@@ -1846,6 +1906,7 @@ class GameEngine {
   /// Heads home with everything gathered on the trip.
   bool returnHome() {
     if (!_decisionPending || hasPendingHaul) return false;
+    _measure('expedition_return', {'depth': _expedition!.depth});
     final trip = _expedition!;
     final before = state;
     _decisionPending = false;
@@ -1883,6 +1944,7 @@ class GameEngine {
 
   bool sleep() {
     if (!canSleep) return false;
+    _measure('night_started', {});
     final before = state;
     _apply(
       EventEffect(
@@ -1996,6 +2058,7 @@ class GameEngine {
 
   bool activateBeacon() {
     if (activateBeaconBlockReason != null) return false;
+    _measure('beacon_activated', {});
     final before = state;
     _spendTime(1);
     if (state.isAlive) {
@@ -2064,6 +2127,9 @@ class GameEngine {
   void restart() {
     if (!canStartNewRun) return;
     ensureRunSummary(outcome: completedRun == null ? 'abandoned' : null);
+    _measure('run_restarted', {
+      'previous_outcome': completedRun?.outcome ?? 'unknown',
+    });
     final option = optionById(profile.nextOption);
     profile.firstRunGuideHandled = true;
     tutorial = TutorialProgress();
@@ -2454,6 +2520,27 @@ class GameEngine {
       daySummary: daySummary,
       catchRecord: catchRecord,
     );
+    _measure('action_result', {
+      'result': title,
+      'health_delta':
+          state.value(SurvivalStat.health) - before.value(SurvivalStat.health),
+      'water_delta':
+          state.value(SurvivalStat.water) - before.value(SurvivalStat.water),
+      'food_delta':
+          state.value(SurvivalStat.food) - before.value(SurvivalStat.food),
+      'sanity_delta':
+          state.value(SurvivalStat.sanity) - before.value(SurvivalStat.sanity),
+      'time_spent': before.day == state.day
+          ? before.timeLeft - state.timeLeft
+          : 0,
+    });
+    for (final entry in _report!.changes.entries) {
+      _measure('resource_change', {
+        'resource': entry.key,
+        'delta': entry.value,
+        'cause': title,
+      });
+    }
     if (daySummary == null && before.day == state.day) {
       _dayHighlights.add(title);
       final place = world.find(before.locationId);

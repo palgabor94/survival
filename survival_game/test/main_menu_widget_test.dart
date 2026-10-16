@@ -237,6 +237,9 @@ void main() {
       await t.pumpAndSettle();
       expect(find.byType(MainMenuScreen), findsOneWidget);
       expect(storage.saved!['pendingEvent'], g.pendingEvent!.id);
+      // The real startup path offers telemetry consent before entering a run.
+      await t.tap(find.text('NO THANKS'));
+      await t.pumpAndSettle();
       await press(t, 'menu-enter-journey');
       expect(find.byType(MainMenuScreen), findsNothing);
       expect(storage.saved!['pendingEvent'], g.pendingEvent!.id);

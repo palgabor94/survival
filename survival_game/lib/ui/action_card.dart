@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import '../game/tool_catalog.dart';
 import 'tool_art.dart';
 import 'dart:math' as math;
@@ -63,7 +64,9 @@ class ActionCard extends StatelessWidget {
   final Map<String, int>? available;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      AnalyticsTarget('action_card:${key ?? art}', child: _build(context));
+  Widget _build(BuildContext context) {
     final scale = math.max(
       1.0,
       MediaQuery.textScalerOf(context).scale(12) / 12,

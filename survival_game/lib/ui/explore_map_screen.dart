@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../game/game_engine.dart';
@@ -257,7 +258,13 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
           color: Colors.transparent,
           child: InkWell(
             key: ValueKey('map-node-${place.id}'),
-            onTap: () => setState(() => selectedId = place.id),
+            onTap: () {
+              AnalyticsScope.of(context)?.track('map_destination_selected', {
+                'destination': place.id,
+                'locked': locked ? 1 : 0,
+              });
+              setState(() => selectedId = place.id);
+            },
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -346,6 +353,7 @@ class _ExploreMapScreenState extends State<ExploreMapScreen> {
                   tooltip: 'Read about this place',
                   onPressed: () => showDialog<void>(
                     context: context,
+                    routeSettings: const RouteSettings(name: 'canopy_dialog'),
                     builder: (_) => CanopyDialog(
                       title: place.name,
                       art: _art(place.id),

@@ -1,3 +1,7 @@
+import 'package:survival_game/analytics/analytics_controller.dart';
+import 'package:survival_game/analytics/analytics_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../test/analytics_test.dart' show FakeAnalyticsSink;
 import 'package:survival_game/ui/beacon_screen.dart';
 import 'package:survival_game/ui/main_menu_screen.dart';
 import 'package:survival_game/ui/first_day_guide.dart';
@@ -64,6 +68,8 @@ Future<void> main() async {
   PaintingBinding.instance.imageCache.maximumSize = 24;
   final storeRaw = Platform.environment['LOST_CANOPY_CAPTURE_STORE_RAW'] == '1';
   final mainMenu = Platform.environment['LOST_CANOPY_CAPTURE_MAIN_MENU'] == '1';
+  final analyticsReview =
+      Platform.environment['LOST_CANOPY_CAPTURE_ANALYTICS'] == '1';
   final firstDay = Platform.environment['LOST_CANOPY_CAPTURE_FIRST_DAY'] == '1';
   final runProgression =
       Platform.environment['LOST_CANOPY_CAPTURE_PROGRESSION'] == '1';
@@ -258,6 +264,7 @@ Future<void> main() async {
         }
         if (storeRaw ||
             mainMenu ||
+            analyticsReview ||
             firstDay ||
             runProgression ||
             inventoryProgression ||
@@ -410,6 +417,35 @@ Future<void> main() async {
       await mount(BeaconScreen(game: rescue));
       await shot('06-rescue');
       await tester.pumpWidget(const SizedBox.shrink());
+      return;
+    }
+
+    if (analyticsReview) {
+      // ignore: invalid_use_of_visible_for_testing_member
+      SharedPreferences.setMockInitialValues({});
+      final preferences = await SharedPreferences.getInstance();
+      final analytics = AnalyticsController(
+        sink: FakeAnalyticsSink(),
+        preferences: preferences,
+      );
+      await analytics.initialize(heartbeat: false);
+      await mount(
+        MaterialApp(
+          theme: canopyTheme,
+          debugShowCheckedModeBanner: false,
+          builder: (context, child) =>
+              AnalyticsScope(controller: analytics, child: child!),
+          home: MainMenuScreen(game: game(), backgroundIndex: 0),
+        ),
+        app: true,
+      );
+      await shot('01-gameplay-analytics-choice');
+      await tester.tap(find.text('SHARE GAMEPLAY DATA'));
+      await tester.pumpAndSettle();
+      await tap('main-menu-settings');
+      await shot('02-gameplay-analytics-settings');
+      await tester.pumpWidget(const SizedBox.shrink());
+      analytics.dispose();
       return;
     }
 

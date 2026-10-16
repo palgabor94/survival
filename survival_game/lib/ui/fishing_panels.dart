@@ -50,6 +50,7 @@ class FishingLoadout extends StatelessWidget {
                   onPressed: () async {
                     await showDialog<void>(
                       context: context,
+                      routeSettings: const RouteSettings(name: 'fishing_gear'),
                       builder: (context) => CanopyDialog(
                         title: 'Fishing gear',
                         art: 'basic_rod',
@@ -118,6 +119,9 @@ class FishingLoadout extends StatelessWidget {
                 onTap: () async {
                   final selected = await showDialog<bool>(
                     context: context,
+                    routeSettings: const RouteSettings(
+                      name: 'bait_preferences',
+                    ),
                     builder: (context) => CanopyDialog(
                       title: bait.name,
                       art: bait.id,
@@ -387,6 +391,9 @@ class FishJournalDialog extends StatelessWidget {
             onTap: game.state.knownFish.contains(species.id)
                 ? () => showDialog<void>(
                     context: context,
+                    routeSettings: const RouteSettings(
+                      name: 'prepare_fish_name',
+                    ),
                     builder: (context) => CanopyDialog(
                       title: species.name,
                       art: species.id,

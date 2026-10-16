@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import 'first_day_guide.dart';
 import 'progression_screens.dart' as progression;
 import 'inventory_panels.dart';
@@ -86,6 +87,7 @@ class _CampScreenState extends State<CampScreen> {
         if (game.tutorial.welcomePending) {
           final accept = await showDialog<bool>(
             context: context,
+            routeSettings: const RouteSettings(name: 'first_day_welcome'),
             barrierDismissible: false,
             builder: (_) =>
                 const PopScope(canPop: false, child: FirstDayWelcome()),
@@ -101,6 +103,7 @@ class _CampScreenState extends State<CampScreen> {
             game.state.isAlive) {
           await showDialog<void>(
             context: context,
+            routeSettings: const RouteSettings(name: 'first_day_complete'),
             builder: (_) => const FirstDayComplete(),
           );
           if (!mounted) return;
@@ -110,7 +113,10 @@ class _CampScreenState extends State<CampScreen> {
         if (game.hasPendingHaul) {
           final resolved = await Navigator.push<bool>(
             context,
-            MaterialPageRoute(builder: (_) => HaulResolutionScreen(game: game)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'haul_resolution_screen'),
+              builder: (_) => HaulResolutionScreen(game: game),
+            ),
           );
           if (!mounted || resolved != true) return;
           setState(() {});
@@ -119,7 +125,10 @@ class _CampScreenState extends State<CampScreen> {
         if (game.packingDraft != null) {
           await Navigator.push<bool>(
             context,
-            MaterialPageRoute(builder: (_) => PackingScreen(game: game)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'packing_screen'),
+              builder: (_) => PackingScreen(game: game),
+            ),
           );
           if (!mounted) return;
           setState(() {});
@@ -131,12 +140,14 @@ class _CampScreenState extends State<CampScreen> {
             await Navigator.push<void>(
               context,
               MaterialPageRoute(
+                settings: const RouteSettings(name: 'day_end_screen'),
                 builder: (_) => DayEndScreen(game: game, summary: summary),
               ),
             );
           } else {
             await showDialog<void>(
               context: context,
+              routeSettings: const RouteSettings(name: 'outcome'),
               barrierDismissible: false,
               builder: (context) => PopScope(
                 canPop: false,
@@ -162,7 +173,10 @@ class _CampScreenState extends State<CampScreen> {
         if (game.state.rescued) {
           final command = await Navigator.push<String>(
             context,
-            MaterialPageRoute(builder: (context) => RescuedScreen(game: game)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'rescued_screen'),
+              builder: (context) => RescuedScreen(game: game),
+            ),
           );
           if (!mounted) return;
           if (command == 'restarted') setState(() {});
@@ -173,6 +187,7 @@ class _CampScreenState extends State<CampScreen> {
           await Navigator.push<String>(
             context,
             MaterialPageRoute(
+              settings: const RouteSettings(name: 'run_result_screen'),
               builder: (_) => progression.RunResultScreen(game: game),
             ),
           );
@@ -182,7 +197,10 @@ class _CampScreenState extends State<CampScreen> {
         if (game.gathering != null) {
           final command = await Navigator.push<String>(
             context,
-            MaterialPageRoute(builder: (_) => GatheringScreen(game: game)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'gathering_screen'),
+              builder: (_) => GatheringScreen(game: game),
+            ),
           );
           if (!mounted) return;
           setState(() {});
@@ -196,6 +214,7 @@ class _CampScreenState extends State<CampScreen> {
           final command = await Navigator.push<String>(
             context,
             MaterialPageRoute(
+              settings: const RouteSettings(name: 'ruins_puzzle_screen'),
               builder: (context) => RuinsPuzzleScreen(game: game),
             ),
           );
@@ -204,7 +223,10 @@ class _CampScreenState extends State<CampScreen> {
         } else if (game.fishing != null) {
           await Navigator.push<void>(
             context,
-            MaterialPageRoute(builder: (context) => FishingScreen(game: game)),
+            MaterialPageRoute(
+              settings: const RouteSettings(name: 'fishing_screen'),
+              builder: (context) => FishingScreen(game: game),
+            ),
           );
           if (!mounted) return;
           setState(() {});
@@ -212,6 +234,7 @@ class _CampScreenState extends State<CampScreen> {
           final choice = await Navigator.push<String>(
             context,
             MaterialPageRoute(
+              settings: const RouteSettings(name: 'event_scene'),
               builder: (context) =>
                   EventScene(game: game, campVariant: _campVariant),
             ),
@@ -222,6 +245,7 @@ class _CampScreenState extends State<CampScreen> {
           final decision = await Navigator.push<String>(
             context,
             MaterialPageRoute(
+              settings: const RouteSettings(name: 'expedition_scene'),
               builder: (context) => ExpeditionScene(game: game),
             ),
           );
@@ -229,6 +253,7 @@ class _CampScreenState extends State<CampScreen> {
           if (decision == 'items') {
             final command = await showDialog<String>(
               context: context,
+              routeSettings: const RouteSettings(name: 'inventory_dialog'),
               builder: (context) => InventoryDialog(game: game),
             );
             if (!mounted) return;
@@ -507,6 +532,7 @@ class _CampScreenState extends State<CampScreen> {
     _openingInventory = true;
     final command = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'inventory_dialog'),
       builder: (context) => InventoryDialog(game: game),
     );
     _openingInventory = false;
@@ -542,6 +568,7 @@ class _CampScreenState extends State<CampScreen> {
     final id = await Navigator.push<String>(
       context,
       MaterialPageRoute(
+        settings: const RouteSettings(name: 'craft_screen'),
         builder: (context) => CraftScreen(game: game, showCamp: camp),
       ),
     );
@@ -556,6 +583,7 @@ class _CampScreenState extends State<CampScreen> {
     final command = await Navigator.push<String>(
       context,
       MaterialPageRoute(
+        settings: const RouteSettings(name: 'beacon_screen'),
         builder: (context) =>
             BeaconScreen(game: game, campVariant: _campVariant),
       ),
@@ -580,6 +608,7 @@ class _CampScreenState extends State<CampScreen> {
     await Navigator.push<bool>(
       context,
       MaterialPageRoute(
+        settings: const RouteSettings(name: 'new_journey_screen'),
         builder: (_) => progression.NewJourneyScreen(game: game),
       ),
     );
@@ -610,6 +639,7 @@ class _CampScreenState extends State<CampScreen> {
     final canReturnToMenu = Navigator.of(context).canPop();
     final choice = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'camp_menu'),
       builder: (context) => CanopyDialog(
         title: 'Camp menu',
         art: 'journal',
@@ -654,7 +684,12 @@ class _CampScreenState extends State<CampScreen> {
             const CampPanel(
               padding: EdgeInsets.all(10),
               child: Column(
-                children: [MusicControls(), SoundControls(), HapticControls()],
+                children: [
+                  MusicControls(),
+                  SoundControls(),
+                  HapticControls(),
+                  AnalyticsControls(),
+                ],
               ),
             ),
           ],
@@ -684,6 +719,7 @@ class _CampScreenState extends State<CampScreen> {
     if (game.isBusy || _presenting) return;
     final kind = await showDialog<GatheringKind>(
       context: context,
+      routeSettings: const RouteSettings(name: 'gather_around_camp'),
       builder: (dialogContext) => CanopyDialog(
         title: 'Gather around camp',
         art: 'forage',
@@ -731,6 +767,7 @@ class _CampScreenState extends State<CampScreen> {
         .firstOrNull;
     final command = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'survival_journal'),
       builder: (context) => CanopyDialog(
         title: 'Survival journal',
         art: 'journal',
@@ -741,6 +778,7 @@ class _CampScreenState extends State<CampScreen> {
             'FISH FIELD GUIDE',
             () => showDialog<void>(
               context: context,
+              routeSettings: const RouteSettings(name: 'fish_journal_dialog'),
               builder: (context) => FishJournalDialog(game: game),
             ),
             secondary: true,
@@ -840,6 +878,7 @@ class _CampScreenState extends State<CampScreen> {
   Future<void> _showGuide() async {
     final command = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'survival_guide_dialog'),
       builder: (_) => SurvivalGuideDialog(game: game),
     );
     if (mounted && command == 'workshop') await _showWorkshop();

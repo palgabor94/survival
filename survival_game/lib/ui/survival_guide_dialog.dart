@@ -33,6 +33,9 @@ class SurvivalGuideDialog extends StatelessWidget {
                   art: 'journal',
                   onTap: () => showDialog<void>(
                     context: context,
+                    routeSettings: const RouteSettings(
+                      name: 'first_day_reference',
+                    ),
                     builder: (_) => FirstDayReference(game: game!),
                   ),
                 ),
@@ -66,6 +69,7 @@ class SurvivalGuideDialog extends StatelessWidget {
                 art: 'basic_rod',
                 onTap: () => showDialog<void>(
                   context: context,
+                  routeSettings: const RouteSettings(name: 'fishing_tutorial'),
                   builder: (_) => const FishingTutorial(),
                 ),
               ),
@@ -81,6 +85,9 @@ class SurvivalGuideDialog extends StatelessWidget {
                   art: art,
                   onTap: () => showDialog<void>(
                     context: context,
+                    routeSettings: const RouteSettings(
+                      name: 'skill_guide_dialog',
+                    ),
                     builder: (_) => SkillGuideDialog(kind: id),
                   ),
                 ),

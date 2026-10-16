@@ -200,6 +200,7 @@ class SituationPanel extends StatelessWidget {
                 icon: const Icon(Icons.info_outline_rounded, size: 22),
                 onPressed: () => showDialog<void>(
                   context: context,
+                  routeSettings: const RouteSettings(name: 'scene_details'),
                   builder: (dialogContext) => CanopyDialog(
                     title: title,
                     art: sceneArt == 3 ? 'torch' : 'map',

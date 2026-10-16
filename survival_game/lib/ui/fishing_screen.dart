@@ -45,6 +45,7 @@ class _FishingScreenState extends State<FishingScreen>
     _last = null;
     await showDialog<void>(
       context: context,
+      routeSettings: const RouteSettings(name: 'fishing_tutorial'),
       builder: (_) => const FishingTutorial(),
     );
     if (!mounted) return;
@@ -157,6 +158,7 @@ class _FishingScreenState extends State<FishingScreen>
     _last = null;
     final leave = await showDialog<bool>(
       context: context,
+      routeSettings: const RouteSettings(name: 'canopy_confirmation'),
       builder: (context) => CanopyConfirmation(
         title: 'Return to camp?',
         art: 'basic_rod',

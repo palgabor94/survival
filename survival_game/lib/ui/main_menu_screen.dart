@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -214,7 +215,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     super.initState();
     game.addListener(refresh);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) menuAudio();
+      if (mounted) {
+        menuAudio();
+        unawaited(offerAnalytics(context));
+      }
     });
   }
 
@@ -298,6 +302,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   Future<void> guide() async {
     final command = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'survival_guide_dialog'),
       builder: (_) => SurvivalGuideDialog(game: game),
     );
     if (mounted && command == 'workshop') await enter();
@@ -305,12 +310,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   void settings() => showDialog<void>(
     context: context,
+    routeSettings: const RouteSettings(name: 'settings'),
     builder: (_) => const CanopyDialog(
       title: 'Settings',
       art: 'journal',
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [MusicControls(), SoundControls(), HapticControls()],
+        children: [
+          MusicControls(),
+          SoundControls(),
+          HapticControls(),
+          AnalyticsControls(),
+        ],
       ),
     ),
   );

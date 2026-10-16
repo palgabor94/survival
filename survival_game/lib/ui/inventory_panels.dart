@@ -185,6 +185,7 @@ class _PackingScreenState extends State<PackingScreen> {
     if (draft == null) return;
     final n = await showDialog<int>(
       context: context,
+      routeSettings: const RouteSettings(name: 'item_quantity_dialog'),
       builder: (_) => ItemQuantityDialog(
         id: id,
         maximum: game.state.storedResources[id] ?? 0,
@@ -201,6 +202,7 @@ class _PackingScreenState extends State<PackingScreen> {
     final draft = game.packingDraft!;
     final selected = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'choose_family'),
       builder: (context) => CanopyDialog(
         title: 'Choose $family',
         art: 'inventory',
@@ -471,6 +473,7 @@ class _HaulResolutionScreenState extends State<HaulResolutionScreen> {
   Future<void> change(String id) async {
     final n = await showDialog<int>(
       context: context,
+      routeSettings: const RouteSettings(name: 'item_quantity_dialog'),
       builder: (_) => ItemQuantityDialog(
         id: id,
         maximum: widget.game.haulCandidate[id] ?? 0,
@@ -495,6 +498,7 @@ class _HaulResolutionScreenState extends State<HaulResolutionScreen> {
     if (discarded.isNotEmpty) {
       final yes = await showDialog<bool>(
         context: context,
+        routeSettings: const RouteSettings(name: 'leave_these_items'),
         builder: (context) => CanopyDialog(
           title: 'Leave these items?',
           art: 'inventory',

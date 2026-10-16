@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import '../game/tool_catalog.dart';
 import 'tool_art.dart';
 import 'dart:math' as math;
@@ -77,15 +78,18 @@ class ParchmentClose extends StatelessWidget {
   const ParchmentClose({super.key, required this.onPressed});
   final VoidCallback onPressed;
   @override
-  Widget build(BuildContext context) => IconButton(
-    tooltip: 'Close',
-    onPressed: onPressed,
-    style: IconButton.styleFrom(
-      foregroundColor: ParchmentColors.ink,
-      minimumSize: const Size(48, 48),
-      side: const BorderSide(color: ParchmentColors.leaf),
+  Widget build(BuildContext context) => AnalyticsTarget(
+    'close',
+    child: IconButton(
+      tooltip: 'Close',
+      onPressed: onPressed,
+      style: IconButton.styleFrom(
+        foregroundColor: ParchmentColors.ink,
+        minimumSize: const Size(48, 48),
+        side: const BorderSide(color: ParchmentColors.leaf),
+      ),
+      icon: const Icon(Icons.close_rounded),
     ),
-    icon: const Icon(Icons.close_rounded),
   );
 }
 
@@ -94,22 +98,27 @@ Widget parchmentButton(
   VoidCallback? action, {
   bool secondary = false,
   Key? key,
-}) => FilledButton(
-  key: key,
-  onPressed: action,
-  style: FilledButton.styleFrom(
-    backgroundColor: secondary ? const Color(0xFFE6D6AE) : ParchmentColors.leaf,
-    foregroundColor: secondary ? ParchmentColors.ink : ParchmentColors.cream,
-    disabledBackgroundColor: const Color(0xFFD3C7A7),
-    disabledForegroundColor: ParchmentColors.muted,
-    minimumSize: const Size(44, 48),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-  ),
-  child: Text(
-    label,
-    textAlign: TextAlign.center,
-    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+}) => AnalyticsTarget(
+  'button:$label',
+  child: FilledButton(
+    key: key,
+    onPressed: action,
+    style: FilledButton.styleFrom(
+      backgroundColor: secondary
+          ? const Color(0xFFE6D6AE)
+          : ParchmentColors.leaf,
+      foregroundColor: secondary ? ParchmentColors.ink : ParchmentColors.cream,
+      disabledBackgroundColor: const Color(0xFFD3C7A7),
+      disabledForegroundColor: ParchmentColors.muted,
+      minimumSize: const Size(44, 48),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+    ),
+    child: Text(
+      label,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+    ),
   ),
 );
 
@@ -138,79 +147,82 @@ class ParchmentCard extends StatelessWidget {
       1.0,
       MediaQuery.textScalerOf(context).scale(12) / 12,
     );
-    return Semantics(
-      button: true,
-      selected: selected,
-      label: '$title, $status. View details',
-      child: PaperSurface(
+    return AnalyticsTarget(
+      'card:$art:$title',
+      child: Semantics(
+        button: true,
         selected: selected,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 32 * scale,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Center(
-                      child: Text(
-                        title.toUpperCase(),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          height: 1.25,
-                          fontWeight: FontWeight.w800,
-                          color: ParchmentColors.ink,
+        label: '$title, $status. View details',
+        child: PaperSurface(
+          selected: selected,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 32 * scale,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Center(
+                        child: Text(
+                          title.toUpperCase(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            height: 1.25,
+                            fontWeight: FontWeight.w800,
+                            color: ParchmentColors.ink,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                AspectRatio(
-                  aspectRatio: 1.5,
-                  child:
-                      artWidget ??
-                      (fieldTools.containsKey(art) && image == null
-                          ? ToolArt(art)
-                          : hasFishingArt(art) && image == null
-                          ? FishingArt(art)
-                          : hasEcologyArt(art) && image == null
-                          ? EcologyArt(art)
-                          : Image.asset(
-                              image ??
-                                  cardIllustrationFor(art) ??
-                                  'assets/art/card_trail_scene_v1.png',
-                              fit: BoxFit.cover,
-                            )),
-                ),
-                SizedBox(
-                  height: 22 * scale,
-                  child: Center(
-                    child: ParchmentLabel(
-                      info,
-                      size: 9,
-                      color: ParchmentColors.muted,
+                  AspectRatio(
+                    aspectRatio: 1.5,
+                    child:
+                        artWidget ??
+                        (fieldTools.containsKey(art) && image == null
+                            ? ToolArt(art)
+                            : hasFishingArt(art) && image == null
+                            ? FishingArt(art)
+                            : hasEcologyArt(art) && image == null
+                            ? EcologyArt(art)
+                            : Image.asset(
+                                image ??
+                                    cardIllustrationFor(art) ??
+                                    'assets/art/card_trail_scene_v1.png',
+                                fit: BoxFit.cover,
+                              )),
+                  ),
+                  SizedBox(
+                    height: 22 * scale,
+                    child: Center(
+                      child: ParchmentLabel(
+                        info,
+                        size: 9,
+                        color: ParchmentColors.muted,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 26 * scale,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  alignment: Alignment.center,
-                  color: ['LOCKED', 'MISSING', 'EMPTY'].contains(status)
-                      ? ParchmentColors.rust
-                      : ParchmentColors.leaf,
-                  child: ParchmentLabel(
-                    status,
-                    size: 9,
-                    color: ParchmentColors.cream,
+                  Container(
+                    height: 26 * scale,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    alignment: Alignment.center,
+                    color: ['LOCKED', 'MISSING', 'EMPTY'].contains(status)
+                        ? ParchmentColors.rust
+                        : ParchmentColors.leaf,
+                    child: ParchmentLabel(
+                      status,
+                      size: 9,
+                      color: ParchmentColors.cream,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -252,20 +264,23 @@ class ParchmentMenuRow extends StatelessWidget {
   final String title, art, trailing;
   final VoidCallback? onTap;
   @override
-  Widget build(BuildContext context) => Material(
-    color: Colors.transparent,
-    child: InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
-        child: Row(
-          children: [
-            CardArt(art, size: 26),
-            const SizedBox(width: 8),
-            Expanded(child: ParchmentLabel(title, size: 13)),
-            const SizedBox(width: 8),
-            ParchmentLabel(trailing, size: 13, color: ParchmentColors.muted),
-          ],
+  Widget build(BuildContext context) => AnalyticsTarget(
+    'menu:$title',
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+          child: Row(
+            children: [
+              CardArt(art, size: 26),
+              const SizedBox(width: 8),
+              Expanded(child: ParchmentLabel(title, size: 13)),
+              const SizedBox(width: 8),
+              ParchmentLabel(trailing, size: 13, color: ParchmentColors.muted),
+            ],
+          ),
         ),
       ),
     ),

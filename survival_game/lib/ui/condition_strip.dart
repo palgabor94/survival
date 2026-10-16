@@ -20,6 +20,7 @@ class ConditionStrip extends StatelessWidget {
             key: ValueKey('condition-${condition.kind.name}'),
             onTap: () => showDialog<void>(
               context: context,
+              routeSettings: const RouteSettings(name: 'dialog'),
               builder: (context) => Dialog(
                 backgroundColor: Colors.transparent,
                 child: PaperSurface(

@@ -150,6 +150,7 @@ class _GatheringScreenState extends State<GatheringScreen>
     _dialog = true;
     final command = await showDialog<String>(
       context: context,
+      routeSettings: const RouteSettings(name: 'dialog'),
       barrierDismissible: false,
       builder: (dialogContext) => PopScope(
         canPop: false,
@@ -205,6 +206,7 @@ class _GatheringScreenState extends State<GatheringScreen>
     _dialog = true;
     final leave = await showDialog<bool>(
       context: context,
+      routeSettings: const RouteSettings(name: 'canopy_confirmation'),
       builder: (_) => CanopyConfirmation(
         title: 'Leave this attempt?',
         message: session.kind == GatheringKind.foraging

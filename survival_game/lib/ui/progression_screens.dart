@@ -204,8 +204,13 @@ class _WatchState extends State<_Watch> {
   Widget build(BuildContext context) => widget.builder();
 }
 
-Future<T?> _open<T>(BuildContext context, Widget screen) =>
-    Navigator.push<T>(context, MaterialPageRoute(builder: (_) => screen));
+Future<T?> _open<T>(BuildContext context, Widget screen) => Navigator.push<T>(
+  context,
+  MaterialPageRoute(
+    settings: const RouteSettings(name: 'screen'),
+    builder: (_) => screen,
+  ),
+);
 Widget saveNotice(GameEngine game) => game.saveFailed
     ? column([
         notice(

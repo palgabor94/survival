@@ -1,3 +1,4 @@
+import '../../test/analytics_test.dart' as analytics;
 import '../../test/main_menu_widget_test.dart' as main_menu;
 import '../../test/first_day_tutorial_widget_test.dart' as first_day_ui;
 import '../../test/game/first_day_tutorial_test.dart' as first_day;
@@ -64,6 +65,7 @@ Future<void> main() async {
   final declarer = Declarer(collectTraces: true, noRetry: true);
   declarer.declare(() {
     final files = <String, void Function()>{
+      'analytics': analytics.main,
       'run_progression': run_progression.main,
       'run_progression_widgets': run_progression_ui.main,
       'ecology': ecology.main,

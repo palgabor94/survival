@@ -1,3 +1,8 @@
+import 'analytics/analytics_controller.dart';
+import 'analytics/analytics_ui.dart';
+import 'analytics/firebase_sink.dart';
+import 'analytics/game_analytics.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -44,6 +49,8 @@ class LostCanopyApp extends StatefulWidget {
     this.haptics,
     this.enableAudio = true,
     this.enableHaptics = true,
+    this.enableAnalytics = true,
+    this.analytics,
     this.showMainMenu,
   });
   final GameEngine? engine;
@@ -52,6 +59,8 @@ class LostCanopyApp extends StatefulWidget {
   final HapticsController? haptics;
   final bool enableAudio;
   final bool enableHaptics;
+  final bool enableAnalytics;
+  final AnalyticsController? analytics;
 
   /// Injected gameplay fixtures bypass startup unless explicitly requested.
   final bool? showMainMenu;
@@ -83,6 +92,12 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
       (widget.engine == null && widget.enableHaptics
           ? HapticsController.device()
           : null);
+  late AnalyticsController? _analytics = widget.analytics;
+  GameAnalytics? _gameAnalytics;
+  late final _analyticsNavigation = AnalyticsNavigationObserver(
+    _analytics,
+    home: _useMenu ? 'main_menu' : 'camp',
+  );
   AppLifecycleListener? _lifecycle;
   late Future<GameEngine> _engine = _load();
   bool get _useMenu => widget.showMainMenu ?? widget.engine == null;
@@ -92,9 +107,13 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
   @override
   void initState() {
     super.initState();
-    if (_music != null || _sounds != null || _haptics != null) {
+    if (_music != null ||
+        _sounds != null ||
+        _haptics != null ||
+        widget.enableAnalytics) {
       final lifecycle = WidgetsBinding.instance.lifecycleState;
       void foreground(bool value) {
+        _analytics?.setForeground(value);
         _music?.setForeground(value);
         _sounds?.setForeground(value);
         _haptics?.setForeground(value);
@@ -114,6 +133,8 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
   @override
   void dispose() {
     _lifecycle?.dispose();
+    _gameAnalytics?.dispose();
+    if (widget.analytics == null) _analytics?.dispose();
     if (widget.music == null) _music?.dispose();
     if (widget.sounds == null) _sounds?.dispose();
     if (widget.haptics == null) _haptics?.dispose();
@@ -130,6 +151,24 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
   }
 
   Future<GameEngine> _load() async {
+    if (_analytics == null && widget.engine == null && widget.enableAnalytics) {
+      try {
+        _analytics = AnalyticsController(
+          sink: FirebaseAnalyticsSink(),
+          preferences: await SharedPreferences.getInstance(),
+        );
+        await _analytics!.initialize();
+        final lifecycle = WidgetsBinding.instance.lifecycleState;
+        _analytics!.setForeground(
+          lifecycle == null || lifecycle == AppLifecycleState.resumed,
+        );
+        _analyticsNavigation.controller = _analytics;
+        _analytics!.showScreen(_useMenu ? 'main_menu' : 'camp');
+        if (mounted) setState(() {});
+      } catch (_) {
+        /* Loading a journey must work without telemetry. */
+      }
+    }
     final storage =
         widget.storage ??
         (widget.engine == null ? PreferencesRunStorage() : null);
@@ -158,6 +197,10 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
     }
     if (_useMenu) _menuBackground = await _rotation.next();
     if (mounted) {
+      _gameAnalytics?.dispose();
+      if (_analytics != null) {
+        _gameAnalytics = GameAnalytics(_analytics!, engine);
+      }
       _music?.attach(engine);
       _sounds?.attach(engine);
       _haptics?.attach(engine);
@@ -170,12 +213,18 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
     title: 'Lost Canopy',
     debugShowCheckedModeBanner: false,
     theme: canopyTheme,
-    navigatorObservers: [_musicNavigation],
+    navigatorObservers: [_musicNavigation, _analyticsNavigation],
     builder: (context, child) => MusicScope(
       controller: _music,
       child: SoundsScope(
         controller: _sounds,
-        child: HapticsScope(controller: _haptics, child: child!),
+        child: HapticsScope(
+          controller: _haptics,
+          child: AnalyticsScope(
+            controller: _analytics,
+            child: AnalyticsGestures(controller: _analytics, child: child!),
+          ),
+        ),
       ),
     ),
     home: FutureBuilder<GameEngine>(

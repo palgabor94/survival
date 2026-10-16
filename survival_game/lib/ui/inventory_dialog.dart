@@ -57,6 +57,7 @@ class _InventoryDialogState extends State<InventoryDialog> {
   Future<void> dryDetails() async {
     final confirmed = await showDialog<bool>(
       context: context,
+      routeSettings: const RouteSettings(name: 'dry_by_the_fire'),
       builder: (context) => CanopyDialog(
         title: 'Dry by the fire',
         art: 'firewood',
@@ -434,6 +435,9 @@ class _ItemDetails extends StatelessWidget {
                             child: parchmentButton('REPAIR TOOL', () async {
                               final result = await showDialog<bool>(
                                 context: context,
+                                routeSettings: const RouteSettings(
+                                  name: 'tool_repair_dialog',
+                                ),
                                 builder: (context) =>
                                     ToolRepairDialog(game: game, id: id),
                               );
@@ -465,6 +469,9 @@ class _ItemDetails extends StatelessWidget {
                           ? () async {
                               final confirmed = await showDialog<bool>(
                                 context: context,
+                                routeSettings: const RouteSettings(
+                                  name: 'fish_preparation_dialog',
+                                ),
                                 builder: (context) =>
                                     FishPreparationDialog(game: game, id: id),
                               );
@@ -549,6 +556,9 @@ class _ItemDetails extends StatelessWidget {
                                   if (fish?.hazardous == true) {
                                     final confirmed = await showDialog<bool>(
                                       context: context,
+                                      routeSettings: const RouteSettings(
+                                        name: 'canopy_confirmation',
+                                      ),
                                       builder: (context) => CanopyConfirmation(
                                         title: 'Eat without preparing?',
                                         destructive: true,

@@ -164,6 +164,7 @@ Future<String?> chooseFieldTool(
   String family,
 ) => showDialog<String>(
   context: context,
+  routeSettings: const RouteSettings(name: 'dialog'),
   builder: (context) => Dialog(
     backgroundColor: Colors.transparent,
     insetPadding: const EdgeInsets.all(10),

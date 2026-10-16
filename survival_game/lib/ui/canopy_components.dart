@@ -1,3 +1,4 @@
+import '../analytics/analytics_ui.dart';
 import 'condition_strip.dart';
 import 'package:flutter/material.dart';
 import '../feedback/haptics_scope.dart';
@@ -402,29 +403,32 @@ class CanopyShortcut extends StatelessWidget {
   final String label, art;
   final VoidCallback? onPressed;
   @override
-  Widget build(BuildContext context) => OutlinedButton(
-    onPressed: onPressed == null
-        ? null
-        : () {
-            HapticsScope.of(context)?.tap();
-            onPressed!();
-          },
-    style: OutlinedButton.styleFrom(
-      backgroundColor: CanopyColors.panel.withValues(alpha: .96),
-      foregroundColor: CanopyColors.cream,
-      side: const BorderSide(color: CanopyColors.border, width: 1.5),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-      minimumSize: const Size(52, 52),
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CardArt(art, size: 26),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900),
-        ),
-      ],
+  Widget build(BuildContext context) => AnalyticsTarget(
+    'shortcut:$art',
+    child: OutlinedButton(
+      onPressed: onPressed == null
+          ? null
+          : () {
+              HapticsScope.of(context)?.tap();
+              onPressed!();
+            },
+      style: OutlinedButton.styleFrom(
+        backgroundColor: CanopyColors.panel.withValues(alpha: .96),
+        foregroundColor: CanopyColors.cream,
+        side: const BorderSide(color: CanopyColors.border, width: 1.5),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        minimumSize: const Size(52, 52),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CardArt(art, size: 26),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900),
+          ),
+        ],
+      ),
     ),
   );
 }

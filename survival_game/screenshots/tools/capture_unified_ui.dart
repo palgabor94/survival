@@ -1,3 +1,4 @@
+import 'package:survival_game/ui/beacon_screen.dart';
 import 'package:survival_game/ui/main_menu_screen.dart';
 import 'package:survival_game/ui/first_day_guide.dart';
 import 'dart:convert';
@@ -61,6 +62,7 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final storeRaw = Platform.environment['LOST_CANOPY_CAPTURE_STORE_RAW'] == '1';
   final mainMenu = Platform.environment['LOST_CANOPY_CAPTURE_MAIN_MENU'] == '1';
   final firstDay = Platform.environment['LOST_CANOPY_CAPTURE_FIRST_DAY'] == '1';
   final runProgression =
@@ -231,14 +233,15 @@ Future<void> main() async {
       await tester.pump();
       await tester.runAsync(() async {
         final context = tester.element(find.byType(Scaffold).first);
-        if (campLayers || allCampLayers || itemsRefresh) {
+        if (storeRaw || campLayers || allCampLayers || itemsRefresh) {
           // Foreground sprites enter the widget tree after the background
           // decodes, so they may be absent from the initial Image traversal.
           for (final asset in {...starterCampSprites, campSeatedRight}) {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (mainMenu ||
+        if (storeRaw ||
+            mainMenu ||
             firstDay ||
             runProgression ||
             inventoryProgression ||
@@ -291,7 +294,13 @@ Future<void> main() async {
           boundaryKey.currentContext!.findRenderObject()!
               as RenderRepaintBoundary;
       await tester.runAsync(() async {
-        final picture = await boundary.toImage(pixelRatio: 2);
+        final picture = await boundary.toImage(
+          pixelRatio:
+              double.tryParse(
+                Platform.environment['LOST_CANOPY_CAPTURE_PIXEL_RATIO'] ?? '',
+              ) ??
+              2,
+        );
         try {
           final data = await picture.toByteData(format: ui.ImageByteFormat.png);
           final temporary = File('${directory.path}/$name.png.tmp');
@@ -320,6 +329,72 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (storeRaw) {
+      await binding.setSurfaceSize(const Size(390, 932));
+      tester.view.physicalSize = const Size(390, 932);
+      final state = RunState(
+        day: 5,
+        campTier: 1,
+        tools: {
+          'stone_axe',
+          'stone_spear',
+          'torch',
+          'basic_rod',
+          'stone_knife',
+        },
+        resources: {
+          'wood': 12,
+          'stone': 4,
+          'fiber': 10,
+          'herb': 2,
+          'bait': 3,
+          'ember_berries': 2,
+        },
+      );
+      final camp = game(state: state);
+      await mount(CampScreen(engine: camp, initialCampVariant: 0));
+      await shot('01-survive');
+      await mount(ExploreMapScreen(game: camp));
+      await shot('02-explore');
+      await mount(CraftScreen(game: camp));
+      await shot('03-craft');
+      final encounter = game(state: state);
+      if (!encounter.restore(
+        encounter.toJson()
+          ..['state'] = state.copyWith(locationId: 'riverbank').toJson()
+          ..['pendingEvent'] = 'jaguar_trail'
+          ..['pendingCost'] = 0,
+      )) {
+        throw StateError('Invalid store encounter');
+      }
+      await mount(EventScene(game: encounter));
+      await shot('04-face-the-wild');
+      final fish = game(state: state);
+      fish.travelTo('fishing_pond');
+      fish.castLine();
+      waitForBite(fish.fishing!);
+      fish.fishing!.hook();
+      fish.fishing!.update(.5);
+      await mount(FishingScreen(game: fish), settle: false);
+      await shot('05-fishing');
+      final rescue = game(
+        state: state.copyWith(
+          day: 12,
+          campTier: 3,
+          tools: {...state.tools, 'emergency_beacon'},
+          resources: {
+            ...state.resources,
+            for (final id in beaconComponents.keys) id: 1,
+          },
+          foundComponents: beaconComponents.keys.toSet(),
+        ),
+      );
+      await mount(BeaconScreen(game: rescue));
+      await shot('06-rescue');
+      await tester.pumpWidget(const SizedBox.shrink());
+      return;
     }
 
     if (mainMenu) {

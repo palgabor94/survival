@@ -101,4 +101,8 @@ Első menetes tutorial: 462 sikeres teszt, 0 hiba, analyzer tiszta. A splash és
 
 ## Főmenü és splash — 2026-10-16
 
-475 sikeres teszt, analyzer tiszta. Valódi kezdés/folytatás, profil, beállítások, súgó, megerősített új menet, megjegyzett A/B/C hátterek. A felső és alsó perem képpontszinten ellenőrzött. [Bekötés](design/menu-variations-v1/IMPLEMENTATION_HU.md). [Új karakteres ikonjelölt](design/app-icon-v1/lost_canopy_explorer_icon_v1.png), külön elmentve, még nincs launcherikonként bekötve.
+475 sikeres teszt, analyzer tiszta. Valódi kezdés/folytatás, profil, beállítások, súgó, megerősített új menet, megjegyzett A/B/C hátterek. A felső és alsó perem képpontszinten ellenőrzött. [Bekötés](design/menu-variations-v1/IMPLEMENTATION_HU.md). [Új karakteres ikonjelölt](design/app-icon-v1/lost_canopy_explorer_icon_v1.png), az iOS AppIconhoz bekötve, 15 ellenőrzött RGB PNG-vel / 19 mérethelyen.
+
+## iOS ikon és App Store — 2026-10-16
+
+Az új karakteres ikon iOS-re bekötve. A méretek és az átlátszóság hiánya ellenőrzött; a teljes Xcode assetfordítást a nem elérhető CoreSimulator környezet blokkolta. [Ikonbekötés](design/app-icon-v1/IOS_INTEGRATION.md). Hat angol promóciós kép, címmel, alcímmel és friss, tényleges gameplay screenshotokkal, két iPhone-méretben: [App Store-csomag](app_store/en-US/README.md). Ezek fájlként elkészültek, App Store Connect-feltöltés nem történt.

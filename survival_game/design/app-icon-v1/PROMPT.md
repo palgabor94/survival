@@ -1,6 +1,6 @@
 # Karakteres játékikon
 
-2026-10-16 · Beépített image_gen eszközzel generált önálló ikonjelölt. Nem helyettesíti automatikusan az iOS/Android launcher ikonokat.
+2026-10-16 · Beépített image_gen eszközzel generált önálló ikonjelölt. Az iOS AppIcon a jóváhagyás után bekötve: [részletek](IOS_INTEGRATION.md). Az Android launcherikon változatlan.
 
 Referenciák: `design/references/explorer_character_master_v1.png` (karakter), `assets/art/camp_tier_2_empty_v1.jpg` (stílus és színek).
 

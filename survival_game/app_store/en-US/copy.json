@@ -1,0 +1,38 @@
+[
+  {
+    "id": "01-survive",
+    "title": "Survive the Jungle",
+    "subtitle": "Manage your supplies. Make every day count.",
+    "source": "raw/01-survive.png"
+  },
+  {
+    "id": "02-explore",
+    "title": "Explore the Unknown",
+    "subtitle": "Choose your route. Bring your supplies home.",
+    "source": "raw/02-explore.png"
+  },
+  {
+    "id": "03-craft",
+    "title": "Craft Your Way Forward",
+    "subtitle": "Make useful tools. Build a stronger refuge.",
+    "source": "raw/03-craft.png"
+  },
+  {
+    "id": "04-face-the-wild",
+    "title": "Face the Wild",
+    "subtitle": "Meet the jungle’s dangers. Choose how you respond.",
+    "source": "raw/04-face-the-wild.png"
+  },
+  {
+    "id": "05-fishing",
+    "title": "Master the Catch",
+    "subtitle": "Time the hook. Keep the fish in the green.",
+    "source": "raw/05-fishing.png"
+  },
+  {
+    "id": "06-rescue",
+    "title": "Build Your Escape",
+    "subtitle": "Recover the missing parts. Send a signal for rescue.",
+    "source": "raw/06-rescue.png"
+  }
+]

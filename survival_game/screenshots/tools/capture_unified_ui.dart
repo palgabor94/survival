@@ -226,7 +226,23 @@ Future<void> main() async {
               : MaterialApp(
                   theme: canopyTheme,
                   debugShowCheckedModeBanner: false,
-                  home: screen,
+                  home: storeRaw
+                      ? Builder(
+                          builder: (context) => MediaQuery(
+                            data: MediaQuery.of(context).copyWith(
+                              padding: const EdgeInsets.only(
+                                top: 44,
+                                bottom: 24,
+                              ),
+                              viewPadding: const EdgeInsets.only(
+                                top: 44,
+                                bottom: 24,
+                              ),
+                            ),
+                            child: screen,
+                          ),
+                        )
+                      : screen,
                 ),
         ),
       );
@@ -332,8 +348,8 @@ Future<void> main() async {
     }
 
     if (storeRaw) {
-      await binding.setSurfaceSize(const Size(390, 932));
-      tester.view.physicalSize = const Size(390, 932);
+      await binding.setSurfaceSize(const Size(430, 932));
+      tester.view.physicalSize = const Size(430, 932);
       final state = RunState(
         day: 5,
         campTier: 1,

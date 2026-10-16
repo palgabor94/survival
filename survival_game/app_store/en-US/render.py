@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import zipfile
 
 project = Path(__file__).resolve().parents[2]
 os.chdir(project)
@@ -47,3 +48,12 @@ for raw in sorted((project / '.dart_tool/app-store-export').glob('*.png')):
                     str(raw), '--out', str(directory / (parts[1] + '.jpg'))], check=True,
                    stdout=subprocess.DEVNULL)
 print('App Store JPEGs exported without alpha.')
+
+package = project / 'app_store/en-US'
+with zipfile.ZipFile(package / 'lost-canopy-iphone-screenshots.zip', 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+    for folder in ['iphone-large', 'iphone-medium']:
+        for path in sorted((package / folder).glob('*.jpg')):
+            archive.write(path, path.relative_to(package))
+    for name in ['README.md', 'copy.json']:
+        archive.write(package / name, name)
+print('Updated downloadable screenshot ZIP.')

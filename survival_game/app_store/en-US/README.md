@@ -21,9 +21,9 @@ Both dimensions are listed in [Apple’s screenshot specifications](https://deve
 
 ## Capture and composition
 
-`raw/` contains fresh captures of the actual Flutter game UI, rendered at 390×932 logical pixels / 3× resolution. The scenes use staged, valid game states to show the existing features: camp, world map, workshop, jaguar encounter, active fishing and the assembled rescue beacon. The fishing image captures an actual running session. This is not a claim that the six screens came from a single uninterrupted playthrough.
+`raw/` contains fresh captures of the actual Flutter game UI, rendered at 430×932 logical pixels / 3× resolution, with native safe areas reserved for the status bar and home indicator. The scenes use staged, valid game states to show the existing features: camp, world map, workshop, jaguar encounter, active fishing and the assembled rescue beacon. The fishing image captures an actual running session. This is not a claim that the six screens came from a single uninterrupted playthrough.
 
-The entire screenshot is preserved inside its frame, with no replacement HUD, fabricated gameplay or obscured controls. The separate title/subtitle and forest backdrop are composed with native Flutter widgets using existing game artwork. No new AI imagery was used for this screenshot pack. `copy.json` contains the English text.
+The entire screenshot is preserved inside a wider iPhone-shaped frame, with no replacement HUD, fabricated gameplay or obscured controls. The frame adds a Dynamic Island, status indicators, side buttons and a home indicator within the reserved system areas. The screenshot is uniformly scaled; it is not stretched. The top-left brand label and top-right slide number have been removed from the promotional layout. The separate title/subtitle and forest backdrop are composed with native Flutter widgets using existing game artwork. No new AI imagery was used for this screenshot pack. `copy.json` contains the English text.
 
 Reproduce from the Flutter project directory, sequentially:
 

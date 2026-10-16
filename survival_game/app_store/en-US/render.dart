@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:survival_game/ui/main_menu_screen.dart';
 import 'package:survival_game/ui/canopy_theme.dart';
 import '../../screenshots/tools/capture_fonts.dart';
+import 'iphone_mockup.dart';
 
 const root = 'app_store/en-US';
 const slides = <(String, String, String)>[
@@ -52,30 +53,6 @@ Widget poster(int index) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'LOST CANOPY',
-                    style: TextStyle(
-                      color: Color(0xFFE6BA69),
-                      fontWeight: FontWeight.w800,
-                      fontSize: 11,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                ),
-                Text(
-                  '${index + 1} / 6',
-                  style: const TextStyle(
-                    color: menuCream,
-                    fontSize: 10,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 18),
             Text(
               slide.$2,
               textAlign: TextAlign.center,
@@ -101,34 +78,8 @@ Widget poster(int index) {
             const SizedBox(height: 22),
             Expanded(
               child: Center(
-                child: AspectRatio(
-                  aspectRatio: 390 / 932,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: CanopyColors.background,
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(
-                        color: const Color(0xFFB7A981),
-                        width: 2,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xAA000000),
-                          blurRadius: 24,
-                          offset: Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(2),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        File('$root/raw/${slide.$1}.png'),
-                        fit: BoxFit.contain,
-                        filterQuality: FilterQuality.high,
-                      ),
-                    ),
-                  ),
+                child: IPhoneMockup(
+                  screenshot: File('$root/raw/${slide.$1}.png'),
                 ),
               ),
             ),

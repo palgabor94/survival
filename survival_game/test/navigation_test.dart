@@ -92,6 +92,8 @@ void main() {
     'production app uses five separate character poses at all four camp tiers',
     (tester) async {
       rootBundle.clear();
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
       for (final tier in [0, 1, 2, 3]) {
         for (final day in [1, 2, 3, 4, 5]) {
           final path = campArt(tier, variant: day - 1);

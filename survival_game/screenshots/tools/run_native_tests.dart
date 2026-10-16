@@ -1,3 +1,4 @@
+import '../../test/main_menu_widget_test.dart' as main_menu;
 import '../../test/first_day_tutorial_widget_test.dart' as first_day_ui;
 import '../../test/game/first_day_tutorial_test.dart' as first_day;
 import '../../test/run_progression_widget_test.dart' as run_progression_ui;
@@ -74,6 +75,7 @@ Future<void> main() async {
       'fishing': fishing.main,
       'fishing_progression': fishing_progression.main,
       'tool_progression': tool_progression.main,
+      'main_menu': main_menu.main,
       'first_day_tutorial_widgets': first_day_ui.main,
       'first_day_tutorial': first_day.main,
       'inventory': inventory.main,

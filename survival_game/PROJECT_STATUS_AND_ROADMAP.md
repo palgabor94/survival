@@ -1,6 +1,6 @@
 # Lost Canopy — állapot és további menetrend
 
-**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 462 teszt sikeres; az első menet tutorialja bekötve; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
+**Frissítve: 2026-10-15 · Megmentési játékfolyam, Tier 0–3 tábor, 3 minijáték, hangok, haptic, pergamentes felület, képen választható térkép és menthető napzáró összesítő; 475 teszt sikeres; splash és váltakozó főmenü bekötve; az első menet tutorialja bekötve; a hátizsák/tároló, az új dzsungel-ökológia és halfaj-/csali-/botrendszer is bekötve.**
 
 Most már az új játéktól a sikeres befejezésig működik a lánc: táborfejlesztés → roncsalkatrészek → Machete → Ancient Ruins puzzle → Beacon Core → Rescue Base → Emergency Beacon → jeladás → végső vihar → RESCUED.
 
@@ -97,4 +97,8 @@ A [tényleges Flutter screenshotok](screenshots/parchment-all-v1/README.md) kül
 
 ## Legutóbbi ellenőrzés — 2026-10-15
 
-Első menetes tutorial: 462 sikeres teszt, 0 hiba, analyzer tiszta. Az új splashscreen és főmenü külön látványterv, még nincs bekötve: [tervek](design/splash-menu-v1/README.md). A következő játékmeneti feladat a balansz, majd készülékes ellenőrzés.
+Első menetes tutorial: 462 sikeres teszt, 0 hiba, analyzer tiszta. A splash és a három váltakozó főmenüháttér bekötve, képszélhez igazodó fade-del és teljes pergamengombbal: [bekötés](design/menu-variations-v1/IMPLEMENTATION_HU.md) · [screenshotok](screenshots/main-menu-v1/README.md). A következő játékmeneti feladat a balansz, majd készülékes ellenőrzés.
+
+## Főmenü és splash — 2026-10-16
+
+475 sikeres teszt, analyzer tiszta. Valódi kezdés/folytatás, profil, beállítások, súgó, megerősített új menet, megjegyzett A/B/C hátterek. A felső és alsó perem képpontszinten ellenőrzött. [Bekötés](design/menu-variations-v1/IMPLEMENTATION_HU.md). [Új karakteres ikonjelölt](design/app-icon-v1/lost_canopy_explorer_icon_v1.png), külön elmentve, még nincs launcherikonként bekötve.

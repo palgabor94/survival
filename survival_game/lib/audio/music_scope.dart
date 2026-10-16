@@ -19,7 +19,7 @@ class MusicNavigationObserver extends NavigatorObserver {
   final void Function(bool)? onMapOpen;
   final _pages = <Route<dynamic>>[];
   void _update() {
-    final mapOpen = _pages.lastOrNull?.settings.name == 'map';
+    final mapOpen = {'map', 'menu'}.contains(_pages.lastOrNull?.settings.name);
     music?.setMapOpen(mapOpen);
     onMapOpen?.call(mapOpen);
   }

@@ -68,7 +68,9 @@ void main() {
   testWidgets('loads shipped content and presents the camp', (tester) async {
     SharedPreferences.setMockInitialValues({});
     rootBundle.clear();
-    await tester.pumpWidget(const LostCanopyApp(enableAudio: false));
+    await tester.pumpWidget(
+      const LostCanopyApp(enableAudio: false, showMainMenu: false),
+    );
     for (var i = 0; i < 200; i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 10)),

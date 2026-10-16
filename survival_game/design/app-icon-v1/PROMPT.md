@@ -1,0 +1,10 @@
+# Karakteres játékikon
+
+2026-10-16 · Beépített image_gen eszközzel generált önálló ikonjelölt. Nem helyettesíti automatikusan az iOS/Android launcher ikonokat.
+
+Referenciák: `design/references/explorer_character_master_v1.png` (karakter), `assets/art/camp_tier_2_empty_v1.jpg` (stílus és színek).
+
+## Prompt
+
+Use case: stylized-concept. Create a polished mobile SURVIVAL GAME APP ICON for Lost Canopy. A single completely square 1:1 illustration, full bleed to all four square edges, intended for an app-store icon, no text or letters, no watermark, no border, no baked rounded corners. Reference image 1 is the canonical explorer character identity: reproduce his short angular dark brown hair, full dark beard, warm tan skin, cream rolled-sleeve explorer shirt and brown diagonal satchel strap. Reference image 2 is visual style and palette ONLY. New composition: very large close-up head and upper shoulders of this same explorer, face occupying most of the frame, front three-quarter angle looking slightly to viewer's right, calm determined rugged expression, dark readable eyebrows and natural eyes. His identity must remain recognizable, not a different generic hero. Typical strong mobile game icon composition: one dominant face, bold simple silhouette, very clear at tiny sizes. Crop at upper chest, show cream collar and a little brown strap. Background deep teal jungle with only two or three large angular fern/leaf shapes; warm muted sunlight edge on one side of hair and cheek, restrained olive-green accents. Match the game's simple low-poly hand-painted illustration, broad matte angular planes, clean faceted shapes, very little microtexture. Refined illustrated game art, not shiny plastic 3D, not photorealistic, not detailed painted realism, not anime, not superhero comic. Strong face-to-background separation, cream shirt lighter than forest, natural masculine proportions, no weapons, no second character. Output a SQUARE image, approximately 1024 by 1024, not a portrait character sheet or mockup on a phone.
+

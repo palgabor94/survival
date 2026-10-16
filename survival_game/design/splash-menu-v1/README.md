@@ -1,5 +1,7 @@
 # Splashscreen és főmenü — látványterv
 
+**2026-10-16: a jóváhagyott változatok bekötve.** [Működés és validáció](../menu-variations-v1/IMPLEMENTATION_HU.md) · [12 tényleges screenshot](../../screenshots/main-menu-v1/README.md). Az alábbiak a korábbi tervezési kör archivált leírásai.
+
 2026-10-15 · **Koncepció, nincs bekötve.** A meglévő Tier 2 tábori hátteret, valódi pergamentextúrát és a játék tipográfiai/színrendszerét használó natív Flutter-kompozíciók. Nincs újonnan generált háttér vagy végleges logó; a címlogó tipográfiai javaslat.
 
 - [A három terv együtt](00-overview.png)

@@ -15,6 +15,7 @@ import 'game/game_engine.dart';
 import 'game/run_storage.dart';
 import 'game/world_catalog.dart';
 import 'ui/camp_screen.dart';
+import 'ui/main_menu_screen.dart';
 import 'ui/canopy_theme.dart';
 import 'ui/action_card.dart';
 import 'ui/camp_widgets.dart';
@@ -43,6 +44,7 @@ class LostCanopyApp extends StatefulWidget {
     this.haptics,
     this.enableAudio = true,
     this.enableHaptics = true,
+    this.showMainMenu,
   });
   final GameEngine? engine;
   final MusicController? music;
@@ -50,6 +52,9 @@ class LostCanopyApp extends StatefulWidget {
   final HapticsController? haptics;
   final bool enableAudio;
   final bool enableHaptics;
+
+  /// Injected gameplay fixtures bypass startup unless explicitly requested.
+  final bool? showMainMenu;
 
   /// Where the run is autosaved. Defaults to device storage unless an
   /// [engine] is injected (tests), which then runs without saving.
@@ -80,6 +85,9 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
           : null);
   AppLifecycleListener? _lifecycle;
   late Future<GameEngine> _engine = _load();
+  bool get _useMenu => widget.showMainMenu ?? widget.engine == null;
+  int _menuBackground = 0;
+  final _rotation = MenuBackgroundRotation();
 
   @override
   void initState() {
@@ -148,6 +156,7 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
       engine.persistSnapshot = storage.save;
       await engine.retrySave();
     }
+    if (_useMenu) _menuBackground = await _rotation.next();
     if (mounted) {
       _music?.attach(engine);
       _sounds?.attach(engine);
@@ -172,7 +181,21 @@ class _LostCanopyAppState extends State<LostCanopyApp> {
     home: FutureBuilder<GameEngine>(
       future: _engine,
       builder: (context, snapshot) {
-        if (snapshot.hasData) return CampScreen(engine: snapshot.requireData);
+        if (snapshot.hasData) {
+          return _useMenu
+              ? MainMenuScreen(
+                  game: snapshot.requireData,
+                  backgroundIndex: _menuBackground,
+                  nextBackground: _rotation.next,
+                )
+              : CampScreen(engine: snapshot.requireData);
+        }
+        if (_useMenu) {
+          return SplashScreen(
+            failed: snapshot.hasError,
+            onRetry: () => setState(() => _engine = _load()),
+          );
+        }
         return RunLoadingScreen(
           failed: snapshot.hasError,
           onRetry: () => setState(() => _engine = _load()),

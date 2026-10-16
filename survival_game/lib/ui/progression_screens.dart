@@ -740,7 +740,7 @@ class _NewJourneyScreenState extends State<NewJourneyScreen> {
   Widget build(BuildContext context) => _Watch(
     game: game,
     builder: () {
-      final active = game.completedRun == null;
+      final active = game.journeyStarted && game.completedRun == null;
       final p = optionById(game.profile.nextOption);
       return page(
         active ? 'END THIS JOURNEY?' : 'BEGIN AGAIN?',
@@ -805,7 +805,11 @@ class _NewJourneyScreenState extends State<NewJourneyScreen> {
                 if (mounted) setState(() => _working = false);
                 return;
               }
-              game.restart();
+              if (!game.journeyStarted) {
+                game.beginJourney();
+              } else {
+                game.restart();
+              }
               _resetDone = true;
               await game.saveSettled;
               if (mounted) setState(() => _working = false);

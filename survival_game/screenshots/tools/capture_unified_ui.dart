@@ -1,3 +1,4 @@
+import 'package:survival_game/ui/main_menu_screen.dart';
 import 'package:survival_game/ui/first_day_guide.dart';
 import 'dart:convert';
 import 'package:survival_game/game/run_progression.dart';
@@ -60,6 +61,7 @@ Future<void> main() async {
   // A gallery visits many large backgrounds; retain only a small warm cache.
   PaintingBinding.instance.imageCache.maximumSizeBytes = 64 * 1024 * 1024;
   PaintingBinding.instance.imageCache.maximumSize = 24;
+  final mainMenu = Platform.environment['LOST_CANOPY_CAPTURE_MAIN_MENU'] == '1';
   final firstDay = Platform.environment['LOST_CANOPY_CAPTURE_FIRST_DAY'] == '1';
   final runProgression =
       Platform.environment['LOST_CANOPY_CAPTURE_PROGRESSION'] == '1';
@@ -208,6 +210,7 @@ Future<void> main() async {
         )..volume = .8;
         screen = LostCanopyApp(
           engine: screen.engine,
+          showMainMenu: screen.showMainMenu,
           music: music,
           sounds: sounds,
           haptics: HapticsController(device: FakeHapticDevice()),
@@ -235,7 +238,8 @@ Future<void> main() async {
             await precacheImage(AssetImage(asset), context);
           }
         }
-        if (firstDay ||
+        if (mainMenu ||
+            firstDay ||
             runProgression ||
             inventoryProgression ||
             toolProgression ||
@@ -316,6 +320,54 @@ Future<void> main() async {
         await tester.tap(confirm);
         await tester.pumpAndSettle();
       }
+    }
+
+    if (mainMenu) {
+      final fresh = GameEngine(
+        catalog,
+        recipes: recipes,
+        world: world,
+        offerFirstRunGuide: true,
+        random: Random(42),
+      );
+      await mount(const SplashScreen(), settle: false);
+      await shot('01-splash');
+      for (var i = 0; i < menuBackgrounds.length; i++) {
+        await mount(MainMenuScreen(game: fresh, backgroundIndex: i));
+        await shot('0${i + 2}-main-menu-${['map', 'river', 'ruins'][i]}');
+      }
+      final saved = game(state: RunState(day: 5, campTier: 1));
+      await mount(MainMenuScreen(game: saved, backgroundIndex: 1));
+      await shot('05-continue-journey');
+      await tap('main-menu-new-journey');
+      await shot('06-new-journey-confirmation');
+      await mount(MainMenuScreen(game: fresh, backgroundIndex: 0));
+      await tap('menu-enter-journey');
+      await shot('07-first-run-tutorial');
+      await tap('skip-first-day');
+      await tap('camp-menu');
+      await tap('menu-main-menu');
+      await shot('08-returned-to-menu');
+      await tap('main-menu-guide');
+      await shot('09-survival-guide');
+      await mount(MainMenuScreen(game: saved, backgroundIndex: 2));
+      await tap('main-menu-profile');
+      await shot('10-survivor-profile');
+      await binding.setSurfaceSize(const Size(390, 932));
+      tester.view.physicalSize = const Size(390, 932);
+      await mount(MainMenuScreen(game: saved, backgroundIndex: 1));
+      await shot('11-tall-phone-fade');
+      await mount(
+        Scaffold(
+          body: MenuBackdrop(
+            asset: menuBackgrounds[1],
+            child: const SizedBox.expand(),
+          ),
+        ),
+      );
+      await shot('12-unobstructed-fade');
+      await tester.pumpWidget(const SizedBox.shrink());
+      return;
     }
 
     if (firstDay) {

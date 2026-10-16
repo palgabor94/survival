@@ -37,12 +37,20 @@ class GameEngine {
            RunState(resources: {'wood': 2, 'stone': 0, 'fiber': 0, 'herb': 2}) {
     metrics.campTier = state.campTier;
     tutorial.offered = offerFirstRunGuide && initialState == null;
+    journeyStarted = !tutorial.offered;
   }
   RunMetrics metrics = RunMetrics();
   PlayerProfile profile = PlayerProfile();
   RunSummary? completedRun;
   bool rankNoticePending = false;
   TutorialProgress tutorial = TutorialProgress();
+  bool journeyStarted = true;
+  void beginJourney() {
+    if (journeyStarted) return;
+    journeyStarted = true;
+    _changed();
+  }
+
   void decideFirstRunGuide(bool accept) {
     if (!tutorial.welcomePending || profile.firstRunGuideHandled) return;
     profile.firstRunGuideHandled = true;
@@ -2059,6 +2067,7 @@ class GameEngine {
     final option = optionById(profile.nextOption);
     profile.firstRunGuideHandled = true;
     tutorial = TutorialProgress();
+    journeyStarted = true;
     metrics = RunMetrics(option: option.id);
     completedRun = null;
     rankNoticePending = false;
@@ -2476,6 +2485,7 @@ class GameEngine {
     'metrics': metrics.toJson(),
     'profile': profile.toJson(),
     'tutorial': tutorial.toJson(),
+    'journeyStarted': journeyStarted,
     'completedRun': completedRun?.toJson(),
     'rankNoticePending': rankNoticePending,
     'pendingFishId': _pendingFishId,
@@ -2586,6 +2596,7 @@ class GameEngine {
       _state = restored;
       metrics = restoredMetrics;
       profile = restoredProfile;
+      journeyStarted = json['journeyStarted'] as bool? ?? true;
       tutorial = json['tutorial'] == null
           ? TutorialProgress()
           : TutorialProgress.fromJson(

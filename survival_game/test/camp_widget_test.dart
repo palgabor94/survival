@@ -34,7 +34,9 @@ Future<void> pumpApp(WidgetTester tester, RunStorage storage) async {
   addTearDown(tester.view.resetDevicePixelRatio);
   // Cached asset futures from an earlier test never resolve on this clock.
   rootBundle.clear();
-  await tester.pumpWidget(LostCanopyApp(storage: storage, enableAudio: false));
+  await tester.pumpWidget(
+    LostCanopyApp(storage: storage, enableAudio: false, showMainMenu: false),
+  );
   // Real asset and storage loading happens outside the fake clock.
   for (var i = 0; i < 200; i++) {
     await tester.runAsync(

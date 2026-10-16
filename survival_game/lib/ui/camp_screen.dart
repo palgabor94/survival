@@ -607,6 +607,7 @@ class _CampScreenState extends State<CampScreen> {
   }
 
   Future<void> _showMenu() async {
+    final canReturnToMenu = Navigator.of(context).canPop();
     final choice = await showDialog<String>(
       context: context,
       builder: (context) => CanopyDialog(
@@ -633,6 +634,7 @@ class _CampScreenState extends State<CampScreen> {
               child: Column(
                 children: [
                   for (final (id, title, art) in [
+                    if (canReturnToMenu) ('main-menu', 'Main menu', 'map'),
                     ('gather', 'Gather around camp', 'forage'),
                     ('journal', 'Survival journal', 'journal'),
                     ('profile', 'Survivor profile', 'journal'),
@@ -660,6 +662,11 @@ class _CampScreenState extends State<CampScreen> {
       ),
     );
     if (!mounted) return;
+    if (choice == 'main-menu') {
+      await game.saveSettled;
+      if (mounted) Navigator.pop(context);
+      return;
+    }
     if (choice == 'journal') _showJournal();
     if (choice == 'profile') {
       await progression.openProfile(context, game);

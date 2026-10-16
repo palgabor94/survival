@@ -1,0 +1,23 @@
+{
+  "name": {
+    "characters": 28,
+    "limit": 30
+  },
+  "subtitle": {
+    "characters": 26,
+    "limit": 30
+  },
+  "description": {
+    "characters": 1370,
+    "limit": 4000
+  },
+  "promotional_text": {
+    "characters": 151,
+    "limit": 170
+  },
+  "keywords": {
+    "utf8_bytes": 96,
+    "limit": 100,
+    "terms": 12
+  }
+}
